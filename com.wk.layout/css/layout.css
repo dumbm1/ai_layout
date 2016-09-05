@@ -1,0 +1,338 @@
+/*STYLES FOR THE LAYOUT PANEL*/
+
+body {
+  font-weight: bold;
+}
+
+ul, li {
+  margin:         0;
+  padding:        0;
+  border:         0;
+  font-size:      100%;
+  font:           inherit;
+  vertical-align: baseline;
+}
+
+ul { list-style: none; }
+
+textarea {
+  resize:     none;
+  overflow-y: scroll;
+}
+
+input {
+  box-sizing: border-box;
+  display:    inline-block;
+}
+
+input[type=number] {
+  float:  left;
+  border: 1px solid rgba(0, 0, 0, .4);
+  height: 20px;
+  width:  55px;
+}
+
+input[type=text] {
+  border: 1px solid rgba(0, 0, 0, .4);
+  height: 20px;
+}
+
+input[type=checkbox] { cursor: pointer; }
+
+.sep-horiz {
+  width:         300px;
+  border-top:    1px solid rgba(0, 0, 0, .3);
+  border-bottom: 1px solid rgba(255, 255, 255, .2);
+  margin:        0 auto;
+}
+
+.main-pan {
+  margin:  auto;
+  padding: 0;
+}
+
+.block {
+  width:   300px;
+  margin:  5px auto;
+  display: block;
+}
+
+.row {
+  height:  20px;
+  display: inline-block;
+}
+
+.left-label {
+  display:       inline-block;
+  width:         74px;
+  float:         left;
+  height:        20px;
+  overflow:      hidden;
+  text-align:    right;
+  padding-right: 1px;
+  box-sizing:    border-box;
+}
+
+.label-marg-dark { background-image: url(../img/margins-labels-dark.svg); }
+
+.label-marg-light { background-image: url(../img/margins-labels-light.svg); }
+
+#fileNameRow { height: 48px; }
+
+#fileName {
+  width:  220px;
+  height: 42px;
+}
+
+#pantSearch {
+  height:      20px;
+  width:       300px;
+  box-sizing:  border-box;
+  /*border-bottom: none;*/
+  font-size:   1.1em;
+  font-weight: bold;
+}
+
+#pantList {
+  height:              150px;
+  box-sizing:          border-box;
+  float:               left;
+  border-bottom:       none;
+  border-top:          none;
+  -webkit-user-select: none;
+  user-select:         none;
+  color:               #101010;
+}
+
+#pantList ul {
+  /*list-style: none;*/
+}
+
+#pantList div {
+  width:               300px;
+  height:              150px;
+  box-sizing:          border-box;
+  overflow-y:          scroll;
+  border:              1px solid rgba(0, 0, 0, .4);
+  border-bottom:       none;
+  border-top:          none;
+  -webkit-user-select: none;
+  user-select:         none;
+}
+
+#pantList li {
+  box-sizing:     border-box;
+  cursor:         pointer;
+  display:        inline-block;
+  width:          20%;
+  vertical-align: top;
+  overflow:       hidden;
+  height:         25px;
+  border:         solid 1px rgba(0, 0, 0, 0.4);
+  border-top:     none;
+  border-left:    none;
+}
+
+#pantList li.hidden {
+  display: none;
+}
+
+#pantList span {
+  -webkit-user-select: none; user-select: none;
+  text-shadow:         3px 3px 10px #333;
+}
+
+#pantList li:hover span {
+  border:  dotted 1px rgba(0, 0, 0, 0.1);
+  opacity: .7;
+}
+
+#pantList li:active span {
+  border:  dotted 0px rgba(0, 0, 0, 0.1);
+  opacity: .4;
+}
+
+.btn-link-div {
+  box-sizing:   border-box;
+  width:        20px;
+  height:       20px;
+  float:        right;
+  margin-right: 10px;
+  /* background:   #999;*/
+  cursor:       pointer;
+}
+
+.btn-link-div-checked {
+  background: rgba(0, 0, 0, .4);
+}
+
+.btn-link-div-x2 { margin-top: 10px; }
+
+.btn-link {
+  box-sizing:            border-box;
+  border-style:          none;
+  margin:                0;
+  padding:               0;
+  width:                 20px;
+  height:                20px;
+  background-repeat:     no-repeat;
+  background-position-x: -20px;
+}
+
+.btn-link-checked { background-position-x: 0; }
+
+.btn-link-light { background-image: url(../img/btn-link_light.svg); }
+
+.btn-link-dark { background-image: url(../img/btn-link_dark.svg); }
+
+#z {
+  box-sizing: border-box;
+  width:      55px;
+  height:     20px;
+  float:      left;
+}
+
+/*** COLOR BUTTONS *******************************/
+.col-btns {
+  padding:    0;
+  margin:     0;
+  height:     42px;
+  box-sizing: border-box;
+}
+
+#colBtns {
+  padding:    0;
+  margin:     0;
+  width:      300px;
+  height:     43px;
+  box-sizing: border-box;
+  border:     1px solid rgba(0, 0, 0, .4);
+}
+
+.col-btn {
+  margin:      0;
+  padding:     0;
+  width:       75px;
+  height:      21px;
+  float:       left;
+  box-sizing:  border-box;
+  border:      1px solid rgba(0, 0, 0, .4);
+  overflow:    hidden;
+  border-left: none;
+  border-top:  none;
+}
+
+.col-btn:nth-child(4n) {
+  width:        73px;
+  border-right: none;
+}
+
+.col-btn:nth-child(n + 5) {
+  border-bottom: none;
+}
+
+.col-btn span.col-btn-title {
+  width:    57px;
+  float:    left;
+  overflow: hidden;
+}
+
+.col-btn-close-btn {
+  width:               16px;
+  height:              16px;
+  float:               right;
+  box-sizing:          border-box;
+  text-align:          center;
+  display:             block;
+  font-weight:         bold;
+  font-size:           1.1em;
+  -webkit-user-select: none;
+  user-select:         none;
+  cursor:              pointer;
+  border:              1px solid rgba(0, 0, 0, .4);
+  border-right:        none;
+  border-top:          none;
+  color:               black;
+}
+
+/*** SHIFT RAILS PANEL *******************************/
+#shiftRails {
+  background: #0000FF;
+  height:     20px;
+  width:      300px;
+  border:     solid 1px;
+  box-sizing: border-box;
+}
+
+#shiftRailsTitle {
+  height:        20px;
+  width:         90px;
+  display:       inline-block;
+  border:        1px solid rgba(0, 0, 0, .4);
+  border-bottom: none;
+  box-sizing:    border-box;
+  float:         left;
+  text-align:    center;
+  font-weight:   bold;
+  padding-top:   1px;
+  cursor:        pointer;
+}
+
+#shiftRailsFill {
+  background:  rgba(0, 0, 0, .4);
+  height:      20px;
+  width:       210px;
+  display:     inline-block;
+  border:      1px solid rgba(0, 0, 0, .4);
+  border-left: none;
+  box-sizing:  border-box;
+  float:       left;
+}
+
+/*** MAIN BUTTONS ***********************/
+#mainButtons {
+  position:     absolute;
+  bottom:       5px;
+  left:         29px;
+  box-sizing:   border-box;
+  display:      block;
+  border-style: none;
+  width:        252px;
+  height:       28px;
+}
+
+.main-btn {
+  display:           inline-block;
+  box-sizing:        border-box;
+  border-style:      none;
+  border-radius:     2px;
+  float:             left;
+  width:             18px;
+  height:            18px;
+  margin:            5px;
+  cursor:            pointer;
+  background-origin: border-box;
+}
+
+.main-btn-dark { background-image: url(../img/btns-main-dark.svg); }
+
+.main-btn-light { background-image: url(../img/btns-main-light.svg); }
+
+#btnFactoryDefaults { background-position-x: -28px }
+
+#btnReset { background-position-x: -56px }
+
+#btnSave { background-position-x: -84px }
+
+#btnSaveToProfile { background-position-x: -112px }
+
+#btnLoadFromProfile { background-position-x: -140px }
+
+#btnSettings { background-position-x: -168px }
+
+#btnKillCEP { background-position-x: -196px }
+
+#btnHelp { background-position-x: -224px }
+
+/*** COMMON **********************/
+.hidden { display: none; }

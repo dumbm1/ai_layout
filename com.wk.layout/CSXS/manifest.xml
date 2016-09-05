@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="5.0"
+                   ExtensionBundleId="com.wk.layout_v042"
+                   ExtensionBundleVersion="0.4.2"
+                   ExtensionBundleName="layout_v042"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Author>
+        <![CDATA[Marat Shagiev]]>
+    </Author>
+    <Contact mailto="m_js@bk.ru">
+        <![CDATA[m_js@bk.ru]]>
+    </Contact>
+    <Legal>
+        <![CDATA[Legal stuff...]]>
+    </Legal>
+    <Abstract href="#">
+        <![CDATA[This is a flexographic layout to output]]>
+    </Abstract>
+
+    <ExtensionList>
+        <Extension Id="com.wk.layout_v042" Version="0.4.2"/>
+    </ExtensionList>
+    <ExecutionEnvironment>
+        <HostList>
+            <Host Name="ILST" Version="17.0"/>
+        </HostList>
+        <LocaleList>
+            <Locale Code="All"/>
+        </LocaleList>
+        <RequiredRuntimeList>
+            <RequiredRuntime Name="CSXS" Version="5.0"/>
+        </RequiredRuntimeList>
+    </ExecutionEnvironment>
+    <DispatchInfoList>
+        <Extension Id="com.wk.layout_v042">
+            <DispatchInfo>
+                <Resources>
+                    <MainPath>./index.html</MainPath>
+                    <ScriptPath>./jsx/hostscript.jsx</ScriptPath>
+                </Resources>
+                <Lifecycle>
+                    <AutoVisible>true</AutoVisible>
+                </Lifecycle>
+                <UI>
+                    <Type>Panel</Type>
+                    <Menu>Layout v0.4.2</Menu>
+                    <Geometry>
+                        <Size>
+                            <Width>320</Width>
+                            <Height>580</Height>
+                        </Size>
+                        <MinSize>
+                            <Width>320</Width>
+                            <Height>580</Height>
+                        </MinSize>
+                        <MaxSize>
+                            <Width>320</Width>
+                            <Height>580</Height>
+                        </MaxSize>
+                    </Geometry>
+                    <Icons>
+                        <Icon Type="Normal">./icons/icon.png</Icon>
+                        <Icon Type="RollOver">./icons/icon.png</Icon>
+                        <Icon Type="Disabled">./icons/icon.png</Icon>
+                        <Icon Type="DarkNormal">./icons/icon.png</Icon>
+                        <Icon Type="DarkRollOver">./icons/icon.png</Icon>
+                    </Icons>
+                </UI>
+            </DispatchInfo>
+        </Extension>
+    </DispatchInfoList>
+</ExtensionManifest>

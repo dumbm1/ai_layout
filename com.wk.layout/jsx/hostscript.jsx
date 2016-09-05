@@ -1,0 +1,1075 @@
+/*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
+/*global $, Folder*/
+
+//todo: primer color label is 0% without overprint
+//todo: white #2 and primer #2 so must be 0% without overprint
+
+var PT_TO_MM = 2.834645668;
+var MM_TO_PT = 0.352777778;
+var DISTORS  = 6;
+
+function killCEP () {
+  /**
+   * make bat-file that kill all system processes CEPHTMLEngine.exe
+   */
+  _execFile (
+    Folder.temp.absoluteURI + '/' + 'tasks_kill.bat',
+    'taskkill /IM CEPHTMLEngine.exe /f'
+  );
+  /**
+   * make new file by full path, write to disk with some file contenr, execute file
+   *
+   * @param {String} filePath - FULL path (include file-extension)
+   * @param {String} fileContent - content to new file
+   */
+  function _execFile (filePath, fileContent) {
+    var f = new File (filePath);
+    f.open ('e');
+    f.write (fileContent);
+    f.close ();
+    f.execute ();
+  }
+}
+
+function makeLayout (str) {
+  var margTop   = +str.nmb.margTop,
+      margBott  = +str.nmb.margBott,
+      margLeft  = +str.nmb.margLeft,
+      margRight = +str.nmb.margRight;
+
+  // scrollWin (showObjDeep (str));
+
+  _addDoc (str);
+  _showRulers (str);
+  _addGuides (str);
+  _addTestElems (str);
+  _delAllUnused ();
+
+  function _addDoc (opts) {
+
+    var docName  = opts.txt.fileName;
+    var railW    = +opts.nmb.railWidth;
+    var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
+    var margHor  = +opts.nmb.margLeft + +(opts.nmb.margRight);
+    var docW     = (+opts.nmb.layoutWidth + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
+    var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
+
+    var pres = new DocumentPreset ();
+
+    pres.title            = docName;
+    pres.colorMode        = DocumentColorSpace.CMYK;
+    pres.height           = docH;
+    pres.width            = docW;
+    pres.units            = RulerUnits.Millimeters;
+    pres.previewMode      = DocumentPreviewMode.OverprintPreview;
+    pres.rasterResolution = DocumentRasterResolution.HighResolution;
+    // pres.numArtboards       = 10;
+    // pres.artboardLayout     = DocumentArtboardLayout.Row;
+    // pres.artboardRowsOrCols = 5;
+    // pres.transparencyGrid   = DocumentTransparencyGrid.TransparencyGridOrange;
+
+    var doc                      = documents.addDocument ('', pres, false);
+    // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
+    doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
+      (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
+    ];
+
+    addLayer ({rgb: [0, 128, 128], doc: doc, title: 'color'});
+    __addVrAndPrPlates (opts, doc);
+    addLayer ({rgb: [128, 128, 0], doc: doc, title: 'test'});
+    doc.layers[doc.layers.length - 1].remove ();
+
+    function __addVrAndPrPlates (opts, doc) {
+      var colArr = opts.col;
+      var sw     = 0;
+      var lay, vr, pr;
+      var plateX = 0,
+          plateY = 0;
+
+      for (var i = 0; i < colArr.length; i++) {
+        var obj = colArr[i];
+        // if (obj.name != 'Vr' && obj.name != 'Pr') continue;
+        if (obj.name == 'Vr') sw += 1;
+        if (obj.name == 'Pr') sw += 2;
+      }
+
+      switch (sw) {
+        case 1:
+          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'varnish'});
+          ___addVr ();
+          break;
+        case 2:
+          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'primer'});
+          ___addPr ();
+          break;
+        case 3:
+          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'varnish+primer'});
+          ___addVr ();
+          ___addPr ();
+          break;
+        default:
+          break;
+      }
+      function ___addVr () {
+        vr               = lay.pathItems.rectangle (
+          plateY,
+          (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
+          (+opts.nmb.layoutWidth + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
+          (+opts.sel.z - 6) * PT_TO_MM
+        );
+        vr.stroked       = false;
+        vr.fillColor     = getColor ('Vr', ___getCmyk (opts, 'Vr'), 100);
+        vr.fillOverprint = true;
+      }
+
+      function ___addPr () {
+        pr               = lay.pathItems.rectangle (
+          plateY,
+          (plateX - opts.nmb.indentIn) * PT_TO_MM,
+          (+opts.nmb.layoutWidth + +opts.nmb.indentIn * 2) * PT_TO_MM,
+          (+opts.sel.z - 6) * PT_TO_MM
+        );
+        pr.stroked       = false;
+        pr.fillColor     = getColor ('Pr', ___getCmyk (opts, 'Pr'), 100);
+        pr.fillOverprint = true;
+      }
+
+      function ___getCmyk (opts, name) {
+        var arr = opts.col;
+        for (var i = 0; i < arr.length; i++) {
+          var obj = arr[i];
+          if (obj.name == name) {
+            return obj.cmyk.split (',');
+          }
+        }
+      }
+
+    }
+  }
+
+  function _showRulers () {
+    var actStr = '/version 3' +
+      '/name [ 11' +
+      '	53686f772052756c657273' +
+      ']' +
+      '/isOpen 1' +
+      '/actionCount 1' +
+      '/action-1 {' +
+      '	/name [ 11' +
+      '		53686f772052756c657273' +
+      '	]' +
+      '	/keyIndex 0' +
+      '	/colorIndex 0' +
+      '	/isOpen 1' +
+      '	/eventCount 1' +
+      '	/event-1 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (adobe_commandManager)' +
+      '		/localizedName [ 16' +
+      '			416363657373204d656e75204974656d' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 0' +
+      '		/parameterCount 3' +
+      '		/parameter-1 {' +
+      '			/key 1769238125' +
+      '			/showInPalette -1' +
+      '			/type (ustring)' +
+      '			/value [ 5' +
+      '				72756c6572' +
+      '			]' +
+      '		}' +
+      '		/parameter-2 {' +
+      '			/key 1818455661' +
+      '			/showInPalette -1' +
+      '			/type (ustring)' +
+      '			/value [ 11' +
+      '				53686f772052756c657273' +
+      '			]' +
+      '		}' +
+      '		/parameter-3 {' +
+      '			/key 1668114788' +
+      '			/showInPalette -1' +
+      '			/type (integer)' +
+      '			/value 37' +
+      '		}' +
+      '	}' +
+      '}'
+
+    runAction ('Show Rulers', 'Show Rulers', actStr);
+  }
+
+  function _addGuides (opts) {
+
+    var doc  = activeDocument,
+        lay  = getLayByName ('test'),
+        docW = doc.width,
+        docH = doc.height;
+
+    var topGuide, bottGuide, centerGuide, leftGuide, rightGuide;
+
+    var topX, topY, topLen,
+        leftX, leftY, leftLen;
+
+    var guideBleeds = 1000;
+
+    topX     = -guideBleeds * PT_TO_MM;
+    topY     = 0;
+    topLen   = docH + guideBleeds * 2 * PT_TO_MM;
+    topGuide = lay.pathItems.add ();
+    topGuide.setEntirePath ([
+      [topX, topY],
+      [topX + topLen, topY]
+    ])
+    topGuide.guides = true;
+
+    bottGuide          = topGuide.duplicate ();
+    bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTop + margBott) * PT_TO_MM];
+
+    centerGuide          = topGuide.duplicate ();
+    centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM]
+
+    leftX     = 0;
+    leftY     = -guideBleeds * PT_TO_MM;
+    leftLen   = docH + guideBleeds * 2 * PT_TO_MM;
+    leftGuide = lay.pathItems.add ();
+    leftGuide.setEntirePath ([
+      [leftX, leftY],
+      [leftX, leftY + leftLen]
+    ])
+    leftGuide.guides = true;
+
+    rightGuide          = leftGuide.duplicate ();
+    rightGuide.position = [leftGuide.position[0] + opts.nmb.layoutWidth * PT_TO_MM, leftGuide.position[1]];
+  }
+
+  function _addTestElems (opts) {
+    var doc      = activeDocument,
+        lay      = getLayByName ('test'),
+        fontName = __getFonts ()[0];
+
+    var mainGr  = lay.groupItems.add (),
+        railGr  = mainGr.groupItems.add (),
+        crossGr = mainGr.groupItems.add (),
+        titleGr = lay.groupItems.add ();
+
+    __addRails (opts, railGr);
+    __addCrossGr (opts, crossGr);
+    __addTitle (opts, titleGr);
+    __addColors (opts, titleGr);
+
+    // duplicate the rails to right
+    var mainGrCopy      = mainGr.duplicate ();
+    mainGrCopy.position = [
+      railGr.position[0] + (+opts.nmb.layoutWidth + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
+      railGr.position[1]
+    ]
+
+    /**
+     * LIB TO ADD TEST ELEMENTS
+     * */
+    function __addColors (opts, titleGr) {
+      var colorGr  = titleGr.groupItems.add ();
+      var labelGr  = colorGr.groupItems.add ();
+      var fontSize = 20;
+      var bgH      = (+opts.nmb.railWidth - +opts.nmb.railWidth / 3) * PT_TO_MM,
+          bgW;
+      var colArr   = opts.col;
+
+      var labelX = 0,
+          labelY = 0;
+
+      for (var i = 0; i < colArr.length; i++) {
+        var obj        = colArr[i];
+        var colorLabel = labelGr.textFrames.add ();
+
+        colorLabel.contents = setPantAlias (obj.name);
+        // alert (obj.name.length);
+        // colorLabel.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
+        colorLabel.textRange.characterAttributes.textFont       = textFonts.getByName (fontName);
+        colorLabel.textRange.characterAttributes.capitalization = FontCapsOption.SMALLCAPS;
+        colorLabel.textRange.characterAttributes.size           = fontSize;
+
+        if (i == 0) {
+          ___tuneCharSize ();
+        }
+
+        if (obj.name.match (/^W(#\d)?$/)) {
+          colorLabel.textRange.characterAttributes.fillColor     = getColor ('white');
+          colorLabel.textRange.characterAttributes.overprintFill = false;
+        } else {
+          colorLabel.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+          colorLabel.textRange.characterAttributes.overprintFill = true;
+        }
+
+        colorLabel.position = [labelX, labelY];
+        labelX += colorLabel.width;
+      }
+
+      function ___tuneCharSize () {
+        // tune the label to bg
+        var lblHeight = calcCharSize (colorLabel).h;
+        while (lblHeight > bgH) {
+          fontSize -= 0.1;
+          colorLabel.textRange.characterAttributes.size = fontSize;
+          lblHeight                                     = calcCharSize (colorLabel).h;
+        }
+      }
+
+      labelGr.position = [0, calcCharSize (labelGr.pageItems[0]).top];
+
+      var colBg = (function addColorBg () {
+        bgW             = labelGr.width;
+        var colBg       = labelGr.pathItems.rectangle (0, 0, bgW, bgH);
+        colBg.stroked   = false;
+        colBg.fillColor = getColor ('white');
+
+        for (var j = 0; j < colArr.length; j++) {
+          var col = colArr[j];
+          if (col.name == 'W') {
+            colBg.fillColor = getColor ('W', col.cmyk.split (','), 100);
+          }
+        }
+
+        colBg.move (labelGr, ElementPlacement.PLACEATEND);
+        return colBg;
+
+      } ());
+
+      labelGr.rotate (90, true);
+      labelGr.position = [
+        (-opts.nmb.indentIn - opts.nmb.railWidth + 0.5 * +opts.nmb.railWidth / 3  ) * PT_TO_MM - calcCharSize (labelGr.pageItems[0]).top,
+        (-(opts.sel.z - 6 - +opts.nmb.crossHeight) / 2 + 2.5 ) * PT_TO_MM + colorGr.height
+      ];
+
+      /* for (var l = 0; l < colArr.length; l++) {
+       var col2 = colArr[l];
+       if (col2.name == 'Pr') {
+       var primer       = colBg.duplicate ();
+       primer.fillColor = getColor ('Pr', col2.cmyk.split (','), 100);
+       }
+       }*/
+    }
+
+    function __addTitle (opts, titleGr) {
+      var fontSize      = 16;
+      var str           = (opts.txt.fileName).replace (/_/gmi, '  ');
+      var title         = titleGr.textFrames.add ();
+      var titleTmplRect = [ // top, left, width, height
+        (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossHeight / 2 - 3) * PT_TO_MM,
+        (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+        opts.nmb.railWidth * PT_TO_MM,
+        ((opts.sel.z - DISTORS) / 2 - opts.nmb.crossHeight - 10) * PT_TO_MM
+      ];
+      var titleCharSize;
+      var titleFrameSize;
+      var col           = opts.col;
+
+      // add test title template rectangle:
+      // activeDocument.pathItems.rectangle (titleTmplRect[0], titleTmplRect[1], titleTmplRect[2], titleTmplRect[3]);
+
+      title.contents                                        = str;
+      title.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
+      title.textRange.characterAttributes.textFont          = textFonts.getByName (fontName);
+      title.textRange.characterAttributes.size              = fontSize;
+      title.textRange.characterAttributes.capitalization    = FontCapsOption.ALLCAPS;
+
+      title.textRange.characterAttributes.fillColor     = getRegistration ();
+      title.textRange.characterAttributes.overprintFill = true;
+
+      title.rotate (90, true);
+
+      // tune text frame width
+      while (calcCharSize (title).h * MM_TO_PT > opts.nmb.railWidth - 1) {
+        fontSize -= 0.1;
+        title.textRange.characterAttributes.size = fontSize;
+      }
+      // tune text frame height
+      while (__getFrameSize (title)[3] > titleTmplRect[3]) {
+        fontSize -= 0.1;
+        title.textRange.characterAttributes.size = fontSize;
+      }
+
+      titleCharSize  = calcCharSize (title);
+      titleFrameSize = __getFrameSize (title);
+
+      title.position = [
+        titleTmplRect[1] - calcCharSize (title).top + (  +opts.nmb.railWidth * PT_TO_MM - calcCharSize (title).h ) / 2,
+        titleTmplRect[0]
+      ]
+
+/*      for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
+        var obj = col[i];
+        if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
+          if (titleWhiteCount == 0) {
+            var tmpTitleDupl                                         = title.duplicate ();
+            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
+            tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
+            tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
+            titleWhiteCount++;
+          }
+        } else {
+          var tmpTitleDupl                                         = title.duplicate ();
+          tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+          tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
+        }
+      }*/
+      // title.remove ();
+
+
+    }
+
+    function __addRails (opts, railGr) {
+      var arr         = opts.col;
+      var shift_count = 1;
+
+      for (var i = 0; i < arr.length; i++) {
+        var obj = arr[i];
+
+        if (obj.name == 'Vr') continue;
+
+        var rail    = railGr.pathItems.rectangle (
+          -opts.nmb['shift_' + shift_count] * PT_TO_MM, (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+          opts.nmb.railWidth * PT_TO_MM, (opts.sel.z - DISTORS) * PT_TO_MM
+        );
+        rail.name   = 'rail_' + obj.name;
+        var cmykArr = obj.cmyk.split (',');
+        if (obj.name.match (/^Pr(#\d)?$/)) {
+          rail.fillColor = getColor (obj.name, cmykArr, 100);
+        } else {
+          rail.fillColor = getColor (obj.name, cmykArr, 20);
+        }
+
+        rail.stroked       = false;
+        rail.fillOverprint = true;
+
+        shift_count++;
+      }
+    }
+
+    function __addCrossGr (opts, crossGr) {
+      var arr                = opts.col;
+      var DBL_STROKE         = 2;
+      var scale_count_main   = 0;
+      var scale_count_ground = 0;
+      var scale_fact_main    = 90;
+      var scale_fact_ground  = 85;
+
+      var crossBg     = crossGr.pathItems.ellipse (
+        +opts.nmb.crossWidth * PT_TO_MM,
+        -opts.nmb.crossWidth * PT_TO_MM / 2,
+        +opts.nmb.crossWidth * PT_TO_MM,
+        +opts.nmb.crossWidth * PT_TO_MM
+      )
+      crossBg.stroked = false;
+
+      for (var k = 0; k < arr.length; k++) {
+        var obj = arr[k];
+
+        var lineGr = crossGr.groupItems.add ();
+        var line   = lineGr.pathItems.add ();
+
+        line.filled          = false;
+        line.stroked         = true;
+        line.strokeOverprint = true;
+
+        if (
+          obj.name.match (/^Vr(#\d)?$/) ||
+          obj.name.match (/^W(#\d)?$/) ||
+          obj.name.match (/^Pr(#\d)?$/)
+        ) {
+          line.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM * 2.5;
+        } else {
+          line.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
+        }
+
+        var cmykArr      = obj.cmyk.split (',');
+        line.strokeColor = getColor (obj.name, cmykArr, 100);
+
+        line.setEntirePath ([
+          [0, 0],
+          [0, +opts.nmb.crossWidth * PT_TO_MM]
+        ]);
+
+        var lineClon = line.duplicate ();
+        lineClon.rotate (90, true, undefined, undefined, undefined, Transformation.CENTER);
+        lineGr.name = 'cross_' + obj.name;
+
+        if (obj.name.match (/^W$/)) {
+          lineGr.move (crossBg, ElementPlacement.PLACEBEFORE);
+          continue;
+        } else if (obj.name.match (/^W(#\d)$/) || obj.name.match (/^Vr(#\d)?$/) || obj.name.match (/^Pr(#\d)?$/)) {
+          lineGr.move (crossBg, ElementPlacement.PLACEBEFORE);
+          if (scale_fact_ground > 0) {
+            lineGr.resize (scale_fact_ground, scale_fact_ground, true, false, false, false, undefined, Transformation.CENTER);
+          }
+          scale_count_ground++;
+          scale_fact_ground -= 15;
+          continue;
+        } else {
+          if (scale_count_main > 2) {
+            lineGr.resize (scale_fact_main, scale_fact_main, true, false, false, false, undefined, Transformation.CENTER);
+            scale_fact_main -= 10;
+          }
+          scale_count_main++;
+        }
+
+      }
+
+      crossGr.position = [
+        (-opts.nmb.railWidth - opts.nmb.indentIn + (+opts.nmb.railWidth - opts.nmb.crossWidth) / 2 ) * PT_TO_MM,
+        -(+opts.sel.z - DISTORS - opts.nmb.crossHeight) / 2 * PT_TO_MM
+      ]
+    }
+
+    /**
+     * get available bold-fonts from base bold-fonts array
+     *
+     * @return {Array} fonts - available bold fonts
+     */
+    function __getFonts () {
+      var fonts       = [],
+          fontsCommon = [
+            'MyriadPro-BoldCond', 'MyriadPro-Black', 'MyriadPro-Bold', 'Monaco-Bold',
+            'Arial-Bold', 'Arial-BoldMT', 'Arial-Black',
+            'ComicSansMS-Bold', 'Calibri-Bold', 'CourierNewPS-BoldMT', 'Courier-Bold',
+            'Charcoal',
+            'DejaVuSans-Bold',
+            'Geneva-Bold', 'Impact',
+            'Nimbus-Sans-Bold', 'NimbusMonoL-Bold',
+            'TrebuchetMS-Bold', 'Tahoma-Bold',
+            'Verdana-Bold'
+          ]
+
+// записать шрифты с поддержкой всех символов логических операций в массив
+      for (var i = 0; i < fontsCommon.length; i++) {
+        try {
+          fonts.push ((textFonts.getByName (fontsCommon[i]).name));
+        } catch (e) {
+        }
+      }
+      return fonts;
+    }
+
+    function __getFrameSize (frame) { // top, left, width, height
+      return [frame.position[1], frame.position[0], frame.width, frame.height];
+    }
+  }
+
+  function _delAllUnused () {
+    activeDocument.swatchGroups[1].remove ();
+
+    var str = '/version 3' +
+      '/name [ 12' +
+      '	64656c416c6c556e75736564' +
+      ']' +
+      '/isOpen 0' +
+      '/actionCount 1' +
+      '/action-1 {' +
+      '	/name [ 12' +
+      '		64656c416c6c556e75736564' +
+      '	]' +
+      '	/keyIndex 0' +
+      '	/colorIndex 2' +
+      '	/isOpen 0' +
+      '	/eventCount 8' +
+      '	/event-1 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_swatches)' +
+      '		/localizedName [ 8' +
+      '			5377617463686573' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 17' +
+      '				53656c65637420416c6c20556e75736564' +
+      '			]' +
+      '			/value 11' +
+      '		}' +
+      '	}' +
+      '	/event-2 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_swatches)' +
+      '		/localizedName [ 8' +
+      '			5377617463686573' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 1' +
+      '		/showDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 13' +
+      '				44656c65746520537761746368' +
+      '			]' +
+      '			/value 3' +
+      '		}' +
+      '	}' +
+      '	/event-3 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_brush)' +
+      '		/localizedName [ 5' +
+      '			4272757368' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 17' +
+      '				53656c65637420416c6c20556e75736564' +
+      '			]' +
+      '			/value 8' +
+      '		}' +
+      '	}' +
+      '	/event-4 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_brush)' +
+      '		/localizedName [ 5' +
+      '			4272757368' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 1' +
+      '		/showDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 12' +
+      '				44656c657465204272757368' +
+      '			]' +
+      '			/value 3' +
+      '		}' +
+      '	}' +
+      '	/event-5 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_styles)' +
+      '		/localizedName [ 14' +
+      '			47726170686963205374796c6573' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 17' +
+      '				53656c65637420416c6c20556e75736564' +
+      '			]' +
+      '			/value 14' +
+      '		}' +
+      '	}' +
+      '	/event-6 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_styles)' +
+      '		/localizedName [ 14' +
+      '			47726170686963205374796c6573' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 1' +
+      '		/showDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 20' +
+      '				44656c6574652047726170686963205374796c65' +
+      '			]' +
+      '			/value 3' +
+      '		}' +
+      '	}' +
+      '	/event-7 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_symbol_palette)' +
+      '		/localizedName [ 7' +
+      '			53796d626f6c73' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 17' +
+      '				53656c65637420416c6c20556e75736564' +
+      '			]' +
+      '			/value 12' +
+      '		}' +
+      '	}' +
+      '	/event-8 {' +
+      '		/useRulersIn1stQuadrant 0' +
+      '		/internalName (ai_plugin_symbol_palette)' +
+      '		/localizedName [ 7' +
+      '			53796d626f6c73' +
+      '		]' +
+      '		/isOpen 0' +
+      '		/isOn 1' +
+      '		/hasDialog 1' +
+      '		/showDialog 0' +
+      '		/parameterCount 1' +
+      '		/parameter-1 {' +
+      '			/key 1835363957' +
+      '			/showInPalette -1' +
+      '			/type (enumerated)' +
+      '			/name [ 13' +
+      '				44656c6574652053796d626f6c' +
+      '			]' +
+      '			/value 5' +
+      '		}' +
+      '	}' +
+      '}';
+    runAction ('delAllUnused', 'delAllUnused', str);
+  }
+}
+
+/**
+ * COMMON LIB
+ * */
+function setPantAlias (pantName) {
+
+  var aliases = {
+    "Process Yellow" : "PrY",
+    "Process Magenta": "PrM",
+    "Process Cyan"   : "PrC",
+    "Process Black"  : "PrK",
+    "Yellow 012"     : "012",
+    "Orange 021"     : "021",
+    "Warm Red"       : "WR",
+    "Red 032"        : "032",
+    "Rubine Red"     : "Rub",
+    "Rhodamine Red"  : "Rhod",
+    "Purple"         : "Purp",
+    "Violet"         : "Viol",
+    "Blue 072"       : "072",
+    "Reflex Blue"    : "Refl",
+    "Process Blue"   : "PrBlue",
+    "Green"          : "Gr",
+    "Black"          : "Black",
+    "Black 2"        : "Black2",
+    "Black 3"        : "Black3",
+    "Black 4"        : "Black4",
+    "Black 5"        : "Black5",
+    "Black 6"        : "Black6",
+    "Black 7"        : "Black7",
+    "Warm Gray 1"    : "WG1",
+    "Warm Gray 2"    : "WG2",
+    "Warm Gray 3"    : "WG3",
+    "Warm Gray 4"    : "WG4",
+    "Warm Gray 5"    : "WG5",
+    "Warm Gray 6"    : "WG6",
+    "Warm Gray 7"    : "WG7",
+    "Warm Gray 8"    : "WG8",
+    "Warm Gray 9"    : "WG9",
+    "Warm Gray 10"   : "WG10",
+    "Warm Gray 11"   : "WG11",
+    "Cool Gray 1"    : "CG1",
+    "Cool Gray 2"    : "CG2",
+    "Cool Gray 3"    : "CG3",
+    "Cool Gray 4"    : "CG4",
+    "Cool Gray 5"    : "CG5",
+    "Cool Gray 6"    : "CG6",
+    "Cool Gray 7"    : "CG7",
+    "Cool Gray 8"    : "CG8",
+    "Cool Gray 9"    : "CG9",
+    "Cool Gray 10"   : "CG10",
+    "Cool Gray 11"   : "CG11"
+  }
+
+  for (var key in aliases) {
+    if (pantName == key) return aliases[key];
+
+    if (pantName.match (key)) {
+      return aliases[key] + pantName.slice (-2);
+    }
+  }
+  return pantName;
+}
+/*
+ function setPantAlias (pantName) {
+ var aliases = {
+ "Process Yellow":  "PrY",
+ "Process Magenta": "PrM",
+ "Process Cyan":    "PrC",
+ "Process Black":   "PrK",
+ "Yellow 012":      "012",
+ "Orange 021":      "021",
+ "Warm Red":        "WR",
+ "Red 032":         "032",
+ "Rubine Red":      "Rub",
+ "Rhodamine Red":   "Rhod",
+ "Purple":          "Purp",
+ "Violet":          "Viol",
+ "Blue 072":        "072",
+ "Reflex Blue":     "Refl",
+ "Process Blue":    "PrBlue",
+ "Green":           "Gr",
+ "Black":           "Black",
+ "Black 2":         "Black2",
+ "Black 3":         "Black3",
+ "Black 4":         "Black4",
+ "Black 5":         "Black5",
+ "Black 6":         "Black6",
+ "Black 7":         "Black7",
+ "Warm Gray 1":     "WG1",
+ "Warm Gray 2":     "WG2",
+ "Warm Gray 3":     "WG3",
+ "Warm Gray 4":     "WG4",
+ "Warm Gray 5":     "WG5",
+ "Warm Gray 6":     "WG6",
+ "Warm Gray 7":     "WG7",
+ "Warm Gray 8":     "WG8",
+ "Warm Gray 9":     "WG9",
+ "Warm Gray 10":    "WG10",
+ "Warm Gray 11":    "WG11",
+ "Cool Gray 1":     "CG1",
+ "Cool Gray 2":     "CG2",
+ "Cool Gray 3":     "CG3",
+ "Cool Gray 4":     "CG4",
+ "Cool Gray 5":     "CG5",
+ "Cool Gray 6":     "CG6",
+ "Cool Gray 7":     "CG7",
+ "Cool Gray 8":     "CG8",
+ "Cool Gray 9":     "CG9",
+ "Cool Gray 10":    "CG10",
+ "Cool Gray 11":    "CG11"
+ }
+
+ for (var key in aliases) {
+ if (pantName == key) {
+ return aliases[key];
+ }
+ }
+ return pantName;
+ }
+ */
+
+function getColor (colorName, cmyk, tint) {
+  colorName = colorName || 'Ze_Test';
+  cmyk      = cmyk || [11, 11, 11, 11];
+  tint      = tint || 100;
+
+  var col;
+
+  switch (colorName) {
+    case 'C':
+      col = makeCMYK (cmyk);
+      if (tint) col.cyan = tint;
+      break;
+    case 'M':
+      col = makeCMYK (cmyk);
+      if (tint) col.magenta = tint;
+      break;
+    case 'Y':
+      col = makeCMYK (cmyk);
+      if (tint) col.yellow = tint;
+      break;
+    case 'K':
+      col = makeCMYK (cmyk);
+      if (tint) col.black = tint;
+      break;
+    case 'white':
+      col = makeCMYK ([0, 0, 0, 0]);
+      break;
+    default:
+      col = makeSpot (colorName, cmyk, tint);
+      break;
+  }
+  return col;
+}
+
+function makeSpot (name, cmyk, tint) {
+  tint = tint || 100;
+  name = name || 'Ze_Test';
+  cmyk = cmyk || [11, 11, 11, 11];
+
+  var newSpot, newColor, newSpotColor;
+
+  if (name != 'Vr' && name != 'W' && name != 'Pr') {
+    name = 'PANTONE ' + name + ' C';
+  }
+
+  try {
+    newSpotColor = activeDocument.swatches.getByName (name);
+    return newSpotColor.color;
+  } catch (e) {
+    newSpot      = activeDocument.spots.add ();
+    newColor     = new CMYKColor ();
+    newSpotColor = new SpotColor ();
+
+    newColor.cyan    = cmyk[0];
+    newColor.magenta = cmyk[1];
+    newColor.yellow  = cmyk[2];
+    newColor.black   = cmyk[3];
+
+    newSpot.name      = name;
+    newSpot.colorType = ColorModel.SPOT;
+    newSpot.color     = newColor;
+
+    newSpotColor.spot = newSpot;
+    newSpotColor.tint = tint;
+
+    return newSpotColor;
+  }
+}
+
+function makeCMYK (cmyk) {
+  var col     = new CMYKColor ();
+  col.cyan    = cmyk[0];
+  col.magenta = cmyk[1];
+  col.yellow  = cmyk[2];
+  col.black   = cmyk[3];
+  return col;
+}
+
+function getRegistration () {
+  var tint = 100,
+      name = '[Registration]';
+
+  var newSpot, newColor, newSpotColor;
+
+  try {
+    newSpotColor = activeDocument.swatches.getByName ('[Registration]');
+    return newSpotColor.color;
+  } catch (e) {
+    newSpot      = activeDocument.spots.add ();
+    newColor     = new CMYKColor ();
+    newSpotColor = new SpotColor ();
+
+    newSpot.name      = name;
+    newSpot.colorType = ColorModel.REGISTRATION;
+    newSpot.color     = newColor;
+
+    newSpotColor.spot = newSpot;
+
+    return newSpotColor;
+  }
+}
+
+function getLayByName (name) {
+  if (!documents.length) return;
+  var lay;
+  try {
+    lay = activeDocument.layers.getByName (name);
+  } catch (e) {
+    lay = activeDocument.activeLayer;
+  }
+  return lay;
+}
+
+function addLayer (o/*{o.rgb, o.doc, o.title}*/) {
+  var rgb   = o.rgb || [128, 255, 128];
+  var doc   = o.doc || activeDocument;
+  var title = o.title || 'test';
+
+  var col = new RGBColor ();
+  var lay = o.doc.layers.add ();
+
+  col.red   = rgb[0];
+  col.green = rgb[1];
+  col.blue  = rgb[2];
+
+  lay.name  = title;
+  lay.color = col;
+
+  return lay;
+}
+
+function runAction (actName, setName, actStr) {
+  var f = new File ('~/ScriptAction.aia');
+  f.open ('w');
+  f.write (actStr);
+  f.close ();
+  app.loadAction (f);
+  f.remove ();
+  app.doScript (actName, setName, false); // action name, set name
+  app.unloadAction (setName, ""); // set name
+}
+
+function showObjDeep (obj) {
+  var str    = '{\n';
+  var indent = 1;
+
+  showObj (obj);
+
+  function showObj (obj) {
+
+    for (var key in obj) {
+      if (typeof obj[key] == 'object' /*&& !obj[key].splice*/) {
+        str += addIndent (indent) + key + ':\n';
+        ++indent;
+        showObj (obj[key]);
+      } else {
+        str += addIndent (indent) + key + ': ' + obj[key] + ' [' + typeof obj[key] + '],\n';
+      }
+    }
+    indent--;
+  }
+
+  return str + '}';
+  function addIndent (i) {
+    return new Array (i).join ('_');
+  }
+}
+
+function scrollWin (input) {
+  if (input instanceof Array)     input = input.join ("\r");
+
+  var w    = new Window ("dialog", 'Scrollable alert'),
+      list = w.add ("edittext", undefined, input, {multiline: true, scrolling: true});
+
+  list.maximumSize.height = w.maximumSize.height - 100;
+  list.minimumSize.width  = 600;
+
+  w.add ("button", undefined, "Close", {name: "ok"});
+  w.show ();
+}
+
+/**
+ * calculate top, bottom spasing and the real height of the capital character F
+ *
+ * @param {TextFrameItem} frame - object of the TextFrameItem class
+ * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
+ */
+function calcCharSize (frame) {
+  var txt2meas     = activeDocument.activeLayer.textFrames.add (),
+      fullH,
+      fontMeasures = {};
+
+  // txt2meas.contents                               = frame.contents;
+  txt2meas.contents                               = 'C';
+  txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
+  txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
+
+  var txt2meas_curv = (txt2meas.duplicate ()).createOutline ();
+
+  fullH            = txt2meas.height;
+  fontMeasures.h   = txt2meas_curv.height;
+  fontMeasures.top = Math.abs (txt2meas.position[1] - txt2meas_curv.position[1]);
+  fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
+
+  txt2meas.remove ();
+  txt2meas_curv.remove ();
+
+  return fontMeasures;
+}
