@@ -8,29 +8,6 @@ var PT_TO_MM = 2.834645668;
 var MM_TO_PT = 0.352777778;
 var DISTORS  = 6;
 
-function killCEP () {
-  /**
-   * make bat-file that kill all system processes CEPHTMLEngine.exe
-   */
-  _execFile (
-    Folder.temp.absoluteURI + '/' + 'tasks_kill.bat',
-    'taskkill /IM CEPHTMLEngine.exe /f'
-  );
-  /**
-   * make new file by full path, write to disk with some file contenr, execute file
-   *
-   * @param {String} filePath - FULL path (include file-extension)
-   * @param {String} fileContent - content to new file
-   */
-  function _execFile (filePath, fileContent) {
-    var f = new File (filePath);
-    f.open ('e');
-    f.write (fileContent);
-    f.close ();
-    f.execute ();
-  }
-}
-
 function makeLayout (str) {
   var margTop   = +str.nmb.margTop,
       margBott  = +str.nmb.margBott,
@@ -399,24 +376,23 @@ function makeLayout (str) {
         titleTmplRect[0]
       ]
 
-/*      for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
-        var obj = col[i];
-        if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
-          if (titleWhiteCount == 0) {
-            var tmpTitleDupl                                         = title.duplicate ();
-            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
-            tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
-            tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
-            titleWhiteCount++;
-          }
-        } else {
-          var tmpTitleDupl                                         = title.duplicate ();
-          tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
-          tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
-        }
-      }*/
+      /*      for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
+       var obj = col[i];
+       if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
+       if (titleWhiteCount == 0) {
+       var tmpTitleDupl                                         = title.duplicate ();
+       tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
+       tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
+       tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
+       titleWhiteCount++;
+       }
+       } else {
+       var tmpTitleDupl                                         = title.duplicate ();
+       tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+       tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
+       }
+       }*/
       // title.remove ();
-
 
     }
 

@@ -332,7 +332,7 @@ input[type=checkbox] { cursor: pointer; }
 
 #btnKillCEP { background-position-x: -196px }
 
-#btnHelp { background-position-x: -224px }
+#btn_github { background-position-x : -224px }
 
 /*** COMMON **********************/
 .hidden { display: none; }

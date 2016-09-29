@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <ExtensionList>
-    <Extension Id="com.wk.layout">
+    <Extension Id="com.wk.layout_wk">
         <HostList>
             
             <!-- Illustrator -->

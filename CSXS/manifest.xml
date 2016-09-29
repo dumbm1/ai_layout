@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="5.0"
-                   ExtensionBundleId="com.wk.layout_v042"
-                   ExtensionBundleVersion="0.4.2"
-                   ExtensionBundleName="layout_v042"
+                   ExtensionBundleId="com.wk.layout_wk"
+                   ExtensionBundleVersion="0.5"
+                   ExtensionBundleName="layout_wk"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
         <![CDATA[Marat Shagiev]]>
@@ -13,12 +13,12 @@
     <Legal>
         <![CDATA[Legal stuff...]]>
     </Legal>
-    <Abstract href="#">
-        <![CDATA[This is a flexographic layout to output]]>
+    <Abstract href="https://github.com/dumbm1/ai_layout">
+        <![CDATA[FlexoPrint layout to output]]>
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="com.wk.layout_v042" Version="0.4.2"/>
+        <Extension Id="com.wk.layout_wk" Version="0.5"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -32,7 +32,7 @@
         </RequiredRuntimeList>
     </ExecutionEnvironment>
     <DispatchInfoList>
-        <Extension Id="com.wk.layout_v042">
+        <Extension Id="com.wk.layout_wk">
             <DispatchInfo>
                 <Resources>
                     <MainPath>./index.html</MainPath>
@@ -43,7 +43,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>Layout v0.4.2</Menu>
+                    <Menu>layout_wk 0.5</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
