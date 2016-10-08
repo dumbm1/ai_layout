@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-  <!--<link rel="stylesheet" href="css/fonts.css"/>--> <!--and there I have a piece of shit...-->
+    <!--<link rel="stylesheet" href="css/fonts.css"/>--> <!--and there I have a piece of shit...-->
     <link rel="stylesheet" href="css/topcoat-desktop-dark.min.css"/>
     <link id="hostStyle" rel="stylesheet" href="css/styles.css"/>
     <link id="oayoutStyle" rel="stylesheet" href="css/layout.css"/>
@@ -10,44 +10,44 @@
     <title>layout</title>
     <style type="text/css">
         #engineList {
-          width  : 129px;
-          height : 20px;
-          float  : left;
+            width:  129px;
+            height: 20px;
+            float:  left;
         }
 
         #engineRow {
-          width : 258px;
+            width: 258px;
         }
 
         .col-btn {
-          cursor : pointer;
+            cursor: pointer;
         }
 
         .col-btn:hover {
-          opacity : .7;
+            opacity: .7;
         }
 
         /**
         RAILS SHIFT
         */
         input[type=number].shift {
-          width      : 36px;
-          text-align : center;
+            width:      36px;
+            text-align: center;
         }
 
         .title-label {
-          margin          : 0 4px;
-          text-decoration : underline;
-          height          : 18px;
-          float           : left;
+            margin:          0 4px;
+            text-decoration: underline;
+            height:          18px;
+            float:           left;
         }
 
         .title-label::first-letter {
-          text-transform : capitalize;
+            text-transform: capitalize;
         }
 
         #shift_4 {
-          margin-right : 12px;
+            margin-right: 12px;
         }
     </style>
 </head>
@@ -69,9 +69,13 @@
     <div class="block">
         <div class="row">
             <span class="left-label">film width</span>
-            <input id="filmWidth" class="hostTextarea" type="number">
-            <span class="left-label">layout width</span>
-            <input id="layoutWidth" class="hostTextarea" type="number">
+            <input id="filmWidth" class="hostTextarea" type="number" disabled>
+        </div>
+        <div class="row">
+            <span class="left-label">streams</span>
+            <input id="streams" class="hostTextarea" type="number" min="1">
+            <span class="left-label">stream width</span>
+            <input id="layoutWidth" class="hostTextarea" type="number" step="0.5" min="10">
         </div>
         <div id="engineRow" class="row">
             <select name="engineList" id="engineList" class="hostTextarea">
@@ -94,8 +98,10 @@
             </div>
         </div>
         <div class="row">
-            <span class="left-label">margin left</span> <input id="margLeft" class="hostTextarea" type="number">
-            <span class="left-label">margin right</span> <input id="margRight" class="hostTextarea" type="number">
+            <span class="left-label">margin left</span>
+            <input id="margLeft" class="hostTextarea" type="number" step="0.5" min="0">
+            <span class="left-label">margin right</span>
+            <input id="margRight" class="hostTextarea" type="number" step="0.5" min="0">
         </div>
         <div class="btn-link-div">
             <div class="btn-link">
@@ -103,8 +109,10 @@
             </div>
         </div>
         <div class="row ">
-            <span class="left-label">margin top</span> <input id="margTop" class="hostTextarea" type="number">
-            <span class="left-label">margin bott.</span> <input id="margBott" class="hostTextarea" type="number">
+            <span class="left-label">margin top</span>
+            <input id="margTop" class="hostTextarea" type="number" step="0.5" min="0">
+            <span class="left-label">margin bott.</span>
+            <input id="margBott" class="hostTextarea" type="number" step="0.5" min="0">
         </div>
     </div>
     <div class="sep-horiz"></div>
@@ -117,12 +125,16 @@
             </div>
         </div>
         <div class="row">
-            <span class="left-label">cross width</span> <input id="crossWidth" class="hostTextarea" type="number">
-            <span class="left-label">cross height</span> <input id="crossHeight" class="hostTextarea" type="number">
+            <span class="left-label">cross width</span>
+            <input id="crossWidth" class="hostTextarea" type="number" step="0.5" min="1">
+            <span class="left-label">cross height</span>
+            <input id="crossHeight" class="hostTextarea" type="number" step="0.5" min="1">
         </div>
         <div class="row">
-            <span class="left-label">cross stroke</span> <input id="crossStroke" class="hostTextarea" type="number">
-            <span class="left-label">rail width</span> <input id="railWidth" class="hostTextarea" type="number">
+            <span class="left-label">cross stroke</span>
+            <input id="crossStroke" class="hostTextarea" type="number" step="0.05" min="0.05">
+            <span class="left-label">rail width</span>
+            <input id="railWidth" class="hostTextarea" type="number"  step="0.25" min="2">
         </div>
 
     </div>
@@ -130,17 +142,11 @@
 
     <!--INDENTS-->
     <div class="block">
-        <div class="btn-link-div">
-            <div class="btn-link">
-                <input id="indentChkLink" class="btn-link-chk" type="checkbox" checked="checked">
-            </div>
-        </div>
         <div class="row">
-            <span class="left-label">indent outside</span> <input id="indentOut" class="hostTextarea" type="number">
-            <span class="left-label">indent inside</span> <input id="indentIn" class="hostTextarea" type="number">
+            <span class="left-label">indent inside</span>
+            <input id="indentIn" class="hostTextarea" type="number"  step="0.25" min="0">
         </div>
     </div>
-    <div class="sep-horiz"></div>
 
     <!--COLORS-->
     <div class="block">
@@ -173,9 +179,6 @@
             </div>
         </div>
     </div>
-
-
-    <div class="sep-horiz"></div>
 
     <div class="block">
         <p class="title-label">rails shift:</p>

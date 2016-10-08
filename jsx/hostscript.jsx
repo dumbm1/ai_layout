@@ -22,13 +22,14 @@ function makeLayout (str) {
   _addTestElems (str);
   _delAllUnused ();
 
+
   function _addDoc (opts) {
 
     var docName  = opts.txt.fileName;
     var railW    = +opts.nmb.railWidth;
     var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
     var margHor  = +opts.nmb.margLeft + +(opts.nmb.margRight);
-    var docW     = (+opts.nmb.layoutWidth + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
+    var docW     = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
     var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
     var pres = new DocumentPreset ();
@@ -91,7 +92,7 @@ function makeLayout (str) {
         vr               = lay.pathItems.rectangle (
           plateY,
           (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
-          (+opts.nmb.layoutWidth + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
+          (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
           (+opts.sel.z - 6) * PT_TO_MM
         );
         vr.stroked       = false;
@@ -103,7 +104,7 @@ function makeLayout (str) {
         pr               = lay.pathItems.rectangle (
           plateY,
           (plateX - opts.nmb.indentIn) * PT_TO_MM,
-          (+opts.nmb.layoutWidth + +opts.nmb.indentIn * 2) * PT_TO_MM,
+          (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
           (+opts.sel.z - 6) * PT_TO_MM
         );
         pr.stroked       = false;
@@ -218,7 +219,15 @@ function makeLayout (str) {
     leftGuide.guides = true;
 
     rightGuide          = leftGuide.duplicate ();
-    rightGuide.position = [leftGuide.position[0] + opts.nmb.layoutWidth * PT_TO_MM, leftGuide.position[1]];
+    rightGuide.position = [leftGuide.position[0] + +opts.nmb.layoutWidth * +opts.nmb.streams * PT_TO_MM, leftGuide.position[1]];
+
+    for (var i = 1; i < opts.nmb.streams; i++) {
+      var duplGuide      = leftGuide.duplicate ();
+      duplGuide.position = [
+        (leftGuide.position[0] + +opts.nmb.layoutWidth * i) * PT_TO_MM,
+        leftGuide.position[1]
+      ]
+    }
   }
 
   function _addTestElems (opts) {
@@ -239,7 +248,7 @@ function makeLayout (str) {
     // duplicate the rails to right
     var mainGrCopy      = mainGr.duplicate ();
     mainGrCopy.position = [
-      railGr.position[0] + (+opts.nmb.layoutWidth + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
+      railGr.position[0] + (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
       railGr.position[1]
     ]
 
@@ -725,51 +734,51 @@ function makeLayout (str) {
 function setPantAlias (pantName) {
 
   var aliases = {
-    "Process Yellow" : "PrY",
+    "Process Yellow":  "PrY",
     "Process Magenta": "PrM",
-    "Process Cyan"   : "PrC",
-    "Process Black"  : "PrK",
-    "Yellow 012"     : "012",
-    "Orange 021"     : "021",
-    "Warm Red"       : "WR",
-    "Red 032"        : "032",
-    "Rubine Red"     : "Rub",
-    "Rhodamine Red"  : "Rhod",
-    "Purple"         : "Purp",
-    "Violet"         : "Viol",
-    "Blue 072"       : "072",
-    "Reflex Blue"    : "Refl",
-    "Process Blue"   : "PrBlue",
-    "Green"          : "Gr",
-    "Black"          : "Black",
-    "Black 2"        : "Black2",
-    "Black 3"        : "Black3",
-    "Black 4"        : "Black4",
-    "Black 5"        : "Black5",
-    "Black 6"        : "Black6",
-    "Black 7"        : "Black7",
-    "Warm Gray 1"    : "WG1",
-    "Warm Gray 2"    : "WG2",
-    "Warm Gray 3"    : "WG3",
-    "Warm Gray 4"    : "WG4",
-    "Warm Gray 5"    : "WG5",
-    "Warm Gray 6"    : "WG6",
-    "Warm Gray 7"    : "WG7",
-    "Warm Gray 8"    : "WG8",
-    "Warm Gray 9"    : "WG9",
-    "Warm Gray 10"   : "WG10",
-    "Warm Gray 11"   : "WG11",
-    "Cool Gray 1"    : "CG1",
-    "Cool Gray 2"    : "CG2",
-    "Cool Gray 3"    : "CG3",
-    "Cool Gray 4"    : "CG4",
-    "Cool Gray 5"    : "CG5",
-    "Cool Gray 6"    : "CG6",
-    "Cool Gray 7"    : "CG7",
-    "Cool Gray 8"    : "CG8",
-    "Cool Gray 9"    : "CG9",
-    "Cool Gray 10"   : "CG10",
-    "Cool Gray 11"   : "CG11"
+    "Process Cyan":    "PrC",
+    "Process Black":   "PrK",
+    "Yellow 012":      "012",
+    "Orange 021":      "021",
+    "Warm Red":        "WR",
+    "Red 032":         "032",
+    "Rubine Red":      "Rub",
+    "Rhodamine Red":   "Rhod",
+    "Purple":          "Purp",
+    "Violet":          "Viol",
+    "Blue 072":        "072",
+    "Reflex Blue":     "Refl",
+    "Process Blue":    "PrBlue",
+    "Green":           "Gr",
+    "Black":           "K2",
+    "Black 2":         "Black2",
+    "Black 3":         "Black3",
+    "Black 4":         "Black4",
+    "Black 5":         "Black5",
+    "Black 6":         "Black6",
+    "Black 7":         "Black7",
+    "Warm Gray 1":     "WG1",
+    "Warm Gray 2":     "WG2",
+    "Warm Gray 3":     "WG3",
+    "Warm Gray 4":     "WG4",
+    "Warm Gray 5":     "WG5",
+    "Warm Gray 6":     "WG6",
+    "Warm Gray 7":     "WG7",
+    "Warm Gray 8":     "WG8",
+    "Warm Gray 9":     "WG9",
+    "Warm Gray 10":    "WG10",
+    "Warm Gray 11":    "WG11",
+    "Cool Gray 1":     "CG1",
+    "Cool Gray 2":     "CG2",
+    "Cool Gray 3":     "CG3",
+    "Cool Gray 4":     "CG4",
+    "Cool Gray 5":     "CG5",
+    "Cool Gray 6":     "CG6",
+    "Cool Gray 7":     "CG7",
+    "Cool Gray 8":     "CG8",
+    "Cool Gray 9":     "CG9",
+    "Cool Gray 10":    "CG10",
+    "Cool Gray 11":    "CG11"
   }
 
   for (var key in aliases) {

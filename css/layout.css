@@ -94,7 +94,7 @@ input[type=checkbox] { cursor: pointer; }
 }
 
 #pantList {
-  height:              150px;
+  height:              75px;
   box-sizing:          border-box;
   float:               left;
   border-bottom:       none;
@@ -110,7 +110,7 @@ input[type=checkbox] { cursor: pointer; }
 
 #pantList div {
   width:               300px;
-  height:              150px;
+  height:              75px;
   box-sizing:          border-box;
   overflow-y:          scroll;
   border:              1px solid rgba(0, 0, 0, .4);
@@ -332,7 +332,17 @@ input[type=checkbox] { cursor: pointer; }
 
 #btnKillCEP { background-position-x: -196px }
 
-#btn_github { background-position-x : -224px }
+#btn_github { background-position-x: -224px }
+
+#filmWidth::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+#filmWidth {
+  font-size:   1.1em;
+  font-weight: bold;
+  /*text-align: center;*/
+}
 
 /*** COMMON **********************/
 .hidden { display: none; }
