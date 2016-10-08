@@ -31,8 +31,8 @@
         RAILS SHIFT
         */
         input[type=number].shift {
-            width:      36px;
-            text-align: center;
+            width: 36px;
+            /*text-align: center;*/
         }
 
         .title-label {
@@ -92,61 +92,38 @@
 
     <!--MARGIN-->
     <div class="block">
+        <span class="left-label">Margin:</span>
+
+        <div class="row">
+            <span class="left-label">left/right</span>
+            <input id="margLR" class="hostTextarea" type="number" step="0.5" min="0">
+            <span class="left-label">top/bottom</span>
+            <input id="margTB" class="hostTextarea" type="number" step="0.5" min="0">
+        </div>
         <div class="btn-link-div">
             <div class="btn-link">
                 <input id="margChkHorLink" class="btn-link-chk" type="checkbox" checked="checked">
             </div>
         </div>
-        <div class="row">
-            <span class="left-label">margin left</span>
-            <input id="margLeft" class="hostTextarea" type="number" step="0.5" min="0">
-            <span class="left-label">margin right</span>
-            <input id="margRight" class="hostTextarea" type="number" step="0.5" min="0">
-        </div>
-        <div class="btn-link-div">
-            <div class="btn-link">
-                <input id="margChkVertLink" class="btn-link-chk" type="checkbox" checked="checked">
-            </div>
-        </div>
-        <div class="row ">
-            <span class="left-label">margin top</span>
-            <input id="margTop" class="hostTextarea" type="number" step="0.5" min="0">
-            <span class="left-label">margin bott.</span>
-            <input id="margBott" class="hostTextarea" type="number" step="0.5" min="0">
-        </div>
     </div>
     <div class="sep-horiz"></div>
 
-    <!--CROSS, RAILS-->
+    <!--CROSS, RAILS, INDENTS-->
     <div class="block">
-        <div class="btn-link-div">
-            <div class="btn-link">
-                <input id="crossChkLink" class="btn-link-chk" type="checkbox" checked="checked">
-            </div>
-        </div>
         <div class="row">
-            <span class="left-label">cross width</span>
+            <span class="left-label">cross size</span>
             <input id="crossWidth" class="hostTextarea" type="number" step="0.5" min="1">
-            <span class="left-label">cross height</span>
-            <input id="crossHeight" class="hostTextarea" type="number" step="0.5" min="1">
-        </div>
-        <div class="row">
             <span class="left-label">cross stroke</span>
             <input id="crossStroke" class="hostTextarea" type="number" step="0.05" min="0.05">
-            <span class="left-label">rail width</span>
-            <input id="railWidth" class="hostTextarea" type="number"  step="0.25" min="2">
         </div>
-
-    </div>
-    <div class="sep-horiz"></div>
-
-    <!--INDENTS-->
-    <div class="block">
         <div class="row">
             <span class="left-label">indent inside</span>
-            <input id="indentIn" class="hostTextarea" type="number"  step="0.25" min="0">
+            <input id="indentIn" class="hostTextarea" type="number" step="0.5" min="0">
+            <span class="left-label">rail width</span>
+            <input id="railWidth" class="hostTextarea" type="number" step="0.5" min="2">
         </div>
     </div>
+
 
     <!--COLORS-->
     <div class="block">

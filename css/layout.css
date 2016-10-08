@@ -26,10 +26,11 @@ input {
 }
 
 input[type=number] {
-  float:  left;
-  border: 1px solid rgba(0, 0, 0, .4);
-  height: 20px;
-  width:  55px;
+  float:        left;
+  border:       1px solid rgba(0, 0, 0, .4);
+  height:       20px;
+  width:        55px;
+  padding-left: 3px;
 }
 
 input[type=text] {
@@ -71,6 +72,7 @@ input[type=checkbox] { cursor: pointer; }
   text-align:    right;
   padding-right: 1px;
   box-sizing:    border-box;
+  padding-top:   3px;
 }
 
 .label-marg-dark { background-image: url(../img/margins-labels-dark.svg); }
@@ -272,7 +274,7 @@ input[type=checkbox] { cursor: pointer; }
   border-bottom: none;
   box-sizing:    border-box;
   float:         left;
-  text-align:    center;
+  /*text-align:    center;*/
   font-weight:   bold;
   padding-top:   1px;
   cursor:        pointer;
@@ -339,9 +341,10 @@ input[type=checkbox] { cursor: pointer; }
 }
 
 #filmWidth {
-  font-size:   1.1em;
-  font-weight: bold;
-  /*text-align: center;*/
+  font-size:    1.1em;
+  font-weight:  bold;
+  text-align:   center;
+  padding-left: 0;
 }
 
 /*** COMMON **********************/

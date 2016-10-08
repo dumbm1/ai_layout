@@ -9,10 +9,8 @@ var MM_TO_PT = 0.352777778;
 var DISTORS  = 6;
 
 function makeLayout (str) {
-  var margTop   = +str.nmb.margTop,
-      margBott  = +str.nmb.margBott,
-      margLeft  = +str.nmb.margLeft,
-      margRight = +str.nmb.margRight;
+  var margTB = +str.nmb.margTB,
+      margLR = +str.nmb.margLR;
 
   // scrollWin (showObjDeep (str));
 
@@ -22,13 +20,12 @@ function makeLayout (str) {
   _addTestElems (str);
   _delAllUnused ();
 
-
   function _addDoc (opts) {
 
     var docName  = opts.txt.fileName;
     var railW    = +opts.nmb.railWidth;
-    var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
-    var margHor  = +opts.nmb.margLeft + +(opts.nmb.margRight);
+    var margVert = +opts.nmb.margTB * 2;
+    var margHor  = +opts.nmb.margLR * 2;
     var docW     = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
     var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
@@ -49,7 +46,7 @@ function makeLayout (str) {
     var doc                      = documents.addDocument ('', pres, false);
     // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
     doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
-      (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
+      (+opts.nmb.margLR + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTB * PT_TO_MM
     ];
 
     addLayer ({rgb: [0, 128, 128], doc: doc, title: 'color'});
@@ -203,7 +200,7 @@ function makeLayout (str) {
     topGuide.guides = true;
 
     bottGuide          = topGuide.duplicate ();
-    bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTop + margBott) * PT_TO_MM];
+    bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTB * 2) * PT_TO_MM];
 
     centerGuide          = topGuide.duplicate ();
     centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM]
@@ -326,7 +323,7 @@ function makeLayout (str) {
       labelGr.rotate (90, true);
       labelGr.position = [
         (-opts.nmb.indentIn - opts.nmb.railWidth + 0.5 * +opts.nmb.railWidth / 3  ) * PT_TO_MM - calcCharSize (labelGr.pageItems[0]).top,
-        (-(opts.sel.z - 6 - +opts.nmb.crossHeight) / 2 + 2.5 ) * PT_TO_MM + colorGr.height
+        (-(opts.sel.z - 6 - +opts.nmb.crossWidth) / 2 + 2.5 ) * PT_TO_MM + colorGr.height
       ];
 
       /* for (var l = 0; l < colArr.length; l++) {
@@ -343,10 +340,10 @@ function makeLayout (str) {
       var str           = (opts.txt.fileName).replace (/_/gmi, '  ');
       var title         = titleGr.textFrames.add ();
       var titleTmplRect = [ // top, left, width, height
-        (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossHeight / 2 - 3) * PT_TO_MM,
+        (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
         (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
         opts.nmb.railWidth * PT_TO_MM,
-        ((opts.sel.z - DISTORS) / 2 - opts.nmb.crossHeight - 10) * PT_TO_MM
+        ((opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth - 10) * PT_TO_MM
       ];
       var titleCharSize;
       var titleFrameSize;
@@ -504,7 +501,7 @@ function makeLayout (str) {
 
       crossGr.position = [
         (-opts.nmb.railWidth - opts.nmb.indentIn + (+opts.nmb.railWidth - opts.nmb.crossWidth) / 2 ) * PT_TO_MM,
-        -(+opts.sel.z - DISTORS - opts.nmb.crossHeight) / 2 * PT_TO_MM
+        -(+opts.sel.z - DISTORS - opts.nmb.crossWidth) / 2 * PT_TO_MM
       ]
     }
 

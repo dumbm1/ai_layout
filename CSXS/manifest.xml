@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="5.0"
-                   ExtensionBundleId="com.wk.layout_wk_add_streams"
-                   ExtensionBundleVersion="0.5"
-                   ExtensionBundleName="layout_wk_add_streams"
+<ExtensionManifest Version="4.0"
+                   ExtensionBundleId="com.wk.layout_wk_simplify_input"
+                   ExtensionBundleVersion="0.7"
+                   ExtensionBundleName="layout_wk_simplify_input"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
         <![CDATA[Marat Shagiev]]>
@@ -18,7 +18,7 @@
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="com.wk.layout_wk_add_streams" Version="0.5"/>
+        <Extension Id="com.wk.layout_wk_simplify_input" Version="0.7"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -28,11 +28,11 @@
             <Locale Code="All"/>
         </LocaleList>
         <RequiredRuntimeList>
-            <RequiredRuntime Name="CSXS" Version="5.0"/>
+            <RequiredRuntime Name="CSXS" Version="4.0"/>
         </RequiredRuntimeList>
     </ExecutionEnvironment>
     <DispatchInfoList>
-        <Extension Id="com.wk.layout_wk_add_streams">
+        <Extension Id="com.wk.layout_wk_simplify_input">
             <DispatchInfo>
                 <Resources>
                     <MainPath>./index.html</MainPath>
@@ -43,19 +43,19 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>layout_wk_add_streams 0.5</Menu>
+                    <Menu>layout_wk_simplify_input 0.7</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
-                            <Height>530</Height>
+                            <Height>480</Height>
                         </Size>
                         <MinSize>
                             <Width>320</Width>
-                            <Height>530</Height>
+                            <Height>480</Height>
                         </MinSize>
                         <MaxSize>
                             <Width>320</Width>
-                            <Height>530</Height>
+                            <Height>480</Height>
                         </MaxSize>
                     </Geometry>
                     <Icons>

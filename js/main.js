@@ -134,20 +134,18 @@
       });
       $ ('input').change (function (e) {
         if ($ (this).attr ('id') == 'indentIn' ||
-          $ (this).attr ('id') == 'margLeft' ||
-          $ (this).attr ('id') == 'margRight' ||
+          $ (this).attr ('id') == 'margLR' ||
           $ (this).attr ('id') == 'streams' ||
           $ (this).attr ('id') == 'layoutWidth' ||
           $ (this).attr ('id') == 'railWidth'
         ) {
           ($ ('#filmWidth').val (function () {
             var indentIn_val    = $ ('#indentIn').val (),
-                margLeft_val    = $ ('#margLeft').val (),
-                margRight_val   = $ ('#margRight').val (),
+                margLR_val      = $ ('#margLR').val (),
                 streams_val     = $ ('#streams').val (),
                 railWidth_val   = $ ('#railWidth').val (),
                 layoutWidth_val = $ ('#layoutWidth').val ();
-            return +indentIn_val * 2 + +margLeft_val + +margRight_val + +streams_val * +layoutWidth_val + +railWidth_val * 2;
+            return +indentIn_val * 2 + +margLR_val * 2 + +streams_val * +layoutWidth_val + +railWidth_val * 2;
           }));
         }
       });
@@ -298,18 +296,14 @@
           streams:     1,
           layoutWidth: 300,
 
-          margTop:   10,
-          margBott:  10,
-          margRight: 5,
-          margLeft:  5,
+          margTB: 10,
+          margLR: 5,
 
           crossWidth:  4,
-          crossHeight: 4,
           crossStroke: 0.15,
           railWidth:   4,
 
-          indentOut: 1.5,
-          indentIn:  1.5,
+          indentIn: 1.5,
 
           shift_1: 0,
           shift_2: 0,
