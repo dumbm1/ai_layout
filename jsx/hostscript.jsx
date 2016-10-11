@@ -9,8 +9,10 @@ var MM_TO_PT = 0.352777778;
 var DISTORS  = 6;
 
 function makeLayout (str) {
-  var margTB = +str.nmb.margTB,
-      margLR = +str.nmb.margLR;
+  var margTop   = +str.nmb.margTop,
+      margBott  = +str.nmb.margBott,
+      margLeft  = +str.nmb.margLeft,
+      margRight = +str.nmb.margRight;
 
   // scrollWin (showObjDeep (str));
 
@@ -24,8 +26,8 @@ function makeLayout (str) {
 
     var docName  = opts.txt.fileName;
     var railW    = +opts.nmb.railWidth;
-    var margVert = +opts.nmb.margTB * 2;
-    var margHor  = +opts.nmb.margLR * 2;
+    var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
+    var margHor  = +opts.nmb.margLeft + +(opts.nmb.margRight);
     var docW     = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
     var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
@@ -46,7 +48,7 @@ function makeLayout (str) {
     var doc                      = documents.addDocument ('', pres, false);
     // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
     doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
-      (+opts.nmb.margLR + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTB * PT_TO_MM
+      (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
     ];
 
     addLayer ({rgb: [0, 128, 128], doc: doc, title: 'color'});
@@ -200,7 +202,7 @@ function makeLayout (str) {
     topGuide.guides = true;
 
     bottGuide          = topGuide.duplicate ();
-    bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTB * 2) * PT_TO_MM];
+    bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTop + margBott) * PT_TO_MM];
 
     centerGuide          = topGuide.duplicate ();
     centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM]
@@ -337,7 +339,7 @@ function makeLayout (str) {
 
     function __addTitle (opts, titleGr) {
       var fontSize      = 16;
-      var str           = (opts.txt.fileName).replace (/_/gmi, '  ');
+      var str           = (opts.txt.layoutName).replace (/_/gmi, '  ');
       var title         = titleGr.textFrames.add ();
       var titleTmplRect = [ // top, left, width, height
         (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
@@ -382,23 +384,29 @@ function makeLayout (str) {
         titleTmplRect[0]
       ]
 
-      /*      for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
-       var obj = col[i];
-       if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
-       if (titleWhiteCount == 0) {
-       var tmpTitleDupl                                         = title.duplicate ();
-       tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
-       tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
-       tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
-       titleWhiteCount++;
-       }
-       } else {
-       var tmpTitleDupl                                         = title.duplicate ();
-       tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
-       tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
-       }
-       }*/
-      // title.remove ();
+      for (i = 0; i < opts.col.length; i++) {
+        var obj = opts.col[i];
+        if (obj.name != 'Pr' && obj.name != 'Vr') continue;
+
+        for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
+          var obj = col[i];
+          if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
+            if (titleWhiteCount == 0) {
+              var tmpTitleDupl                                         = title.duplicate ();
+              tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
+              tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
+              tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
+              titleWhiteCount++;
+            }
+          } else {
+            var tmpTitleDupl                                         = title.duplicate ();
+            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+            tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
+          }
+        }
+        title.remove ();
+        break;
+      }
 
     }
 
@@ -731,51 +739,51 @@ function makeLayout (str) {
 function setPantAlias (pantName) {
 
   var aliases = {
-    "Process Yellow":  "PrY",
+    "Process Yellow" : "PrY",
     "Process Magenta": "PrM",
-    "Process Cyan":    "PrC",
-    "Process Black":   "PrK",
-    "Yellow 012":      "012",
-    "Orange 021":      "021",
-    "Warm Red":        "WR",
-    "Red 032":         "032",
-    "Rubine Red":      "Rub",
-    "Rhodamine Red":   "Rhod",
-    "Purple":          "Purp",
-    "Violet":          "Viol",
-    "Blue 072":        "072",
-    "Reflex Blue":     "Refl",
-    "Process Blue":    "PrBlue",
-    "Green":           "Gr",
-    "Black":           "K2",
-    "Black 2":         "Black2",
-    "Black 3":         "Black3",
-    "Black 4":         "Black4",
-    "Black 5":         "Black5",
-    "Black 6":         "Black6",
-    "Black 7":         "Black7",
-    "Warm Gray 1":     "WG1",
-    "Warm Gray 2":     "WG2",
-    "Warm Gray 3":     "WG3",
-    "Warm Gray 4":     "WG4",
-    "Warm Gray 5":     "WG5",
-    "Warm Gray 6":     "WG6",
-    "Warm Gray 7":     "WG7",
-    "Warm Gray 8":     "WG8",
-    "Warm Gray 9":     "WG9",
-    "Warm Gray 10":    "WG10",
-    "Warm Gray 11":    "WG11",
-    "Cool Gray 1":     "CG1",
-    "Cool Gray 2":     "CG2",
-    "Cool Gray 3":     "CG3",
-    "Cool Gray 4":     "CG4",
-    "Cool Gray 5":     "CG5",
-    "Cool Gray 6":     "CG6",
-    "Cool Gray 7":     "CG7",
-    "Cool Gray 8":     "CG8",
-    "Cool Gray 9":     "CG9",
-    "Cool Gray 10":    "CG10",
-    "Cool Gray 11":    "CG11"
+    "Process Cyan"   : "PrC",
+    "Process Black"  : "PrK",
+    "Yellow 012"     : "012",
+    "Orange 021"     : "021",
+    "Warm Red"       : "WR",
+    "Red 032"        : "032",
+    "Rubine Red"     : "Rub",
+    "Rhodamine Red"  : "Rhod",
+    "Purple"         : "Purp",
+    "Violet"         : "Viol",
+    "Blue 072"       : "072",
+    "Reflex Blue"    : "Refl",
+    "Process Blue"   : "PrBlue",
+    "Green"          : "Gr",
+    "Black"          : "K2",
+    "Black 2"        : "Black2",
+    "Black 3"        : "Black3",
+    "Black 4"        : "Black4",
+    "Black 5"        : "Black5",
+    "Black 6"        : "Black6",
+    "Black 7"        : "Black7",
+    "Warm Gray 1"    : "WG1",
+    "Warm Gray 2"    : "WG2",
+    "Warm Gray 3"    : "WG3",
+    "Warm Gray 4"    : "WG4",
+    "Warm Gray 5"    : "WG5",
+    "Warm Gray 6"    : "WG6",
+    "Warm Gray 7"    : "WG7",
+    "Warm Gray 8"    : "WG8",
+    "Warm Gray 9"    : "WG9",
+    "Warm Gray 10"   : "WG10",
+    "Warm Gray 11"   : "WG11",
+    "Cool Gray 1"    : "CG1",
+    "Cool Gray 2"    : "CG2",
+    "Cool Gray 3"    : "CG3",
+    "Cool Gray 4"    : "CG4",
+    "Cool Gray 5"    : "CG5",
+    "Cool Gray 6"    : "CG6",
+    "Cool Gray 7"    : "CG7",
+    "Cool Gray 8"    : "CG8",
+    "Cool Gray 9"    : "CG9",
+    "Cool Gray 10"   : "CG10",
+    "Cool Gray 11"   : "CG11"
   }
 
   for (var key in aliases) {
@@ -1038,8 +1046,12 @@ function calcCharSize (frame) {
       fullH,
       fontMeasures = {};
 
-  // txt2meas.contents                               = frame.contents;
-  txt2meas.contents                               = 'C';
+  if (arguments.length) {
+    txt2meas.contents = frame.contents;
+  } else {
+    txt2meas.contents = 'C';
+  }
+
   txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
   txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
 

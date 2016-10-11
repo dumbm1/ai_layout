@@ -62,6 +62,10 @@
             <span class="left-label">file name:</span>
             <textarea class="hostTextarea" id="fileName"></textarea>
         </div>
+        <div class="row" id="fileNameRow">
+            <span class="left-label">layout name:</span>
+            <textarea class="hostTextarea" id="layoutName"></textarea>
+        </div>
     </div>
     <div class="sep-horiz"></div>
 
@@ -90,20 +94,24 @@
     </div>
     <div class="sep-horiz"></div>
 
-    <!--MARGIN-->
-    <div class="block">
-        <span class="left-label">Margin:</span>
-
-        <div class="row">
-            <span class="left-label">left/right</span>
-            <input id="margLR" class="hostTextarea" type="number" step="0.5" min="0">
-            <span class="left-label">top/bottom</span>
-            <input id="margTB" class="hostTextarea" type="number" step="0.5" min="0">
-        </div>
+ <div class="block">
         <div class="btn-link-div">
             <div class="btn-link">
                 <input id="margChkHorLink" class="btn-link-chk" type="checkbox" checked="checked">
             </div>
+        </div>
+        <div class="row">
+            <span class="left-label">margin left</span> <input id="margLeft" class="hostTextarea" type="number">
+            <span class="left-label">margin right</span> <input id="margRight" class="hostTextarea" type="number">
+        </div>
+        <div class="btn-link-div">
+            <div class="btn-link">
+                <input id="margChkVertLink" class="btn-link-chk" type="checkbox" checked="checked">
+            </div>
+        </div>
+        <div class="row ">
+            <span class="left-label">margin top</span> <input id="margTop" class="hostTextarea" type="number">
+            <span class="left-label">margin bott.</span> <input id="margBott" class="hostTextarea" type="number">
         </div>
     </div>
     <div class="sep-horiz"></div>
@@ -129,7 +137,7 @@
     <div class="block">
         <!--SEARCH PANTONES-->
         <div class="row">
-            <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name">
+            <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">
         </div>
         <!--PANTNE LIST-->
         <div class="row" id="pantList">
