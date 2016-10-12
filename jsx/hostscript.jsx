@@ -21,6 +21,17 @@ function makeLayout (str) {
   _addGuides (str);
   _addTestElems (str);
   _delAllUnused ();
+  (function setZeroPoint () {
+    var d                                                          = activeDocument;
+    d.rulerOrigin                                                  = [
+      d.rulerOrigin[0],
+      d.height - +str.nmb.margTop * PT_TO_MM
+    ];
+    d.artboards[d.artboards.getActiveArtboardIndex ()].rulerOrigin = [
+      d.artboards[d.artboards.getActiveArtboardIndex ()].rulerOrigin[0],
+      str.nmb.margTop * PT_TO_MM
+    ];
+  } ());
 
   function _addDoc (opts) {
 
@@ -227,6 +238,7 @@ function makeLayout (str) {
         leftGuide.position[1]
       ]
     }
+
   }
 
   function _addTestElems (opts) {
@@ -996,6 +1008,39 @@ function runAction (actName, setName, actStr) {
   app.unloadAction (setName, ""); // set name
 }
 
+/**
+ * calculate top, bottom spasing and the real height of the capital character F
+ *
+ * @param {TextFrameItem} frame - object of the TextFrameItem class
+ * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
+ */
+function calcCharSize (frame) {
+  var txt2meas     = activeDocument.activeLayer.textFrames.add (),
+      fullH,
+      fontMeasures = {};
+
+  txt2meas.contents = 'C';
+
+  txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
+  txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
+
+  var txt2meas_curv = (txt2meas.duplicate ()).createOutline ();
+
+  fullH            = txt2meas.height;
+  fontMeasures.h   = txt2meas_curv.height;
+  fontMeasures.top = Math.abs (txt2meas.position[1] - txt2meas_curv.position[1]);
+  fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
+
+  txt2meas.remove ();
+  txt2meas_curv.remove ();
+
+  return fontMeasures;
+}
+
+/**
+ * DEBUG HELPERS
+ * */
+
 function showObjDeep (obj) {
   var str    = '{\n';
   var indent = 1;
@@ -1033,37 +1078,4 @@ function scrollWin (input) {
 
   w.add ("button", undefined, "Close", {name: "ok"});
   w.show ();
-}
-
-/**
- * calculate top, bottom spasing and the real height of the capital character F
- *
- * @param {TextFrameItem} frame - object of the TextFrameItem class
- * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
- */
-function calcCharSize (frame) {
-  var txt2meas     = activeDocument.activeLayer.textFrames.add (),
-      fullH,
-      fontMeasures = {};
-
-  if (arguments.length) {
-    txt2meas.contents = frame.contents;
-  } else {
-    txt2meas.contents = 'C';
-  }
-
-  txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
-  txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
-
-  var txt2meas_curv = (txt2meas.duplicate ()).createOutline ();
-
-  fullH            = txt2meas.height;
-  fontMeasures.h   = txt2meas_curv.height;
-  fontMeasures.top = Math.abs (txt2meas.position[1] - txt2meas_curv.position[1]);
-  fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
-
-  txt2meas.remove ();
-  txt2meas_curv.remove ();
-
-  return fontMeasures;
 }

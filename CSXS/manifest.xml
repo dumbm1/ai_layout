@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="4.0"
-                   ExtensionBundleId="com.wk.layout_wk_lena_correct"
-                   ExtensionBundleVersion="0.7"
-                   ExtensionBundleName="layout_wk_lena_correct"
+                   ExtensionBundleId="com.wk.layout_wk"
+                   ExtensionBundleVersion="0.8"
+                   ExtensionBundleName="layout_wk"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
         <![CDATA[Marat Shagiev]]>
@@ -18,7 +18,7 @@
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="com.wk.layout_wk_lena_correct" Version="0.7"/>
+        <Extension Id="com.wk.layout_wk" Version="0.8"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -32,7 +32,7 @@
         </RequiredRuntimeList>
     </ExecutionEnvironment>
     <DispatchInfoList>
-        <Extension Id="com.wk.layout_wk_lena_correct">
+        <Extension Id="com.wk.layout_wk">
             <DispatchInfo>
                 <Resources>
                     <MainPath>./index.html</MainPath>
@@ -43,7 +43,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>layout_wk_lena_correct 0.7</Menu>
+                    <Menu>layout_wk 0.8</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
