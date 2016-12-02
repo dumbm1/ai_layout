@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="4.0"
                    ExtensionBundleId="com.wk.layout_wk"
-                   ExtensionBundleVersion="0.8"
+                   ExtensionBundleVersion="0.9"
                    ExtensionBundleName="layout_wk"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
@@ -18,7 +18,7 @@
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="com.wk.layout_wk" Version="0.8"/>
+        <Extension Id="com.wk.layout_wk" Version="0.9"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -43,11 +43,11 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>layout_wk 0.8</Menu>
+                    <Menu>layout_wk 0.9</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
-                            <Height>545</Height>
+                            <Height>600</Height>
                         </Size>
                         <MinSize>
                             <Width>320</Width>
@@ -55,7 +55,7 @@
                         </MinSize>
                         <MaxSize>
                             <Width>320</Width>
-                            <Height>600</Height>
+                            <Height>610</Height>
                         </MaxSize>
                     </Geometry>
                     <Icons>

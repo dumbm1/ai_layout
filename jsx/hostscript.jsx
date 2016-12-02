@@ -8,7 +8,7 @@ var PT_TO_MM = 2.834645668;
 var MM_TO_PT = 0.352777778;
 var DISTORS  = 6;
 
-function makeLayout (str) {
+function makeLayout(str) {
   var margTop   = +str.nmb.margTop,
       margBott  = +str.nmb.margBott,
       margLeft  = +str.nmb.margLeft,
@@ -16,24 +16,24 @@ function makeLayout (str) {
 
   // scrollWin (showObjDeep (str));
 
-  _addDoc (str);
-  _showRulers (str);
-  _addGuides (str);
-  _addTestElems (str);
-  _delAllUnused ();
-  (function setZeroPoint () {
-    var d                                                          = activeDocument;
-    d.rulerOrigin                                                  = [
+  _addDoc(str);
+  _showRulers(str);
+  _addGuides(str);
+  _addTestElems(str);
+  _delAllUnused();
+  (function setZeroPoint() {
+    var d                                                         = activeDocument;
+    d.rulerOrigin                                                 = [
       d.rulerOrigin[0],
       d.height - +str.nmb.margTop * PT_TO_MM
     ];
-    d.artboards[d.artboards.getActiveArtboardIndex ()].rulerOrigin = [
-      d.artboards[d.artboards.getActiveArtboardIndex ()].rulerOrigin[0],
+    d.artboards[d.artboards.getActiveArtboardIndex()].rulerOrigin = [
+      d.artboards[d.artboards.getActiveArtboardIndex()].rulerOrigin[0],
       str.nmb.margTop * PT_TO_MM
     ];
-  } ());
+  }());
 
-  function _addDoc (opts) {
+  function _addDoc(opts) {
 
     var docName  = opts.txt.fileName;
     var railW    = +opts.nmb.railWidth;
@@ -42,7 +42,7 @@ function makeLayout (str) {
     var docW     = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
     var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
-    var pres = new DocumentPreset ();
+    var pres = new DocumentPreset();
 
     pres.title            = docName;
     pres.colorMode        = DocumentColorSpace.CMYK;
@@ -56,18 +56,18 @@ function makeLayout (str) {
     // pres.artboardRowsOrCols = 5;
     // pres.transparencyGrid   = DocumentTransparencyGrid.TransparencyGridOrange;
 
-    var doc                      = documents.addDocument ('', pres, false);
+    var doc                      = documents.addDocument('', pres, false);
     // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
     doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
       (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
     ];
 
-    addLayer ({rgb: [0, 128, 128], doc: doc, title: 'color'});
-    __addVrAndPrPlates (opts, doc);
-    addLayer ({rgb: [128, 128, 0], doc: doc, title: 'test'});
-    doc.layers[doc.layers.length - 1].remove ();
+    addLayer({rgb: [0, 128, 128], doc: doc, title: 'color'});
+    __addVrAndPrPlates(opts, doc);
+    addLayer({rgb: [128, 128, 0], doc: doc, title: 'test'});
+    doc.layers[doc.layers.length - 1].remove();
 
-    function __addVrAndPrPlates (opts, doc) {
+    function __addVrAndPrPlates(opts, doc) {
       var colArr = opts.col;
       var sw     = 0;
       var lay, vr, pr;
@@ -83,51 +83,51 @@ function makeLayout (str) {
 
       switch (sw) {
         case 1:
-          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'varnish'});
-          ___addVr ();
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'varnish'});
+          ___addVr();
           break;
         case 2:
-          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'primer'});
-          ___addPr ();
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'primer'});
+          ___addPr();
           break;
         case 3:
-          lay = addLayer ({rgb: [128, 0, 128], doc: doc, title: 'varnish+primer'});
-          ___addVr ();
-          ___addPr ();
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'varnish+primer'});
+          ___addVr();
+          ___addPr();
           break;
         default:
           break;
       }
-      function ___addVr () {
-        vr               = lay.pathItems.rectangle (
-          plateY,
-          (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
-          (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
-          (+opts.sel.z - 6) * PT_TO_MM
-        );
-        vr.stroked       = false;
-        vr.fillColor     = getColor ('Vr', ___getCmyk (opts, 'Vr'), 100);
-        vr.fillOverprint = true;
-      }
-
-      function ___addPr () {
-        pr               = lay.pathItems.rectangle (
+      function ___addVr() {
+        vr               = lay.pathItems.rectangle(
           plateY,
           (plateX - opts.nmb.indentIn) * PT_TO_MM,
           (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
           (+opts.sel.z - 6) * PT_TO_MM
         );
+        vr.stroked       = false;
+        vr.fillColor     = getColor('Vr', ___getCmyk(opts, 'Vr'), 100);
+        vr.fillOverprint = true;
+      }
+
+      function ___addPr() {
+        pr               = lay.pathItems.rectangle(
+          plateY,
+          (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
+          (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
+          (+opts.sel.z - 6) * PT_TO_MM
+        );
         pr.stroked       = false;
-        pr.fillColor     = getColor ('Pr', ___getCmyk (opts, 'Pr'), 100);
+        pr.fillColor     = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
         pr.fillOverprint = true;
       }
 
-      function ___getCmyk (opts, name) {
+      function ___getCmyk(opts, name) {
         var arr = opts.col;
         for (var i = 0; i < arr.length; i++) {
           var obj = arr[i];
           if (obj.name == name) {
-            return obj.cmyk.split (',');
+            return obj.cmyk.split(',');
           }
         }
       }
@@ -135,7 +135,7 @@ function makeLayout (str) {
     }
   }
 
-  function _showRulers () {
+  function _showRulers() {
     var actStr = '/version 3' +
       '/name [ 11' +
       '	53686f772052756c657273' +
@@ -185,13 +185,13 @@ function makeLayout (str) {
       '	}' +
       '}'
 
-    runAction ('Show Rulers', 'Show Rulers', actStr);
+    runAction('Show Rulers', 'Show Rulers', actStr);
   }
 
-  function _addGuides (opts) {
+  function _addGuides(opts) {
 
     var doc  = activeDocument,
-        lay  = getLayByName ('test'),
+        lay  = getLayByName('test'),
         docW = doc.width,
         docH = doc.height;
 
@@ -205,34 +205,34 @@ function makeLayout (str) {
     topX     = -guideBleeds * PT_TO_MM;
     topY     = 0;
     topLen   = docH + guideBleeds * 2 * PT_TO_MM;
-    topGuide = lay.pathItems.add ();
-    topGuide.setEntirePath ([
+    topGuide = lay.pathItems.add();
+    topGuide.setEntirePath([
       [topX, topY],
       [topX + topLen, topY]
     ])
     topGuide.guides = true;
 
-    bottGuide          = topGuide.duplicate ();
+    bottGuide          = topGuide.duplicate();
     bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTop + margBott) * PT_TO_MM];
 
-    centerGuide          = topGuide.duplicate ();
+    centerGuide          = topGuide.duplicate();
     centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM]
 
     leftX     = 0;
     leftY     = -guideBleeds * PT_TO_MM;
     leftLen   = docH + guideBleeds * 2 * PT_TO_MM;
-    leftGuide = lay.pathItems.add ();
-    leftGuide.setEntirePath ([
+    leftGuide = lay.pathItems.add();
+    leftGuide.setEntirePath([
       [leftX, leftY],
       [leftX, leftY + leftLen]
     ])
     leftGuide.guides = true;
 
-    rightGuide          = leftGuide.duplicate ();
+    rightGuide          = leftGuide.duplicate();
     rightGuide.position = [leftGuide.position[0] + +opts.nmb.layoutWidth * +opts.nmb.streams * PT_TO_MM, leftGuide.position[1]];
 
     for (var i = 1; i < opts.nmb.streams; i++) {
-      var duplGuide      = leftGuide.duplicate ();
+      var duplGuide      = leftGuide.duplicate();
       duplGuide.position = [
         (leftGuide.position[0] + +opts.nmb.layoutWidth * i) * PT_TO_MM,
         leftGuide.position[1]
@@ -241,23 +241,23 @@ function makeLayout (str) {
 
   }
 
-  function _addTestElems (opts) {
+  function _addTestElems(opts) {
     var doc      = activeDocument,
-        lay      = getLayByName ('test'),
-        fontName = __getFonts ()[0];
+        lay      = getLayByName('test'),
+        fontName = __getFonts()[0];
 
-    var mainGr  = lay.groupItems.add (),
-        railGr  = mainGr.groupItems.add (),
-        crossGr = mainGr.groupItems.add (),
-        titleGr = lay.groupItems.add ();
+    var mainGr  = lay.groupItems.add(),
+        railGr  = mainGr.groupItems.add(),
+        crossGr = mainGr.groupItems.add(),
+        titleGr = lay.groupItems.add();
 
-    __addRails (opts, railGr);
-    __addCrossGr (opts, crossGr);
-    __addTitle (opts, titleGr);
-    __addColors (opts, titleGr);
+    __addRails(opts, railGr);
+    __addCrossGr(opts, crossGr);
+    __addTitle(opts, titleGr);
+    __addColors(opts, titleGr);
 
     // duplicate the rails to right
-    var mainGrCopy      = mainGr.duplicate ();
+    var mainGrCopy      = mainGr.duplicate();
     mainGrCopy.position = [
       railGr.position[0] + (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
       railGr.position[1]
@@ -266,9 +266,9 @@ function makeLayout (str) {
     /**
      * LIB TO ADD TEST ELEMENTS
      * */
-    function __addColors (opts, titleGr) {
-      var colorGr  = titleGr.groupItems.add ();
-      var labelGr  = colorGr.groupItems.add ();
+    function __addColors(opts, titleGr) {
+      var colorGr  = titleGr.groupItems.add();
+      var labelGr  = colorGr.groupItems.add();
       var fontSize = 20;
       var bgH      = (+opts.nmb.railWidth - +opts.nmb.railWidth / 3) * PT_TO_MM,
           bgW;
@@ -279,24 +279,24 @@ function makeLayout (str) {
 
       for (var i = 0; i < colArr.length; i++) {
         var obj        = colArr[i];
-        var colorLabel = labelGr.textFrames.add ();
+        var colorLabel = labelGr.textFrames.add();
 
-        colorLabel.contents = setPantAlias (obj.name);
+        colorLabel.contents = setPantAlias(obj.name);
         // alert (obj.name.length);
         // colorLabel.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
-        colorLabel.textRange.characterAttributes.textFont       = textFonts.getByName (fontName);
+        colorLabel.textRange.characterAttributes.textFont       = textFonts.getByName(fontName);
         colorLabel.textRange.characterAttributes.capitalization = FontCapsOption.SMALLCAPS;
         colorLabel.textRange.characterAttributes.size           = fontSize;
 
         if (i == 0) {
-          ___tuneCharSize ();
+          ___tuneCharSize();
         }
 
-        if (obj.name.match (/^W(#\d)?$/)) {
-          colorLabel.textRange.characterAttributes.fillColor     = getColor ('white');
+        if (obj.name.match(/^W(#\d)?$/)) {
+          colorLabel.textRange.characterAttributes.fillColor     = getColor('white');
           colorLabel.textRange.characterAttributes.overprintFill = false;
         } else {
-          colorLabel.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+          colorLabel.textRange.characterAttributes.fillColor     = getColor(obj.name, obj.cmyk.split(','), 100);
           colorLabel.textRange.characterAttributes.overprintFill = true;
         }
 
@@ -304,39 +304,39 @@ function makeLayout (str) {
         labelX += colorLabel.width;
       }
 
-      function ___tuneCharSize () {
+      function ___tuneCharSize() {
         // tune the label to bg
-        var lblHeight = calcCharSize (colorLabel).h;
+        var lblHeight = calcCharSize(colorLabel).h;
         while (lblHeight > bgH) {
           fontSize -= 0.1;
           colorLabel.textRange.characterAttributes.size = fontSize;
-          lblHeight                                     = calcCharSize (colorLabel).h;
+          lblHeight                                     = calcCharSize(colorLabel).h;
         }
       }
 
-      labelGr.position = [0, calcCharSize (labelGr.pageItems[0]).top];
+      labelGr.position = [0, calcCharSize(labelGr.pageItems[0]).top];
 
-      var colBg = (function addColorBg () {
+      var colBg = (function addColorBg() {
         bgW             = labelGr.width;
-        var colBg       = labelGr.pathItems.rectangle (0, 0, bgW, bgH);
+        var colBg       = labelGr.pathItems.rectangle(0, 0, bgW, bgH);
         colBg.stroked   = false;
-        colBg.fillColor = getColor ('white');
+        colBg.fillColor = getColor('white');
 
         for (var j = 0; j < colArr.length; j++) {
           var col = colArr[j];
           if (col.name == 'W') {
-            colBg.fillColor = getColor ('W', col.cmyk.split (','), 100);
+            colBg.fillColor = getColor('W', col.cmyk.split(','), 100);
           }
         }
 
-        colBg.move (labelGr, ElementPlacement.PLACEATEND);
+        colBg.move(labelGr, ElementPlacement.PLACEATEND);
         return colBg;
 
-      } ());
+      }());
 
-      labelGr.rotate (90, true);
+      labelGr.rotate(90, true);
       labelGr.position = [
-        (-opts.nmb.indentIn - opts.nmb.railWidth + 0.5 * +opts.nmb.railWidth / 3  ) * PT_TO_MM - calcCharSize (labelGr.pageItems[0]).top,
+        (-opts.nmb.indentIn - opts.nmb.railWidth + 0.5 * +opts.nmb.railWidth / 3  ) * PT_TO_MM - calcCharSize(labelGr.pageItems[0]).top,
         (-(opts.sel.z - 6 - +opts.nmb.crossWidth) / 2 + 2.5 ) * PT_TO_MM + colorGr.height
       ];
 
@@ -349,10 +349,10 @@ function makeLayout (str) {
        }*/
     }
 
-    function __addTitle (opts, titleGr) {
+    function __addTitle(opts, titleGr) {
       var fontSize      = 16;
-      var str           = (opts.txt.layoutName).replace (/_/gmi, '  ');
-      var title         = titleGr.textFrames.add ();
+      var str           = (opts.txt.layoutName).replace(/_/gmi, '  ');
+      var title         = titleGr.textFrames.add();
       var titleTmplRect = [ // top, left, width, height
         (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
         (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
@@ -368,31 +368,31 @@ function makeLayout (str) {
 
       title.contents                                        = str;
       title.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
-      title.textRange.characterAttributes.textFont          = textFonts.getByName (fontName);
+      title.textRange.characterAttributes.textFont          = textFonts.getByName(fontName);
       title.textRange.characterAttributes.size              = fontSize;
       title.textRange.characterAttributes.capitalization    = FontCapsOption.ALLCAPS;
 
-      title.textRange.characterAttributes.fillColor     = getRegistration ();
+      title.textRange.characterAttributes.fillColor     = getRegistration();
       title.textRange.characterAttributes.overprintFill = true;
 
-      title.rotate (90, true);
+      title.rotate(90, true);
 
       // tune text frame width
-      while (calcCharSize (title).h * MM_TO_PT > opts.nmb.railWidth - 1) {
+      while (calcCharSize(title).h * MM_TO_PT > opts.nmb.railWidth - 1) {
         fontSize -= 0.1;
         title.textRange.characterAttributes.size = fontSize;
       }
       // tune text frame height
-      while (__getFrameSize (title)[3] > titleTmplRect[3]) {
+      while (__getFrameSize(title)[3] > titleTmplRect[3]) {
         fontSize -= 0.1;
         title.textRange.characterAttributes.size = fontSize;
       }
 
-      titleCharSize  = calcCharSize (title);
-      titleFrameSize = __getFrameSize (title);
+      titleCharSize  = calcCharSize(title);
+      titleFrameSize = __getFrameSize(title);
 
       title.position = [
-        titleTmplRect[1] - calcCharSize (title).top + (  +opts.nmb.railWidth * PT_TO_MM - calcCharSize (title).h ) / 2,
+        titleTmplRect[1] - calcCharSize(title).top + (  +opts.nmb.railWidth * PT_TO_MM - calcCharSize(title).h ) / 2,
         titleTmplRect[0]
       ]
 
@@ -402,45 +402,49 @@ function makeLayout (str) {
 
         for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
           var obj = col[i];
-          if (obj.name.match (/^Pr(#\d)?/) || obj.name.match (/^Vr(#\d)?/)) {
+          if (obj.name.match(/^Pr(#\d)?$/) || obj.name.match(/^Vr(#\d)?/)) { // !!! Pr - primer but no Process colors
             if (titleWhiteCount == 0) {
-              var tmpTitleDupl                                         = title.duplicate ();
-              tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor ('white');
+              var tmpTitleDupl = title.duplicate();
+
+              tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor('white');
               tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
-              tmpTitleDupl.move (titleGr, ElementPlacement.PLACEATEND);
+              tmpTitleDupl.move(titleGr, ElementPlacement.PLACEATEND);
               titleWhiteCount++;
             }
           } else {
-            var tmpTitleDupl                                         = title.duplicate ();
-            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor (obj.name, obj.cmyk.split (','), 100);
+            var tmpTitleDupl = title.duplicate();
+
+            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor(obj.name, obj.cmyk.split(','), 100);
             tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
           }
         }
-        title.remove ();
+        title.remove();
         break;
       }
 
     }
 
-    function __addRails (opts, railGr) {
+    function __addRails(opts, railGr) {
       var arr         = opts.col;
       var shift_count = 1;
 
       for (var i = 0; i < arr.length; i++) {
         var obj = arr[i];
 
-        if (obj.name == 'Vr') continue;
+        if (obj.name == 'Pr') continue;
 
-        var rail    = railGr.pathItems.rectangle (
-          -opts.nmb['shift_' + shift_count] * PT_TO_MM, (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
-          opts.nmb.railWidth * PT_TO_MM, (opts.sel.z - DISTORS) * PT_TO_MM
+        var rail    = railGr.pathItems.rectangle(
+          opts.nmb['shift_' + shift_count] * PT_TO_MM,
+          (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+          opts.nmb.railWidth * PT_TO_MM,
+          (opts.sel.z - DISTORS) * PT_TO_MM
         );
         rail.name   = 'rail_' + obj.name;
-        var cmykArr = obj.cmyk.split (',');
-        if (obj.name.match (/^Pr(#\d)?$/)) {
-          rail.fillColor = getColor (obj.name, cmykArr, 100);
+        var cmykArr = obj.cmyk.split(',');
+        if (obj.name.match(/^Vr(#\d)?$/)) {
+          rail.fillColor = getColor(obj.name, cmykArr, 100);
         } else {
-          rail.fillColor = getColor (obj.name, cmykArr, 20);
+          rail.fillColor = getColor(obj.name, cmykArr, 20);
         }
 
         rail.stroked       = false;
@@ -450,7 +454,7 @@ function makeLayout (str) {
       }
     }
 
-    function __addCrossGr (opts, crossGr) {
+    function __addCrossGr(opts, crossGr) {
       var arr                = opts.col;
       var DBL_STROKE         = 2;
       var scale_count_main   = 0;
@@ -458,7 +462,7 @@ function makeLayout (str) {
       var scale_fact_main    = 90;
       var scale_fact_ground  = 85;
 
-      var crossBg     = crossGr.pathItems.ellipse (
+      var crossBg     = crossGr.pathItems.ellipse(
         +opts.nmb.crossWidth * PT_TO_MM,
         -opts.nmb.crossWidth * PT_TO_MM / 2,
         +opts.nmb.crossWidth * PT_TO_MM,
@@ -469,49 +473,49 @@ function makeLayout (str) {
       for (var k = 0; k < arr.length; k++) {
         var obj = arr[k];
 
-        var lineGr = crossGr.groupItems.add ();
-        var line   = lineGr.pathItems.add ();
+        var lineGr = crossGr.groupItems.add();
+        var line   = lineGr.pathItems.add();
 
         line.filled          = false;
         line.stroked         = true;
         line.strokeOverprint = true;
 
         if (
-          obj.name.match (/^Vr(#\d)?$/) ||
-          obj.name.match (/^W(#\d)?$/) ||
-          obj.name.match (/^Pr(#\d)?$/)
+          obj.name.match(/^Vr(#\d)?$/) ||
+          obj.name.match(/^W(#\d)?$/) ||
+          obj.name.match(/^Pr(#\d)?$/)
         ) {
           line.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM * 2.5;
         } else {
           line.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
         }
 
-        var cmykArr      = obj.cmyk.split (',');
-        line.strokeColor = getColor (obj.name, cmykArr, 100);
+        var cmykArr      = obj.cmyk.split(',');
+        line.strokeColor = getColor(obj.name, cmykArr, 100);
 
-        line.setEntirePath ([
+        line.setEntirePath([
           [0, 0],
           [0, +opts.nmb.crossWidth * PT_TO_MM]
         ]);
 
-        var lineClon = line.duplicate ();
-        lineClon.rotate (90, true, undefined, undefined, undefined, Transformation.CENTER);
+        var lineClon = line.duplicate();
+        lineClon.rotate(90, true, undefined, undefined, undefined, Transformation.CENTER);
         lineGr.name = 'cross_' + obj.name;
 
-        if (obj.name.match (/^W$/)) {
-          lineGr.move (crossBg, ElementPlacement.PLACEBEFORE);
+        if (obj.name.match(/^W$/)) {
+          lineGr.move(crossBg, ElementPlacement.PLACEBEFORE);
           continue;
-        } else if (obj.name.match (/^W(#\d)$/) || obj.name.match (/^Vr(#\d)?$/) || obj.name.match (/^Pr(#\d)?$/)) {
-          lineGr.move (crossBg, ElementPlacement.PLACEBEFORE);
+        } else if (obj.name.match(/^W(#\d)$/) || obj.name.match(/^Vr(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) {
+          lineGr.move(crossBg, ElementPlacement.PLACEBEFORE);
           if (scale_fact_ground > 0) {
-            lineGr.resize (scale_fact_ground, scale_fact_ground, true, false, false, false, undefined, Transformation.CENTER);
+            lineGr.resize(scale_fact_ground, scale_fact_ground, true, false, false, false, undefined, Transformation.CENTER);
           }
           scale_count_ground++;
           scale_fact_ground -= 15;
           continue;
         } else {
           if (scale_count_main > 2) {
-            lineGr.resize (scale_fact_main, scale_fact_main, true, false, false, false, undefined, Transformation.CENTER);
+            lineGr.resize(scale_fact_main, scale_fact_main, true, false, false, false, undefined, Transformation.CENTER);
             scale_fact_main -= 10;
           }
           scale_count_main++;
@@ -530,7 +534,7 @@ function makeLayout (str) {
      *
      * @return {Array} fonts - available bold fonts
      */
-    function __getFonts () {
+    function __getFonts() {
       var fonts       = [],
           fontsCommon = [
             'MyriadPro-BoldCond', 'MyriadPro-Black', 'MyriadPro-Bold', 'Monaco-Bold',
@@ -544,23 +548,23 @@ function makeLayout (str) {
             'Verdana-Bold'
           ]
 
-// записать шрифты с поддержкой всех символов логических операций в массив
+      // записать шрифты с поддержкой всех символов логических операций в массив
       for (var i = 0; i < fontsCommon.length; i++) {
         try {
-          fonts.push ((textFonts.getByName (fontsCommon[i]).name));
+          fonts.push((textFonts.getByName(fontsCommon[i]).name));
         } catch (e) {
         }
       }
       return fonts;
     }
 
-    function __getFrameSize (frame) { // top, left, width, height
+    function __getFrameSize(frame) { // top, left, width, height
       return [frame.position[1], frame.position[0], frame.width, frame.height];
     }
   }
 
-  function _delAllUnused () {
-    activeDocument.swatchGroups[1].remove ();
+  function _delAllUnused() {
+    activeDocument.swatchGroups[1].remove();
 
     var str = '/version 3' +
       '/name [ 12' +
@@ -741,68 +745,68 @@ function makeLayout (str) {
       '		}' +
       '	}' +
       '}';
-    runAction ('delAllUnused', 'delAllUnused', str);
+    runAction('delAllUnused', 'delAllUnused', str);
   }
 }
 
 /**
  * COMMON LIB
  * */
-function setPantAlias (pantName) {
+function setPantAlias(pantName) {
 
   var aliases = {
-    "Process Yellow" : "PrY",
+    "Process Yellow":  "PrY",
     "Process Magenta": "PrM",
-    "Process Cyan"   : "PrC",
-    "Process Black"  : "PrK",
-    "Yellow 012"     : "012",
-    "Orange 021"     : "021",
-    "Warm Red"       : "WR",
-    "Red 032"        : "032",
-    "Rubine Red"     : "Rub",
-    "Rhodamine Red"  : "Rhod",
-    "Purple"         : "Purp",
-    "Violet"         : "Viol",
-    "Blue 072"       : "072",
-    "Reflex Blue"    : "Refl",
-    "Process Blue"   : "PrBlue",
-    "Green"          : "Gr",
-    "Black"          : "K2",
-    "Black 2"        : "Black2",
-    "Black 3"        : "Black3",
-    "Black 4"        : "Black4",
-    "Black 5"        : "Black5",
-    "Black 6"        : "Black6",
-    "Black 7"        : "Black7",
-    "Warm Gray 1"    : "WG1",
-    "Warm Gray 2"    : "WG2",
-    "Warm Gray 3"    : "WG3",
-    "Warm Gray 4"    : "WG4",
-    "Warm Gray 5"    : "WG5",
-    "Warm Gray 6"    : "WG6",
-    "Warm Gray 7"    : "WG7",
-    "Warm Gray 8"    : "WG8",
-    "Warm Gray 9"    : "WG9",
-    "Warm Gray 10"   : "WG10",
-    "Warm Gray 11"   : "WG11",
-    "Cool Gray 1"    : "CG1",
-    "Cool Gray 2"    : "CG2",
-    "Cool Gray 3"    : "CG3",
-    "Cool Gray 4"    : "CG4",
-    "Cool Gray 5"    : "CG5",
-    "Cool Gray 6"    : "CG6",
-    "Cool Gray 7"    : "CG7",
-    "Cool Gray 8"    : "CG8",
-    "Cool Gray 9"    : "CG9",
-    "Cool Gray 10"   : "CG10",
-    "Cool Gray 11"   : "CG11"
+    "Process Cyan":    "PrC",
+    "Process Black":   "PrK",
+    "Yellow 012":      "012",
+    "Orange 021":      "021",
+    "Warm Red":        "WR",
+    "Red 032":         "032",
+    "Rubine Red":      "Rub",
+    "Rhodamine Red":   "Rhod",
+    "Purple":          "Purp",
+    "Violet":          "Viol",
+    "Blue 072":        "072",
+    "Reflex Blue":     "Refl",
+    "Process Blue":    "PrBlue",
+    "Green":           "Gr",
+    "Black":           "K2",
+    "Black 2":         "Black2",
+    "Black 3":         "Black3",
+    "Black 4":         "Black4",
+    "Black 5":         "Black5",
+    "Black 6":         "Black6",
+    "Black 7":         "Black7",
+    "Warm Gray 1":     "WG1",
+    "Warm Gray 2":     "WG2",
+    "Warm Gray 3":     "WG3",
+    "Warm Gray 4":     "WG4",
+    "Warm Gray 5":     "WG5",
+    "Warm Gray 6":     "WG6",
+    "Warm Gray 7":     "WG7",
+    "Warm Gray 8":     "WG8",
+    "Warm Gray 9":     "WG9",
+    "Warm Gray 10":    "WG10",
+    "Warm Gray 11":    "WG11",
+    "Cool Gray 1":     "CG1",
+    "Cool Gray 2":     "CG2",
+    "Cool Gray 3":     "CG3",
+    "Cool Gray 4":     "CG4",
+    "Cool Gray 5":     "CG5",
+    "Cool Gray 6":     "CG6",
+    "Cool Gray 7":     "CG7",
+    "Cool Gray 8":     "CG8",
+    "Cool Gray 9":     "CG9",
+    "Cool Gray 10":    "CG10",
+    "Cool Gray 11":    "CG11"
   }
 
   for (var key in aliases) {
     if (pantName == key) return aliases[key];
 
-    if (pantName.match (key)) {
-      return aliases[key] + pantName.slice (-2);
+    if (pantName.match(key)) {
+      return aliases[key] + pantName.slice(-2);
     }
   }
   return pantName;
@@ -866,7 +870,7 @@ function setPantAlias (pantName) {
  }
  */
 
-function getColor (colorName, cmyk, tint) {
+function getColor(colorName, cmyk, tint) {
   colorName = colorName || 'Ze_Test';
   cmyk      = cmyk || [11, 11, 11, 11];
   tint      = tint || 100;
@@ -875,32 +879,32 @@ function getColor (colorName, cmyk, tint) {
 
   switch (colorName) {
     case 'C':
-      col = makeCMYK (cmyk);
+      col = makeCMYK(cmyk);
       if (tint) col.cyan = tint;
       break;
     case 'M':
-      col = makeCMYK (cmyk);
+      col = makeCMYK(cmyk);
       if (tint) col.magenta = tint;
       break;
     case 'Y':
-      col = makeCMYK (cmyk);
+      col = makeCMYK(cmyk);
       if (tint) col.yellow = tint;
       break;
     case 'K':
-      col = makeCMYK (cmyk);
+      col = makeCMYK(cmyk);
       if (tint) col.black = tint;
       break;
     case 'white':
-      col = makeCMYK ([0, 0, 0, 0]);
+      col = makeCMYK([0, 0, 0, 0]);
       break;
     default:
-      col = makeSpot (colorName, cmyk, tint);
+      col = makeSpot(colorName, cmyk, tint);
       break;
   }
   return col;
 }
 
-function makeSpot (name, cmyk, tint) {
+function makeSpot(name, cmyk, tint) {
   tint = tint || 100;
   name = name || 'Ze_Test';
   cmyk = cmyk || [11, 11, 11, 11];
@@ -912,12 +916,12 @@ function makeSpot (name, cmyk, tint) {
   }
 
   try {
-    newSpotColor = activeDocument.swatches.getByName (name);
+    newSpotColor = activeDocument.swatches.getByName(name);
     return newSpotColor.color;
   } catch (e) {
-    newSpot      = activeDocument.spots.add ();
-    newColor     = new CMYKColor ();
-    newSpotColor = new SpotColor ();
+    newSpot      = activeDocument.spots.add();
+    newColor     = new CMYKColor();
+    newSpotColor = new SpotColor();
 
     newColor.cyan    = cmyk[0];
     newColor.magenta = cmyk[1];
@@ -935,8 +939,8 @@ function makeSpot (name, cmyk, tint) {
   }
 }
 
-function makeCMYK (cmyk) {
-  var col     = new CMYKColor ();
+function makeCMYK(cmyk) {
+  var col     = new CMYKColor();
   col.cyan    = cmyk[0];
   col.magenta = cmyk[1];
   col.yellow  = cmyk[2];
@@ -944,19 +948,19 @@ function makeCMYK (cmyk) {
   return col;
 }
 
-function getRegistration () {
+function getRegistration() {
   var tint = 100,
       name = '[Registration]';
 
   var newSpot, newColor, newSpotColor;
 
   try {
-    newSpotColor = activeDocument.swatches.getByName ('[Registration]');
+    newSpotColor = activeDocument.swatches.getByName('[Registration]');
     return newSpotColor.color;
   } catch (e) {
-    newSpot      = activeDocument.spots.add ();
-    newColor     = new CMYKColor ();
-    newSpotColor = new SpotColor ();
+    newSpot      = activeDocument.spots.add();
+    newColor     = new CMYKColor();
+    newSpotColor = new SpotColor();
 
     newSpot.name      = name;
     newSpot.colorType = ColorModel.REGISTRATION;
@@ -968,24 +972,24 @@ function getRegistration () {
   }
 }
 
-function getLayByName (name) {
+function getLayByName(name) {
   if (!documents.length) return;
   var lay;
   try {
-    lay = activeDocument.layers.getByName (name);
+    lay = activeDocument.layers.getByName(name);
   } catch (e) {
     lay = activeDocument.activeLayer;
   }
   return lay;
 }
 
-function addLayer (o/*{o.rgb, o.doc, o.title}*/) {
+function addLayer(o/*{o.rgb, o.doc, o.title}*/) {
   var rgb   = o.rgb || [128, 255, 128];
   var doc   = o.doc || activeDocument;
   var title = o.title || 'test';
 
-  var col = new RGBColor ();
-  var lay = o.doc.layers.add ();
+  var col = new RGBColor();
+  var lay = o.doc.layers.add();
 
   col.red   = rgb[0];
   col.green = rgb[1];
@@ -997,15 +1001,15 @@ function addLayer (o/*{o.rgb, o.doc, o.title}*/) {
   return lay;
 }
 
-function runAction (actName, setName, actStr) {
-  var f = new File ('~/ScriptAction.aia');
-  f.open ('w');
-  f.write (actStr);
-  f.close ();
-  app.loadAction (f);
-  f.remove ();
-  app.doScript (actName, setName, false); // action name, set name
-  app.unloadAction (setName, ""); // set name
+function runAction(actName, setName, actStr) {
+  var f = new File('~/ScriptAction.aia');
+  f.open('w');
+  f.write(actStr);
+  f.close();
+  app.loadAction(f);
+  f.remove();
+  app.doScript(actName, setName, false); // action name, set name
+  app.unloadAction(setName, ""); // set name
 }
 
 /**
@@ -1014,8 +1018,8 @@ function runAction (actName, setName, actStr) {
  * @param {TextFrameItem} frame - object of the TextFrameItem class
  * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
  */
-function calcCharSize (frame) {
-  var txt2meas     = activeDocument.activeLayer.textFrames.add (),
+function calcCharSize(frame) {
+  var txt2meas     = activeDocument.activeLayer.textFrames.add(),
       fullH,
       fontMeasures = {};
 
@@ -1024,15 +1028,15 @@ function calcCharSize (frame) {
   txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
   txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
 
-  var txt2meas_curv = (txt2meas.duplicate ()).createOutline ();
+  var txt2meas_curv = (txt2meas.duplicate()).createOutline();
 
   fullH            = txt2meas.height;
   fontMeasures.h   = txt2meas_curv.height;
-  fontMeasures.top = Math.abs (txt2meas.position[1] - txt2meas_curv.position[1]);
+  fontMeasures.top = Math.abs(txt2meas.position[1] - txt2meas_curv.position[1]);
   fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
 
-  txt2meas.remove ();
-  txt2meas_curv.remove ();
+  txt2meas.remove();
+  txt2meas_curv.remove();
 
   return fontMeasures;
 }
@@ -1041,41 +1045,41 @@ function calcCharSize (frame) {
  * DEBUG HELPERS
  * */
 
-function showObjDeep (obj) {
+function showObjDeep(obj) {
   var str    = '{\n';
   var indent = 1;
 
-  showObj (obj);
+  showObj(obj);
 
-  function showObj (obj) {
+  function showObj(obj) {
 
     for (var key in obj) {
       if (typeof obj[key] == 'object' /*&& !obj[key].splice*/) {
-        str += addIndent (indent) + key + ':\n';
+        str += addIndent(indent) + key + ':\n';
         ++indent;
-        showObj (obj[key]);
+        showObj(obj[key]);
       } else {
-        str += addIndent (indent) + key + ': ' + obj[key] + ' [' + typeof obj[key] + '],\n';
+        str += addIndent(indent) + key + ': ' + obj[key] + ' [' + typeof obj[key] + '],\n';
       }
     }
     indent--;
   }
 
   return str + '}';
-  function addIndent (i) {
-    return new Array (i).join ('_');
+  function addIndent(i) {
+    return new Array(i).join('_');
   }
 }
 
-function scrollWin (input) {
-  if (input instanceof Array)     input = input.join ("\r");
+function scrollWin(input) {
+  if (input instanceof Array)     input = input.join("\r");
 
-  var w    = new Window ("dialog", 'Scrollable alert'),
-      list = w.add ("edittext", undefined, input, {multiline: true, scrolling: true});
+  var w    = new Window("dialog", 'Scrollable alert'),
+      list = w.add("edittext", undefined, input, {multiline: true, scrolling: true});
 
   list.maximumSize.height = w.maximumSize.height - 100;
   list.minimumSize.width  = 600;
 
-  w.add ("button", undefined, "Close", {name: "ok"});
-  w.show ();
+  w.add("button", undefined, "Close", {name: "ok"});
+  w.show();
 }

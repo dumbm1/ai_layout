@@ -57,7 +57,7 @@
     }
 
     function addLayout () {
-      var sorryMessage = 'Sorry. This element is in development..';
+      var sorryMessage = 'In development..';
       var pantBook     = makePantoneBook ();
       addPantList (pantBook);
       searchPantByName ();
