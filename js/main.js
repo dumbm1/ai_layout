@@ -291,7 +291,7 @@
           {name: "Y", color: "black", bg: "yellow", cmyk: "0,0,100,0"},
           {name: "K", color: "white", bg: "black", cmyk: "0,0,0,100"},
           {name: "W", color: "black", bg: "rgb(128, 128, 255)", cmyk: "50,50,0,0"},
-          // {name: "Vr", color: "black", bg: "rgb(255, 128, 128)", cmyk: "0,50,50,0"},
+          // {name: "L", color: "black", bg: "rgb(255, 128, 128)", cmyk: "0,50,50,0"},
           // {name: "Pr", color: "black", bg: "rgb(128, 255, 128)", cmyk: "50,0,50,0"},
         ];
       }
@@ -653,7 +653,7 @@
           " M"              : "0,100,0,0",
           " Y"              : "0,0,100,0",
           " K"              : "0,0,0,100",
-          " Vr"             : "0,50,50,0",
+          " L"             : "0,50,50,0",
           " Process Yellow" : "0,0,100,0",
           " Process Magenta": "0,100,0,0",
           " Process Cyan"   : "100,0,0,0",

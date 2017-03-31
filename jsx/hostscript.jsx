@@ -76,8 +76,8 @@ function makeLayout(str) {
 
       for (var i = 0; i < colArr.length; i++) {
         var obj = colArr[i];
-        // if (obj.name != 'Vr' && obj.name != 'Pr') continue;
-        if (obj.name == 'Vr') sw += 1;
+        // if (obj.name != 'L' && obj.name != 'Pr') continue;
+        if (obj.name == 'L') sw += 1;
         if (obj.name == 'Pr') sw += 2;
       }
 
@@ -106,7 +106,7 @@ function makeLayout(str) {
           (+opts.sel.z - 6) * PT_TO_MM
         );
         vr.stroked       = false;
-        vr.fillColor     = getColor('Vr', ___getCmyk(opts, 'Vr'), 100);
+        vr.fillColor     = getColor('L', ___getCmyk(opts, 'L'), 100);
         vr.fillOverprint = true;
       }
 
@@ -398,11 +398,11 @@ function makeLayout(str) {
 
       for (i = 0; i < opts.col.length; i++) {
         var obj = opts.col[i];
-        if (obj.name != 'Pr' && obj.name != 'Vr') continue;
+        if (obj.name != 'Pr' && obj.name != 'L') continue;
 
         for (var i = 0, titleWhiteCount = 0; i < col.length; i++) {
           var obj = col[i];
-          if (obj.name.match(/^Pr(#\d)?$/) || obj.name.match(/^Vr(#\d)?/)) { // !!! Pr - primer but no Process colors
+          if (obj.name.match(/^Pr(#\d)?$/) || obj.name.match(/^L(#\d)?/)) { // !!! Pr - primer but no Process colors
             if (titleWhiteCount == 0) {
               var tmpTitleDupl = title.duplicate();
 
@@ -441,7 +441,7 @@ function makeLayout(str) {
         );
         rail.name   = 'rail_' + obj.name;
         var cmykArr = obj.cmyk.split(',');
-        if (obj.name.match(/^Vr(#\d)?$/)) {
+        if (obj.name.match(/^L(#\d)?$/)) {
           rail.fillColor = getColor(obj.name, cmykArr, 100);
         } else {
           rail.fillColor = getColor(obj.name, cmykArr, 20);
@@ -481,7 +481,7 @@ function makeLayout(str) {
         line.strokeOverprint = true;
 
         if (
-          obj.name.match(/^Vr(#\d)?$/) ||
+          obj.name.match(/^L(#\d)?$/) ||
           obj.name.match(/^W(#\d)?$/) ||
           obj.name.match(/^Pr(#\d)?$/)
         ) {
@@ -505,7 +505,7 @@ function makeLayout(str) {
         if (obj.name.match(/^W$/)) {
           lineGr.move(crossBg, ElementPlacement.PLACEBEFORE);
           continue;
-        } else if (obj.name.match(/^W(#\d)$/) || obj.name.match(/^Vr(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) {
+        } else if (obj.name.match(/^W(#\d)$/) || obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) {
           lineGr.move(crossBg, ElementPlacement.PLACEBEFORE);
           if (scale_fact_ground > 0) {
             lineGr.resize(scale_fact_ground, scale_fact_ground, true, false, false, false, undefined, Transformation.CENTER);
@@ -911,7 +911,7 @@ function makeSpot(name, cmyk, tint) {
 
   var newSpot, newColor, newSpotColor;
 
-  if (name != 'Vr' && name != 'W' && name != 'Pr') {
+  if (name != 'L' && name != 'W' && name != 'Pr') {
     name = 'PANTONE ' + name + ' C';
   }
 
