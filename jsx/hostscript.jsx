@@ -351,7 +351,7 @@ function makeLayout(str) {
 
     function __addTitle(opts, titleGr) {
       var fontSize      = 16;
-      var str           = (opts.txt.layoutName).replace(/_/gmi, '  ');
+      var str           = (opts.txt.layoutName + ' ' + formatDate2(new Date())).replace(/_/gmi, '  ');
       var title         = titleGr.textFrames.add();
       var titleTmplRect = [ // top, left, width, height
         (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
@@ -1082,4 +1082,20 @@ function scrollWin(input) {
 
   w.add("button", undefined, "Close", {name: "ok"});
   w.show();
+}
+
+function formatDate2(date) {
+  var d = date;
+  // форматировать дату, с учетом того, что месяцы начинаются с 0
+  d = [
+    '0' + d.getDate(),
+    '0' + (d.getMonth() + 1),
+    '' + d.getFullYear(),
+    '0' + d.getHours(),
+    '0' + d.getMinutes()
+  ];
+  for (var i = 0; i < d.length; i++) {
+    d[i] = d[i].slice(-2);
+  }
+  return d.slice(0, 3).join('.') /*+ ' ' + d.slice(3).join(':')*/;
 }
