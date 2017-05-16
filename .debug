@@ -4,7 +4,7 @@
         <HostList>
             
             <!-- Illustrator -->
-            <Host Name="ILST" Port="8088"/>
+            <Host Name="ILST" Port="8081"/>
                         
         </HostList>
     </Extension>

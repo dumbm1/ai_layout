@@ -367,7 +367,8 @@ function makeLayout(str) {
       // activeDocument.pathItems.rectangle (titleTmplRect[0], titleTmplRect[1], titleTmplRect[2], titleTmplRect[3]);
 
       title.contents                                        = str;
-      title.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
+      // title.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
+      title.paragraphs[0].paragraphAttributes.justification = Justification.LEFT;
       title.textRange.characterAttributes.textFont          = textFonts.getByName(fontName);
       title.textRange.characterAttributes.size              = fontSize;
       title.textRange.characterAttributes.capitalization    = FontCapsOption.ALLCAPS;
@@ -393,7 +394,7 @@ function makeLayout(str) {
 
       title.position = [
         titleTmplRect[1] - calcCharSize(title).top + (  +opts.nmb.railWidth * PT_TO_MM - calcCharSize(title).h ) / 2,
-        titleTmplRect[0]
+        titleTmplRect[0] - opts.sel.z * PT_TO_MM / 2 + Math.abs(title.geometricBounds[1] - title.geometricBounds[3]) + 16 * PT_TO_MM
       ]
 
       for (i = 0; i < opts.col.length; i++) {
@@ -1087,7 +1088,7 @@ function scrollWin(input) {
 function formatDate2(date) {
   var d = date;
   // форматировать дату, с учетом того, что месяцы начинаются с 0
-  d = [
+  d     = [
     '0' + d.getDate(),
     '0' + (d.getMonth() + 1),
     '' + d.getFullYear(),
