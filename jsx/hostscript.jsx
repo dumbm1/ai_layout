@@ -458,7 +458,7 @@ function makeLayout(str) {
     function __addCrossGr(opts, crossGr) {
       var arr                = opts.col;
       var DBL_STROKE         = 2;
-      var scale_count_main   = 0;
+      var scale_count_main   = 2;
       var scale_count_ground = 0;
       var scale_fact_main    = 90;
       var scale_fact_ground  = 85;
@@ -514,8 +514,10 @@ function makeLayout(str) {
           scale_count_ground++;
           scale_fact_ground -= 15;
           continue;
+        } else if (obj.name == "C" || obj.name == "M" || obj.name == "Y") {
+          continue;
         } else {
-          if (scale_count_main > 2) {
+          if (scale_count_main > 2 || obj.name == 'K') {
             lineGr.resize(scale_fact_main, scale_fact_main, true, false, false, false, undefined, Transformation.CENTER);
             scale_fact_main -= 10;
           }
@@ -1073,7 +1075,7 @@ function showObjDeep(obj) {
 }
 
 function scrollWin(input) {
-  if (input instanceof Array)     input = input.join("\r");
+  if (input instanceof Array) input = input.join("\r");
 
   var w    = new Window("dialog", 'Scrollable alert'),
       list = w.add("edittext", undefined, input, {multiline: true, scrolling: true});
