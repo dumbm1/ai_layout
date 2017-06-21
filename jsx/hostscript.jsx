@@ -471,6 +471,14 @@ function makeLayout(str) {
       )
       crossBg.stroked = false;
 
+      for (var m = 0; m < arr.length; m++) {
+        var obj1 = arr[m];
+        if (obj1.name == "C" || obj1.name == "M" || obj1.name == "Y" || obj1.name == "K") {
+          scale_count_main = 3;
+          break;
+        }
+      }
+
       for (var k = 0; k < arr.length; k++) {
         var obj = arr[k];
 
@@ -514,10 +522,11 @@ function makeLayout(str) {
           scale_count_ground++;
           scale_fact_ground -= 15;
           continue;
-        } else if (obj.name == "C" || obj.name == "M" || obj.name == "Y") {
+        } else if (obj.name == "C" || obj.name == "M" || obj.name == "Y" || obj.name == "K") {
+          // scale_count_main = 3;
           continue;
         } else {
-          if (scale_count_main > 2 || obj.name == 'K') {
+          if (scale_count_main > 2) {
             lineGr.resize(scale_fact_main, scale_fact_main, true, false, false, false, undefined, Transformation.CENTER);
             scale_fact_main -= 10;
           }
@@ -814,6 +823,7 @@ function setPantAlias(pantName) {
   }
   return pantName;
 }
+
 /*
  function setPantAlias (pantName) {
  var aliases = {
