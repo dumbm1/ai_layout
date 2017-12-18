@@ -1,12 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global $, Folder*/
 
-//todo: primer color label is 0% without overprint
-//todo: white #2 and primer #2 so must be 0% without overprint
-
 var PT_TO_MM = 2.834645668;
 var MM_TO_PT = 0.352777778;
-var DISTORS  = 6;
+var DISTORS = 6;
 
 function makeLayout(str) {
   var margTop   = +str.nmb.margTop,
@@ -22,8 +19,8 @@ function makeLayout(str) {
   _addTestElems(str);
   _delAllUnused();
   (function setZeroPoint() {
-    var d                                                         = activeDocument;
-    d.rulerOrigin                                                 = [
+    var d = activeDocument;
+    d.rulerOrigin = [
       d.rulerOrigin[0],
       d.height - +str.nmb.margTop * PT_TO_MM
     ];
@@ -35,28 +32,28 @@ function makeLayout(str) {
 
   function _addDoc(opts) {
 
-    var docName  = opts.txt.fileName;
-    var railW    = +opts.nmb.railWidth;
+    var docName = opts.txt.fileName;
+    var railW = +opts.nmb.railWidth;
     var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
-    var margHor  = +opts.nmb.margLeft + +(opts.nmb.margRight);
-    var docW     = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
-    var docH     = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
+    var margHor = +opts.nmb.margLeft + +(opts.nmb.margRight);
+    var docW = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
+    var docH = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
     var pres = new DocumentPreset();
 
-    pres.title            = docName;
-    pres.colorMode        = DocumentColorSpace.CMYK;
-    pres.height           = docH;
-    pres.width            = docW;
-    pres.units            = RulerUnits.Millimeters;
-    pres.previewMode      = DocumentPreviewMode.OverprintPreview;
+    pres.title = docName;
+    pres.colorMode = DocumentColorSpace.CMYK;
+    pres.height = docH;
+    pres.width = docW;
+    pres.units = RulerUnits.Millimeters;
+    pres.previewMode = DocumentPreviewMode.OverprintPreview;
     pres.rasterResolution = DocumentRasterResolution.HighResolution;
     // pres.numArtboards       = 10;
     // pres.artboardLayout     = DocumentArtboardLayout.Row;
     // pres.artboardRowsOrCols = 5;
     // pres.transparencyGrid   = DocumentTransparencyGrid.TransparencyGridOrange;
 
-    var doc                      = documents.addDocument('', pres, false);
+    var doc = documents.addDocument('', pres, false);
     // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
     doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
       (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn ) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
@@ -69,7 +66,7 @@ function makeLayout(str) {
 
     function __addVrAndPrPlates(opts, doc) {
       var colArr = opts.col;
-      var sw     = 0;
+      var sw = 0;
       var lay, vr, pr;
       var plateX = 0,
           plateY = 0;
@@ -99,26 +96,26 @@ function makeLayout(str) {
           break;
       }
       function ___addVr() {
-        vr               = lay.pathItems.rectangle(
+        vr = lay.pathItems.rectangle(
           plateY,
           (plateX - opts.nmb.indentIn) * PT_TO_MM,
           (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
           (+opts.sel.z - 6) * PT_TO_MM
         );
-        vr.stroked       = false;
-        vr.fillColor     = getColor('L', ___getCmyk(opts, 'L'), 100);
+        vr.stroked = false;
+        vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
         vr.fillOverprint = true;
       }
 
       function ___addPr() {
-        pr               = lay.pathItems.rectangle(
+        pr = lay.pathItems.rectangle(
           plateY,
           (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
           (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
           (+opts.sel.z - 6) * PT_TO_MM
         );
-        pr.stroked       = false;
-        pr.fillColor     = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
+        pr.stroked = false;
+        pr.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
         pr.fillOverprint = true;
       }
 
@@ -137,53 +134,53 @@ function makeLayout(str) {
 
   function _showRulers() {
     var actStr = '/version 3' +
-      '/name [ 11' +
-      '	53686f772052756c657273' +
-      ']' +
-      '/isOpen 1' +
-      '/actionCount 1' +
-      '/action-1 {' +
-      '	/name [ 11' +
-      '		53686f772052756c657273' +
-      '	]' +
-      '	/keyIndex 0' +
-      '	/colorIndex 0' +
-      '	/isOpen 1' +
-      '	/eventCount 1' +
-      '	/event-1 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (adobe_commandManager)' +
-      '		/localizedName [ 16' +
-      '			416363657373204d656e75204974656d' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 0' +
-      '		/parameterCount 3' +
-      '		/parameter-1 {' +
-      '			/key 1769238125' +
-      '			/showInPalette -1' +
-      '			/type (ustring)' +
-      '			/value [ 5' +
-      '				72756c6572' +
-      '			]' +
-      '		}' +
-      '		/parameter-2 {' +
-      '			/key 1818455661' +
-      '			/showInPalette -1' +
-      '			/type (ustring)' +
-      '			/value [ 11' +
-      '				53686f772052756c657273' +
-      '			]' +
-      '		}' +
-      '		/parameter-3 {' +
-      '			/key 1668114788' +
-      '			/showInPalette -1' +
-      '			/type (integer)' +
-      '			/value 37' +
-      '		}' +
-      '	}' +
-      '}'
+                 '/name [ 11' +
+                 '	53686f772052756c657273' +
+                 ']' +
+                 '/isOpen 1' +
+                 '/actionCount 1' +
+                 '/action-1 {' +
+                 '	/name [ 11' +
+                 '		53686f772052756c657273' +
+                 '	]' +
+                 '	/keyIndex 0' +
+                 '	/colorIndex 0' +
+                 '	/isOpen 1' +
+                 '	/eventCount 1' +
+                 '	/event-1 {' +
+                 '		/useRulersIn1stQuadrant 0' +
+                 '		/internalName (adobe_commandManager)' +
+                 '		/localizedName [ 16' +
+                 '			416363657373204d656e75204974656d' +
+                 '		]' +
+                 '		/isOpen 0' +
+                 '		/isOn 1' +
+                 '		/hasDialog 0' +
+                 '		/parameterCount 3' +
+                 '		/parameter-1 {' +
+                 '			/key 1769238125' +
+                 '			/showInPalette -1' +
+                 '			/type (ustring)' +
+                 '			/value [ 5' +
+                 '				72756c6572' +
+                 '			]' +
+                 '		}' +
+                 '		/parameter-2 {' +
+                 '			/key 1818455661' +
+                 '			/showInPalette -1' +
+                 '			/type (ustring)' +
+                 '			/value [ 11' +
+                 '				53686f772052756c657273' +
+                 '			]' +
+                 '		}' +
+                 '		/parameter-3 {' +
+                 '			/key 1668114788' +
+                 '			/showInPalette -1' +
+                 '			/type (integer)' +
+                 '			/value 37' +
+                 '		}' +
+                 '	}' +
+                 '}';
 
     runAction('Show Rulers', 'Show Rulers', actStr);
   }
@@ -202,48 +199,47 @@ function makeLayout(str) {
 
     var guideBleeds = 1000;
 
-    topX     = -guideBleeds * PT_TO_MM;
-    topY     = 0;
-    topLen   = docH + guideBleeds * 2 * PT_TO_MM;
+    topX = -guideBleeds * PT_TO_MM;
+    topY = 0;
+    topLen = docH + guideBleeds * 2 * PT_TO_MM;
     topGuide = lay.pathItems.add();
     topGuide.setEntirePath([
-      [topX, topY],
-      [topX + topLen, topY]
-    ])
+                             [topX, topY],
+                             [topX + topLen, topY]
+                           ]);
     topGuide.guides = true;
 
-    bottGuide          = topGuide.duplicate();
+    bottGuide = topGuide.duplicate();
     bottGuide.position = [topGuide.position[0], topGuide.position[1] - docH + (margTop + margBott) * PT_TO_MM];
 
-    centerGuide          = topGuide.duplicate();
-    centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM]
+    centerGuide = topGuide.duplicate();
+    centerGuide.position = [topGuide.position[0], -(+opts.sel.z - 6) / 2 * PT_TO_MM];
 
-    leftX     = 0;
-    leftY     = -guideBleeds * PT_TO_MM;
-    leftLen   = docH + guideBleeds * 2 * PT_TO_MM;
+    leftX = 0;
+    leftY = -guideBleeds * PT_TO_MM;
+    leftLen = docH + guideBleeds * 2 * PT_TO_MM;
     leftGuide = lay.pathItems.add();
     leftGuide.setEntirePath([
-      [leftX, leftY],
-      [leftX, leftY + leftLen]
-    ])
+                              [leftX, leftY],
+                              [leftX, leftY + leftLen]
+                            ]);
     leftGuide.guides = true;
 
-    rightGuide          = leftGuide.duplicate();
+    rightGuide = leftGuide.duplicate();
     rightGuide.position = [leftGuide.position[0] + +opts.nmb.layoutWidth * +opts.nmb.streams * PT_TO_MM, leftGuide.position[1]];
 
     for (var i = 1; i < opts.nmb.streams; i++) {
-      var duplGuide      = leftGuide.duplicate();
+      var duplGuide = leftGuide.duplicate();
       duplGuide.position = [
         (leftGuide.position[0] + +opts.nmb.layoutWidth * i) * PT_TO_MM,
         leftGuide.position[1]
-      ]
+      ];
     }
 
   }
 
   function _addTestElems(opts) {
-    var doc      = activeDocument,
-        lay      = getLayByName('test'),
+    var lay      = getLayByName('test'),
         fontName = __getFonts()[0];
 
     var mainGr  = lay.groupItems.add(),
@@ -257,46 +253,46 @@ function makeLayout(str) {
     __addColors(opts, titleGr);
 
     // duplicate the rails to right
-    var mainGrCopy      = mainGr.duplicate();
+    var mainGrCopy = mainGr.duplicate();
     mainGrCopy.position = [
       railGr.position[0] + (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
       railGr.position[1]
-    ]
+    ];
 
     /**
      * LIB TO ADD TEST ELEMENTS
      * */
     function __addColors(opts, titleGr) {
-      var colorGr  = titleGr.groupItems.add();
-      var labelGr  = colorGr.groupItems.add();
+      var colorGr = titleGr.groupItems.add();
+      var labelGr = colorGr.groupItems.add();
       var fontSize = 20;
-      var bgH      = (+opts.nmb.railWidth - +opts.nmb.railWidth / 3) * PT_TO_MM,
+      var bgH = (+opts.nmb.railWidth - +opts.nmb.railWidth / 3) * PT_TO_MM,
           bgW;
-      var colArr   = opts.col;
+      var colArr = opts.col;
 
       var labelX = 0,
           labelY = 0;
 
       for (var i = 0; i < colArr.length; i++) {
-        var obj        = colArr[i];
+        var obj = colArr[i];
         var colorLabel = labelGr.textFrames.add();
 
         colorLabel.contents = setPantAlias(obj.name);
         // alert (obj.name.length);
         // colorLabel.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
-        colorLabel.textRange.characterAttributes.textFont       = textFonts.getByName(fontName);
+        colorLabel.textRange.characterAttributes.textFont = textFonts.getByName(fontName);
         colorLabel.textRange.characterAttributes.capitalization = FontCapsOption.SMALLCAPS;
-        colorLabel.textRange.characterAttributes.size           = fontSize;
+        colorLabel.textRange.characterAttributes.size = fontSize;
 
         if (i == 0) {
           ___tuneCharSize();
         }
 
         if (obj.name.match(/^W(#\d)?$/)) {
-          colorLabel.textRange.characterAttributes.fillColor     = getColor('white');
+          colorLabel.textRange.characterAttributes.fillColor = getColor('white');
           colorLabel.textRange.characterAttributes.overprintFill = false;
         } else {
-          colorLabel.textRange.characterAttributes.fillColor     = getColor(obj.name, obj.cmyk.split(','), 100);
+          colorLabel.textRange.characterAttributes.fillColor = getColor(obj.name, obj.cmyk.split(','), 100);
           colorLabel.textRange.characterAttributes.overprintFill = true;
         }
 
@@ -310,16 +306,16 @@ function makeLayout(str) {
         while (lblHeight > bgH) {
           fontSize -= 0.1;
           colorLabel.textRange.characterAttributes.size = fontSize;
-          lblHeight                                     = calcCharSize(colorLabel).h;
+          lblHeight = calcCharSize(colorLabel).h;
         }
       }
 
       labelGr.position = [0, calcCharSize(labelGr.pageItems[0]).top];
 
       var colBg = (function addColorBg() {
-        bgW             = labelGr.width;
-        var colBg       = labelGr.pathItems.rectangle(0, 0, bgW, bgH);
-        colBg.stroked   = false;
+        bgW = labelGr.width;
+        var colBg = labelGr.pathItems.rectangle(0, 0, bgW, bgH);
+        colBg.stroked = false;
         colBg.fillColor = getColor('white');
 
         for (var j = 0; j < colArr.length; j++) {
@@ -350,9 +346,9 @@ function makeLayout(str) {
     }
 
     function __addTitle(opts, titleGr) {
-      var fontSize      = 16;
-      var str           = (opts.txt.layoutName + ' ' + formatDate2(new Date())).replace(/_/gmi, '  ');
-      var title         = titleGr.textFrames.add();
+      var fontSize = 16;
+      var str = (opts.txt.layoutName + ' ' + formatDate2(new Date())).replace(/_/gmi, '  ');
+      var title = titleGr.textFrames.add();
       var titleTmplRect = [ // top, left, width, height
         (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
         (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
@@ -361,19 +357,19 @@ function makeLayout(str) {
       ];
       var titleCharSize;
       var titleFrameSize;
-      var col           = opts.col;
+      var col = opts.col;
 
       // add test title template rectangle:
       // activeDocument.pathItems.rectangle (titleTmplRect[0], titleTmplRect[1], titleTmplRect[2], titleTmplRect[3]);
 
-      title.contents                                        = str;
+      title.contents = str;
       // title.paragraphs[0].paragraphAttributes.justification = Justification.RIGHT;
       title.paragraphs[0].paragraphAttributes.justification = Justification.LEFT;
-      title.textRange.characterAttributes.textFont          = textFonts.getByName(fontName);
-      title.textRange.characterAttributes.size              = fontSize;
-      title.textRange.characterAttributes.capitalization    = FontCapsOption.ALLCAPS;
+      title.textRange.characterAttributes.textFont = textFonts.getByName(fontName);
+      title.textRange.characterAttributes.size = fontSize;
+      title.textRange.characterAttributes.capitalization = FontCapsOption.ALLCAPS;
 
-      title.textRange.characterAttributes.fillColor     = getRegistration();
+      title.textRange.characterAttributes.fillColor = getRegistration();
       title.textRange.characterAttributes.overprintFill = true;
 
       title.rotate(90, true);
@@ -389,13 +385,13 @@ function makeLayout(str) {
         title.textRange.characterAttributes.size = fontSize;
       }
 
-      titleCharSize  = calcCharSize(title);
+      titleCharSize = calcCharSize(title);
       titleFrameSize = __getFrameSize(title);
 
       title.position = [
         titleTmplRect[1] - calcCharSize(title).top + (  +opts.nmb.railWidth * PT_TO_MM - calcCharSize(title).h ) / 2,
         titleTmplRect[0] - opts.sel.z * PT_TO_MM / 2 + Math.abs(title.geometricBounds[1] - title.geometricBounds[3]) + 16 * PT_TO_MM
-      ]
+      ];
 
       for (i = 0; i < opts.col.length; i++) {
         var obj = opts.col[i];
@@ -407,7 +403,7 @@ function makeLayout(str) {
             if (titleWhiteCount == 0) {
               var tmpTitleDupl = title.duplicate();
 
-              tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor('white');
+              tmpTitleDupl.textRange.characterAttributes.fillColor = getColor('white');
               tmpTitleDupl.textRange.characterAttributes.overprintFill = false;
               tmpTitleDupl.move(titleGr, ElementPlacement.PLACEATEND);
               titleWhiteCount++;
@@ -415,7 +411,7 @@ function makeLayout(str) {
           } else {
             var tmpTitleDupl = title.duplicate();
 
-            tmpTitleDupl.textRange.characterAttributes.fillColor     = getColor(obj.name, obj.cmyk.split(','), 100);
+            tmpTitleDupl.textRange.characterAttributes.fillColor = getColor(obj.name, obj.cmyk.split(','), 100);
             tmpTitleDupl.textRange.characterAttributes.overprintFill = true;
           }
         }
@@ -426,7 +422,7 @@ function makeLayout(str) {
     }
 
     function __addRails(opts, railGr) {
-      var arr         = opts.col;
+      var arr = opts.col;
       var shift_count = 1;
 
       for (var i = 0; i < arr.length; i++) {
@@ -434,13 +430,13 @@ function makeLayout(str) {
 
         if (obj.name == 'Pr') continue;
 
-        var rail    = railGr.pathItems.rectangle(
+        var rail = railGr.pathItems.rectangle(
           opts.nmb['shift_' + shift_count] * PT_TO_MM,
           (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
           opts.nmb.railWidth * PT_TO_MM,
           (opts.sel.z - DISTORS) * PT_TO_MM
         );
-        rail.name   = 'rail_' + obj.name;
+        rail.name = 'rail_' + obj.name;
         var cmykArr = obj.cmyk.split(',');
         if (obj.name.match(/^L(#\d)?$/)) {
           rail.fillColor = getColor(obj.name, cmykArr, 100);
@@ -448,7 +444,7 @@ function makeLayout(str) {
           rail.fillColor = getColor(obj.name, cmykArr, 20);
         }
 
-        rail.stroked       = false;
+        rail.stroked = false;
         rail.fillOverprint = true;
 
         shift_count++;
@@ -456,24 +452,24 @@ function makeLayout(str) {
     }
 
     function __addCrossGr(opts, crossGr) {
-      var arr                = opts.col;
-      var DBL_STROKE         = 2;
-      var scale_count_main   = 2;
+      var arr = opts.col;
+      var DBL_STROKE = 2;
+      var scale_count_main = 2;
       var scale_count_ground = 0;
-      var scale_fact_main    = 90;
-      var scale_fact_ground  = 85;
+      var scale_fact_main = 90;
+      var scale_fact_ground = 85;
 
-      var crossBg     = crossGr.pathItems.ellipse(
+      var crossBg = crossGr.pathItems.ellipse(
         +opts.nmb.crossWidth * PT_TO_MM,
         -opts.nmb.crossWidth * PT_TO_MM / 2,
         +opts.nmb.crossWidth * PT_TO_MM,
         +opts.nmb.crossWidth * PT_TO_MM
-      )
+      );
       crossBg.stroked = false;
 
       for (var m = 0; m < arr.length; m++) {
         var obj1 = arr[m];
-        if (obj1.name == "C" || obj1.name == "M" || obj1.name == "Y" || obj1.name == "K") {
+        if (obj1.name == 'C' || obj1.name == 'M' || obj1.name == 'Y' || obj1.name == 'K') {
           scale_count_main = 3;
           break;
         }
@@ -483,10 +479,10 @@ function makeLayout(str) {
         var obj = arr[k];
 
         var lineGr = crossGr.groupItems.add();
-        var line   = lineGr.pathItems.add();
+        var line = lineGr.pathItems.add();
 
-        line.filled          = false;
-        line.stroked         = true;
+        line.filled = false;
+        line.stroked = true;
         line.strokeOverprint = true;
 
         if (
@@ -499,13 +495,13 @@ function makeLayout(str) {
           line.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
         }
 
-        var cmykArr      = obj.cmyk.split(',');
+        var cmykArr = obj.cmyk.split(',');
         line.strokeColor = getColor(obj.name, cmykArr, 100);
 
         line.setEntirePath([
-          [0, 0],
-          [0, +opts.nmb.crossWidth * PT_TO_MM]
-        ]);
+                             [0, 0],
+                             [0, +opts.nmb.crossWidth * PT_TO_MM]
+                           ]);
 
         var lineClon = line.duplicate();
         lineClon.rotate(90, true, undefined, undefined, undefined, Transformation.CENTER);
@@ -522,7 +518,7 @@ function makeLayout(str) {
           scale_count_ground++;
           scale_fact_ground -= 15;
           continue;
-        } else if (obj.name == "C" || obj.name == "M" || obj.name == "Y" || obj.name == "K") {
+        } else if (obj.name == 'C' || obj.name == 'M' || obj.name == 'Y' || obj.name == 'K') {
           // scale_count_main = 3;
           continue;
         } else {
@@ -538,7 +534,7 @@ function makeLayout(str) {
       crossGr.position = [
         (-opts.nmb.railWidth - opts.nmb.indentIn + (+opts.nmb.railWidth - opts.nmb.crossWidth) / 2 ) * PT_TO_MM,
         -(+opts.sel.z - DISTORS - opts.nmb.crossWidth) / 2 * PT_TO_MM
-      ]
+      ];
     }
 
     /**
@@ -558,7 +554,7 @@ function makeLayout(str) {
             'Nimbus-Sans-Bold', 'NimbusMonoL-Bold',
             'TrebuchetMS-Bold', 'Tahoma-Bold',
             'Verdana-Bold'
-          ]
+          ];
 
       // записать шрифты с поддержкой всех символов логических операций в массив
       for (var i = 0; i < fontsCommon.length; i++) {
@@ -579,184 +575,184 @@ function makeLayout(str) {
     activeDocument.swatchGroups[1].remove();
 
     var str = '/version 3' +
-      '/name [ 12' +
-      '	64656c416c6c556e75736564' +
-      ']' +
-      '/isOpen 0' +
-      '/actionCount 1' +
-      '/action-1 {' +
-      '	/name [ 12' +
-      '		64656c416c6c556e75736564' +
-      '	]' +
-      '	/keyIndex 0' +
-      '	/colorIndex 2' +
-      '	/isOpen 0' +
-      '	/eventCount 8' +
-      '	/event-1 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_swatches)' +
-      '		/localizedName [ 8' +
-      '			5377617463686573' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 17' +
-      '				53656c65637420416c6c20556e75736564' +
-      '			]' +
-      '			/value 11' +
-      '		}' +
-      '	}' +
-      '	/event-2 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_swatches)' +
-      '		/localizedName [ 8' +
-      '			5377617463686573' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 1' +
-      '		/showDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 13' +
-      '				44656c65746520537761746368' +
-      '			]' +
-      '			/value 3' +
-      '		}' +
-      '	}' +
-      '	/event-3 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_brush)' +
-      '		/localizedName [ 5' +
-      '			4272757368' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 17' +
-      '				53656c65637420416c6c20556e75736564' +
-      '			]' +
-      '			/value 8' +
-      '		}' +
-      '	}' +
-      '	/event-4 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_brush)' +
-      '		/localizedName [ 5' +
-      '			4272757368' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 1' +
-      '		/showDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 12' +
-      '				44656c657465204272757368' +
-      '			]' +
-      '			/value 3' +
-      '		}' +
-      '	}' +
-      '	/event-5 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_styles)' +
-      '		/localizedName [ 14' +
-      '			47726170686963205374796c6573' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 17' +
-      '				53656c65637420416c6c20556e75736564' +
-      '			]' +
-      '			/value 14' +
-      '		}' +
-      '	}' +
-      '	/event-6 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_styles)' +
-      '		/localizedName [ 14' +
-      '			47726170686963205374796c6573' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 1' +
-      '		/showDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 20' +
-      '				44656c6574652047726170686963205374796c65' +
-      '			]' +
-      '			/value 3' +
-      '		}' +
-      '	}' +
-      '	/event-7 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_symbol_palette)' +
-      '		/localizedName [ 7' +
-      '			53796d626f6c73' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 17' +
-      '				53656c65637420416c6c20556e75736564' +
-      '			]' +
-      '			/value 12' +
-      '		}' +
-      '	}' +
-      '	/event-8 {' +
-      '		/useRulersIn1stQuadrant 0' +
-      '		/internalName (ai_plugin_symbol_palette)' +
-      '		/localizedName [ 7' +
-      '			53796d626f6c73' +
-      '		]' +
-      '		/isOpen 0' +
-      '		/isOn 1' +
-      '		/hasDialog 1' +
-      '		/showDialog 0' +
-      '		/parameterCount 1' +
-      '		/parameter-1 {' +
-      '			/key 1835363957' +
-      '			/showInPalette -1' +
-      '			/type (enumerated)' +
-      '			/name [ 13' +
-      '				44656c6574652053796d626f6c' +
-      '			]' +
-      '			/value 5' +
-      '		}' +
-      '	}' +
-      '}';
+              '/name [ 12' +
+              '	64656c416c6c556e75736564' +
+              ']' +
+              '/isOpen 0' +
+              '/actionCount 1' +
+              '/action-1 {' +
+              '	/name [ 12' +
+              '		64656c416c6c556e75736564' +
+              '	]' +
+              '	/keyIndex 0' +
+              '	/colorIndex 2' +
+              '	/isOpen 0' +
+              '	/eventCount 8' +
+              '	/event-1 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_swatches)' +
+              '		/localizedName [ 8' +
+              '			5377617463686573' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 17' +
+              '				53656c65637420416c6c20556e75736564' +
+              '			]' +
+              '			/value 11' +
+              '		}' +
+              '	}' +
+              '	/event-2 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_swatches)' +
+              '		/localizedName [ 8' +
+              '			5377617463686573' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 1' +
+              '		/showDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 13' +
+              '				44656c65746520537761746368' +
+              '			]' +
+              '			/value 3' +
+              '		}' +
+              '	}' +
+              '	/event-3 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_brush)' +
+              '		/localizedName [ 5' +
+              '			4272757368' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 17' +
+              '				53656c65637420416c6c20556e75736564' +
+              '			]' +
+              '			/value 8' +
+              '		}' +
+              '	}' +
+              '	/event-4 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_brush)' +
+              '		/localizedName [ 5' +
+              '			4272757368' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 1' +
+              '		/showDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 12' +
+              '				44656c657465204272757368' +
+              '			]' +
+              '			/value 3' +
+              '		}' +
+              '	}' +
+              '	/event-5 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_styles)' +
+              '		/localizedName [ 14' +
+              '			47726170686963205374796c6573' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 17' +
+              '				53656c65637420416c6c20556e75736564' +
+              '			]' +
+              '			/value 14' +
+              '		}' +
+              '	}' +
+              '	/event-6 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_styles)' +
+              '		/localizedName [ 14' +
+              '			47726170686963205374796c6573' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 1' +
+              '		/showDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 20' +
+              '				44656c6574652047726170686963205374796c65' +
+              '			]' +
+              '			/value 3' +
+              '		}' +
+              '	}' +
+              '	/event-7 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_symbol_palette)' +
+              '		/localizedName [ 7' +
+              '			53796d626f6c73' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 17' +
+              '				53656c65637420416c6c20556e75736564' +
+              '			]' +
+              '			/value 12' +
+              '		}' +
+              '	}' +
+              '	/event-8 {' +
+              '		/useRulersIn1stQuadrant 0' +
+              '		/internalName (ai_plugin_symbol_palette)' +
+              '		/localizedName [ 7' +
+              '			53796d626f6c73' +
+              '		]' +
+              '		/isOpen 0' +
+              '		/isOn 1' +
+              '		/hasDialog 1' +
+              '		/showDialog 0' +
+              '		/parameterCount 1' +
+              '		/parameter-1 {' +
+              '			/key 1835363957' +
+              '			/showInPalette -1' +
+              '			/type (enumerated)' +
+              '			/name [ 13' +
+              '				44656c6574652053796d626f6c' +
+              '			]' +
+              '			/value 5' +
+              '		}' +
+              '	}' +
+              '}';
     runAction('delAllUnused', 'delAllUnused', str);
   }
 }
@@ -767,52 +763,52 @@ function makeLayout(str) {
 function setPantAlias(pantName) {
 
   var aliases = {
-    "Process Yellow":  "PrY",
-    "Process Magenta": "PrM",
-    "Process Cyan":    "PrC",
-    "Process Black":   "K2",
-    "Yellow 012":      "012",
-    "Orange 021":      "021",
-    "Warm Red":        "WR",
-    "Red 032":         "032",
-    "Rubine Red":      "Rub",
-    "Rhodamine Red":   "Rhod",
-    "Purple":          "Purp",
-    "Violet":          "Viol",
-    "Blue 072":        "072",
-    "Reflex Blue":     "Refl",
-    "Process Blue":    "PrBlue",
-    "Green":           "Gr",
-    "Black":           "Black",
-    "Black 2":         "Black2",
-    "Black 3":         "Black3",
-    "Black 4":         "Black4",
-    "Black 5":         "Black5",
-    "Black 6":         "Black6",
-    "Black 7":         "Black7",
-    "Warm Gray 1":     "WG1",
-    "Warm Gray 2":     "WG2",
-    "Warm Gray 3":     "WG3",
-    "Warm Gray 4":     "WG4",
-    "Warm Gray 5":     "WG5",
-    "Warm Gray 6":     "WG6",
-    "Warm Gray 7":     "WG7",
-    "Warm Gray 8":     "WG8",
-    "Warm Gray 9":     "WG9",
-    "Warm Gray 10":    "WG10",
-    "Warm Gray 11":    "WG11",
-    "Cool Gray 1":     "CG1",
-    "Cool Gray 2":     "CG2",
-    "Cool Gray 3":     "CG3",
-    "Cool Gray 4":     "CG4",
-    "Cool Gray 5":     "CG5",
-    "Cool Gray 6":     "CG6",
-    "Cool Gray 7":     "CG7",
-    "Cool Gray 8":     "CG8",
-    "Cool Gray 9":     "CG9",
-    "Cool Gray 10":    "CG10",
-    "Cool Gray 11":    "CG11"
-  }
+    'Process Yellow' : 'PrY',
+    'Process Magenta': 'PrM',
+    'Process Cyan'   : 'PrC',
+    'Process Black'  : 'K2',
+    'Yellow 012'     : '012',
+    'Orange 021'     : '021',
+    'Warm Red'       : 'WR',
+    'Red 032'        : '032',
+    'Rubine Red'     : 'Rub',
+    'Rhodamine Red'  : 'Rhod',
+    'Purple'         : 'Purp',
+    'Violet'         : 'Viol',
+    'Blue 072'       : '072',
+    'Reflex Blue'    : 'Refl',
+    'Process Blue'   : 'PrBlue',
+    'Green'          : 'Gr',
+    'Black'          : 'K2',
+    'Black 2'        : 'Black2',
+    'Black 3'        : 'Black3',
+    'Black 4'        : 'Black4',
+    'Black 5'        : 'Black5',
+    'Black 6'        : 'Black6',
+    'Black 7'        : 'Black7',
+    'Warm Gray 1'    : 'WG1',
+    'Warm Gray 2'    : 'WG2',
+    'Warm Gray 3'    : 'WG3',
+    'Warm Gray 4'    : 'WG4',
+    'Warm Gray 5'    : 'WG5',
+    'Warm Gray 6'    : 'WG6',
+    'Warm Gray 7'    : 'WG7',
+    'Warm Gray 8'    : 'WG8',
+    'Warm Gray 9'    : 'WG9',
+    'Warm Gray 10'   : 'WG10',
+    'Warm Gray 11'   : 'WG11',
+    'Cool Gray 1'    : 'CG1',
+    'Cool Gray 2'    : 'CG2',
+    'Cool Gray 3'    : 'CG3',
+    'Cool Gray 4'    : 'CG4',
+    'Cool Gray 5'    : 'CG5',
+    'Cool Gray 6'    : 'CG6',
+    'Cool Gray 7'    : 'CG7',
+    'Cool Gray 8'    : 'CG8',
+    'Cool Gray 9'    : 'CG9',
+    'Cool Gray 10'   : 'CG10',
+    'Cool Gray 11'   : 'CG11'
+  };
 
   for (var key in aliases) {
     if (pantName == key) return aliases[key];
@@ -885,8 +881,8 @@ function setPantAlias(pantName) {
 
 function getColor(colorName, cmyk, tint) {
   colorName = colorName || 'Ze_Test';
-  cmyk      = cmyk || [11, 11, 11, 11];
-  tint      = tint || 100;
+  cmyk = cmyk || [11, 11, 11, 11];
+  tint = tint || 100;
 
   var col;
 
@@ -932,18 +928,18 @@ function makeSpot(name, cmyk, tint) {
     newSpotColor = activeDocument.swatches.getByName(name);
     return newSpotColor.color;
   } catch (e) {
-    newSpot      = activeDocument.spots.add();
-    newColor     = new CMYKColor();
+    newSpot = activeDocument.spots.add();
+    newColor = new CMYKColor();
     newSpotColor = new SpotColor();
 
-    newColor.cyan    = cmyk[0];
+    newColor.cyan = cmyk[0];
     newColor.magenta = cmyk[1];
-    newColor.yellow  = cmyk[2];
-    newColor.black   = cmyk[3];
+    newColor.yellow = cmyk[2];
+    newColor.black = cmyk[3];
 
-    newSpot.name      = name;
+    newSpot.name = name;
     newSpot.colorType = ColorModel.SPOT;
-    newSpot.color     = newColor;
+    newSpot.color = newColor;
 
     newSpotColor.spot = newSpot;
     newSpotColor.tint = tint;
@@ -953,11 +949,11 @@ function makeSpot(name, cmyk, tint) {
 }
 
 function makeCMYK(cmyk) {
-  var col     = new CMYKColor();
-  col.cyan    = cmyk[0];
+  var col = new CMYKColor();
+  col.cyan = cmyk[0];
   col.magenta = cmyk[1];
-  col.yellow  = cmyk[2];
-  col.black   = cmyk[3];
+  col.yellow = cmyk[2];
+  col.black = cmyk[3];
   return col;
 }
 
@@ -971,13 +967,13 @@ function getRegistration() {
     newSpotColor = activeDocument.swatches.getByName('[Registration]');
     return newSpotColor.color;
   } catch (e) {
-    newSpot      = activeDocument.spots.add();
-    newColor     = new CMYKColor();
+    newSpot = activeDocument.spots.add();
+    newColor = new CMYKColor();
     newSpotColor = new SpotColor();
 
-    newSpot.name      = name;
+    newSpot.name = name;
     newSpot.colorType = ColorModel.REGISTRATION;
-    newSpot.color     = newColor;
+    newSpot.color = newColor;
 
     newSpotColor.spot = newSpot;
 
@@ -997,18 +993,18 @@ function getLayByName(name) {
 }
 
 function addLayer(o/*{o.rgb, o.doc, o.title}*/) {
-  var rgb   = o.rgb || [128, 255, 128];
-  var doc   = o.doc || activeDocument;
+  var rgb = o.rgb || [128, 255, 128];
+  var doc = o.doc || activeDocument;
   var title = o.title || 'test';
 
   var col = new RGBColor();
   var lay = o.doc.layers.add();
 
-  col.red   = rgb[0];
+  col.red = rgb[0];
   col.green = rgb[1];
-  col.blue  = rgb[2];
+  col.blue = rgb[2];
 
-  lay.name  = title;
+  lay.name = title;
   lay.color = col;
 
   return lay;
@@ -1022,7 +1018,7 @@ function runAction(actName, setName, actStr) {
   app.loadAction(f);
   f.remove();
   app.doScript(actName, setName, false); // action name, set name
-  app.unloadAction(setName, ""); // set name
+  app.unloadAction(setName, ''); // set name
 }
 
 /**
@@ -1039,12 +1035,12 @@ function calcCharSize(frame) {
   txt2meas.contents = 'C';
 
   txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
-  txt2meas.textRange.characterAttributes.size     = frame.textRange.characterAttributes.size;
+  txt2meas.textRange.characterAttributes.size = frame.textRange.characterAttributes.size;
 
   var txt2meas_curv = (txt2meas.duplicate()).createOutline();
 
-  fullH            = txt2meas.height;
-  fontMeasures.h   = txt2meas_curv.height;
+  fullH = txt2meas.height;
+  fontMeasures.h = txt2meas_curv.height;
   fontMeasures.top = Math.abs(txt2meas.position[1] - txt2meas_curv.position[1]);
   fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
 
@@ -1054,53 +1050,10 @@ function calcCharSize(frame) {
   return fontMeasures;
 }
 
-/**
- * DEBUG HELPERS
- * */
-
-function showObjDeep(obj) {
-  var str    = '{\n';
-  var indent = 1;
-
-  showObj(obj);
-
-  function showObj(obj) {
-
-    for (var key in obj) {
-      if (typeof obj[key] == 'object' /*&& !obj[key].splice*/) {
-        str += addIndent(indent) + key + ':\n';
-        ++indent;
-        showObj(obj[key]);
-      } else {
-        str += addIndent(indent) + key + ': ' + obj[key] + ' [' + typeof obj[key] + '],\n';
-      }
-    }
-    indent--;
-  }
-
-  return str + '}';
-  function addIndent(i) {
-    return new Array(i).join('_');
-  }
-}
-
-function scrollWin(input) {
-  if (input instanceof Array) input = input.join("\r");
-
-  var w    = new Window("dialog", 'Scrollable alert'),
-      list = w.add("edittext", undefined, input, {multiline: true, scrolling: true});
-
-  list.maximumSize.height = w.maximumSize.height - 100;
-  list.minimumSize.width  = 600;
-
-  w.add("button", undefined, "Close", {name: "ok"});
-  w.show();
-}
-
 function formatDate2(date) {
   var d = date;
   // форматировать дату, с учетом того, что месяцы начинаются с 0
-  d     = [
+  d = [
     '0' + d.getDate(),
     '0' + (d.getMonth() + 1),
     '' + d.getFullYear(),
