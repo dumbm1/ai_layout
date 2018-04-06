@@ -4,17 +4,9 @@
 (function main() {
   'use strict';
 
-  // Reloads extension panel
-  function reloadPanel() {
-    location.reload();
-  }
-
   var csInterface = new CSInterface();
 
-  function loadJSX(fileName) {
-    var extensionRoot = csInterface.getSystemPath(SystemPath.EXTENSION) + '/jsx/';
-    csInterface.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
-  }
+  init();
 
   function init() {
 
@@ -154,6 +146,9 @@
             return +indentIn_val * 2 + +margLeft_val + +margRight_val + +streams_val * +layoutWidth_val + +railWidth_val * 2;
           }));
         }
+      });
+      $('#white_layer').click(function (e) {
+        // alert($('#white_layer').prop('checked'));
       });
 
       /* $("#layoutName").onkeypress(function() {
@@ -308,7 +303,7 @@
         var chk = {};
         $('input[type=checkbox]').each(function () {
           var key = $(this).attr('id');
-          chk[key] = $(this).attr('checked') == 'checked';
+          chk[key] = $(this).prop('checked');
         });
         return chk;
       }
@@ -2457,6 +2452,14 @@
 
   }
 
-  init();
+  function reloadPanel() {
+    location.reload();
+  }
+
+  function loadJSX(fileName) {
+    var extensionRoot = csInterface.getSystemPath(SystemPath.EXTENSION) + '/jsx/';
+    csInterface.evalScript('$.evalFile("' + extensionRoot + fileName + '")');
+  }
+
 }());
 

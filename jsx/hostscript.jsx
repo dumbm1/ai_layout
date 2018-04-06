@@ -71,24 +71,46 @@ function makeLayout(str) {
       var plateX = 0,
           plateY = 0;
 
+      alert(opts.chk.white_layer);
+
       for (var i = 0; i < colArr.length; i++) {
         var obj = colArr[i];
         // if (obj.name != 'L' && obj.name != 'Pr') continue;
         if (obj.name == 'L') sw += 1;
         if (obj.name == 'Pr') sw += 2;
+        if (obj.name == 'W') sw += 4;
       }
 
       switch (sw) {
         case 1:
-          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'varnish'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L'});
           ___addVr();
           break;
         case 2:
-          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'primer'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'Pr'});
           ___addPr();
           break;
         case 3:
-          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'varnish+primer'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L+Pr'});
+          ___addVr();
+          ___addPr();
+          break;
+        case 4:
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
+          break;
+        case 5:
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L'});
+          ___addVr();
+          break;
+        case 6:
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'Pr'});
+          ___addPr();
+          break;
+        case 7:
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
+          lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L+Pr'});
           ___addVr();
           ___addPr();
           break;
