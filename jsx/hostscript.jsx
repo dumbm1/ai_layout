@@ -71,14 +71,14 @@ function makeLayout(str) {
       var plateX = 0,
           plateY = 0;
 
-      alert(opts.chk.white_layer);
+      // alert(opts.chk.white_layer);
 
       for (var i = 0; i < colArr.length; i++) {
         var obj = colArr[i];
         // if (obj.name != 'L' && obj.name != 'Pr') continue;
         if (obj.name == 'L') sw += 1;
         if (obj.name == 'Pr') sw += 2;
-        if (obj.name == 'W') sw += 4;
+        if (obj.name == 'W' && opts.chk.white_layer) sw += 4;
       }
 
       switch (sw) {
