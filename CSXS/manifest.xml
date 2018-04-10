@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="4.0"
                    ExtensionBundleId="com.wk.layout_wk"
-                   ExtensionBundleVersion="1.1.0"
+                   ExtensionBundleVersion="1.1.1"
                    ExtensionBundleName="layout_wk"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
