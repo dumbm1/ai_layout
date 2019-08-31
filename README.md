@@ -1,6 +1,6 @@
 #FlexoPrint layout for ouput file
 
-![ai_layout](img/layout_v0.9.png)
+![ai_layout](layout_demo.avi)
 
 31.03.2017
 change 'Vr' to 'L'
