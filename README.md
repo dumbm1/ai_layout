@@ -1,3 +1,3 @@
 FlexoPrint layout for ouput file
 ===
-![ai_layout](layout_demo.avi)
+<source src="layout_demo.mp4" type="video/mp4" />
