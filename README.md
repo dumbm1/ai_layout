@@ -1,3 +1,6 @@
-FlexoPrint layout for ouput file
+Интерфейс создания каркаса для верстки выводного файла по стандарту ООО "ФлексоПринт"
 ===
-<video src="layout_demo.mp4" width="566" height="398" controls preload>-_–zZ</video>
+Выполненный в дизайне Панели Расширения для программы Adobe Illustrator CC+
+---
+Использование:<br>
+![ai_layout](img/layout_v0.9.png)
