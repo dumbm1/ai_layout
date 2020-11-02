@@ -554,9 +554,9 @@
         function convertCmykToRgb(cmykValue) {
           var _cmyk = cmykValue.split(','),
               _rgb  = [];
-          _rgb.push(Math.ceil(255 * (1 - _cmyk[0] / 100) * ( 1 - _cmyk[3] / 100)));
-          _rgb.push(Math.ceil(255 * (1 - _cmyk[1] / 100) * ( 1 - _cmyk[3] / 100)));
-          _rgb.push(Math.ceil(255 * (1 - _cmyk[2] / 100) * ( 1 - _cmyk[3] / 100)));
+          _rgb.push(Math.ceil(255 * (1 - _cmyk[0] / 100) * (1 - _cmyk[3] / 100)));
+          _rgb.push(Math.ceil(255 * (1 - _cmyk[1] / 100) * (1 - _cmyk[3] / 100)));
+          _rgb.push(Math.ceil(255 * (1 - _cmyk[2] / 100) * (1 - _cmyk[3] / 100)));
 
           return _rgb;
         }
@@ -1916,6 +1916,8 @@
           ' 3425': '93,13,85,44',
           ' 3435': '93,24,85,68',
           ' 3545': '75,1,7,0',
+          ' 3533': '54,0,28,0',
+          ' 3534': '99,0,47,0',
           ' 3935': '2,0,60,0',
           ' 3945': '3,0,90,0',
           ' 3955': '4,0,100,0',
