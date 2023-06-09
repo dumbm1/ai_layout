@@ -476,7 +476,7 @@
           300, 320, 330, 340, 345, 350, 360, 370, 380, 390,
           400, 410, 420, 430, 440, 450, 460, 470, 480,
           500, 520, 530, 540, 550, 560, 580,
-          600, 640
+          600, 640, 700
         ];
         var z = document.getElementById('z');
         var engineList = document.getElementById('engineList');
