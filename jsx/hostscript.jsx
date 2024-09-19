@@ -123,7 +123,7 @@ function makeLayout(str) {
      plateY,
      (plateX - opts.nmb.indentIn) * PT_TO_MM,
      (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
-     (+opts.sel.z - 6) * PT_TO_MM
+     (+opts.sel.z - DISTORS) * PT_TO_MM
     );
     vr.stroked = false;
     vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
@@ -133,9 +133,9 @@ function makeLayout(str) {
    function ___addPr() {
     pr = lay.pathItems.rectangle(
      plateY,
-     (plateX - opts.nmb.railWidth - opts.nmb.indentIn - 1) * PT_TO_MM,
-     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2 + 2) * PT_TO_MM,
-     (+opts.sel.z - 6) * PT_TO_MM
+     (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
+     (+opts.sel.z - DISTORS) * PT_TO_MM
     );
     pr.stroked = false;
     pr.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
@@ -283,10 +283,8 @@ function makeLayout(str) {
    railGr.position[1]
   ];
 
-  colorGr.position = [
-   railGr.position[0] + (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
-   railGr.position[1]
-  ];
+  colorGr.translate((+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
+                    0);
 
   /**
    * LIB TO ADD TEST ELEMENTS
@@ -419,7 +417,7 @@ function makeLayout(str) {
 
    title.position = [
     titleTmplRect[1] - calcCharSize(title).top + (+opts.nmb.railWidth * PT_TO_MM - calcCharSize(title).h) / 2,
-    titleTmplRect[0] - opts.sel.z * PT_TO_MM / 2 + Math.abs(title.geometricBounds[1] - title.geometricBounds[3]) + 16 * PT_TO_MM
+    titleTmplRect[0] - opts.sel.z * PT_TO_MM / 2 + Math.abs(title.geometricBounds[1] - title.geometricBounds[3]) + +opts.nmb.crossWidth * 4 * PT_TO_MM
    ];
 
    for (i = 0; i < opts.col.length; i++) {
@@ -478,6 +476,15 @@ function makeLayout(str) {
 
     shift_count++;
    }
+   var railTopLine = railGr.pathItems.rectangle(
+    0,
+    (-opts.nmb.railWidth / 2 - opts.nmb.indentIn - 0.1) * PT_TO_MM,
+    0.2 * PT_TO_MM,
+    (opts.sel.z - DISTORS) * PT_TO_MM);
+   railTopLine.name = 'rail_topLine';
+   railTopLine.fillColor = makeCMYK([0, 0, 0, 0]);
+   railTopLine.fillOverprint = false;
+   railTopLine.stroked = false;
   }
 
   function __addCrossGr(opts, crossGr) {
@@ -495,6 +502,19 @@ function makeLayout(str) {
     +opts.nmb.crossWidth * PT_TO_MM
    );
    crossBg.stroked = false;
+
+   var crossCircle = crossGr.pathItems.ellipse(
+    +opts.nmb.crossWidth * PT_TO_MM,
+    -opts.nmb.crossWidth * PT_TO_MM / 2,
+    +opts.nmb.crossWidth * PT_TO_MM,
+    +opts.nmb.crossWidth * PT_TO_MM
+   );
+
+   crossCircle.filled = false;
+   crossCircle.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
+   crossCircle.strokeColor = getRegistration();
+   crossCircle.resize(50, 50);
+   crossCircle.strokeOverprint = true;
 
    for (var m = 0; m < arr.length; m++) {
     var obj1 = arr[m];
@@ -564,6 +584,11 @@ function makeLayout(str) {
     (-opts.nmb.railWidth - opts.nmb.indentIn + (+opts.nmb.railWidth - opts.nmb.crossWidth) / 2) * PT_TO_MM,
     -(+opts.sel.z - DISTORS - opts.nmb.crossWidth) / 2 * PT_TO_MM
    ];
+
+   var crossGrTop    = crossGr.duplicate(),
+       crossGrBottom = crossGr.duplicate();
+   crossGrTop.translate(0, (-opts.nmb.crossWidth * 1.5 + +opts.sel.z / 2) * PT_TO_MM);
+   crossGrBottom.translate(0, (opts.nmb.crossWidth * 1.5 - +opts.sel.z / 2) * PT_TO_MM);
   }
 
   /**

@@ -321,7 +321,7 @@
    function defTxt() {
     return {
      fileName: 'OUT_000000_CLIENT_MAKET',
-     layoutName: '241xxx КЛИЕНТ МАКЕТ'
+     layoutName: '000000 КЛИЕНТ МАКЕТ'
     };
    }
 
