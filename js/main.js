@@ -4,7 +4,7 @@
 (function main() {
  'use strict';
 
- var csInterface = new CSInterface();
+ const csInterface = new CSInterface();
 
  init();
 
@@ -15,11 +15,10 @@
 
   $('#btnReset').click(reloadPanel);
   document.getElementById('btnKillCEP').addEventListener('click', () => {
-   let apiVersion = csInterface.getCurrentApiVersion();
+   const apiVersion = csInterface.getCurrentApiVersion();
    if (apiVersion.major <= 6) return;
-   csInterface.requestOpenExtension('ai_layout');
+   csInterface.requestOpenExtension('ai_layout_dialog');
    csInterface.closeExtension();
-   csInterface.requestOpenExtension('ai_layout');
   });
 
   addLayout();
@@ -331,7 +330,7 @@
      {name: 'M', color: 'white', bg: 'magenta', cmyk: '0,100,0,0'},
      {name: 'Y', color: 'black', bg: 'yellow', cmyk: '0,0,100,0'},
      {name: 'K', color: 'white', bg: 'black', cmyk: '0,0,0,100'},
-     {name: 'W', color: 'black', bg: 'rgb(128, 128, 255)', cmyk: '50,50,0,0'}
+     {name: 'W', color: 'black', bg: 'rgb(243, 236, 239)', cmyk: '3,6,2,0'}
      // {name: "L", color: "black", bg: "rgb(255, 128, 128)", cmyk: "0,50,50,0"},
      // {name: "Pr", color: "black", bg: "rgb(128, 255, 128)", cmyk: "50,0,50,0"},
     ];
@@ -690,7 +689,7 @@
    function makePantoneBook() {
     return {
      ' Pr': '50,0,50,0',
-     ' W': '50,50,0,0',
+     ' W': '3,6,2,0',
      ' C': '100,0,0,0',
      ' M': '0,100,0,0',
      ' Y': '0,0,100,0',

@@ -482,7 +482,7 @@ function makeLayout(str) {
     0.2 * PT_TO_MM,
     (opts.sel.z - DISTORS) * PT_TO_MM);
    railTopLine.name = 'rail_topLine';
-   railTopLine.fillColor = makeCMYK([0, 0, 0, 0]);
+   railTopLine.fillColor = makeSpot('film', [0, 0, 0, 30], 100);
    railTopLine.fillOverprint = false;
    railTopLine.stroked = false;
   }
@@ -968,13 +968,18 @@ function getColor(colorName, cmyk, tint) {
 }
 
 function makeSpot(name, cmyk, tint) {
- tint = tint || 100;
+ if (tint === 0) {
+  tint = tint;
+ } else {
+  tint = tint || 100;
+ }
+
  name = name || 'Ze_Test';
  cmyk = cmyk || [11, 11, 11, 11];
 
  var newSpot, newColor, newSpotColor;
 
- if (name != 'L' && name != 'W' && name != 'Pr') {
+ if (name != 'L' && name != 'W' && name != 'Pr' && name != 'film') {
   name = 'PANTONE ' + name + ' C';
  }
 
@@ -996,7 +1001,7 @@ function makeSpot(name, cmyk, tint) {
   newSpot.color = newColor;
 
   newSpotColor.spot = newSpot;
-  newSpotColor.tint = tint;
+  newSpotColor.tint = +tint;
 
   return newSpotColor;
  }

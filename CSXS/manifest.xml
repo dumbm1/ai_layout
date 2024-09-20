@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="4.0"
+<ExtensionManifest Version="7.0"
                    ExtensionBundleId="ai_layout"
-                   ExtensionBundleVersion="2.0.1"
+                   ExtensionBundleVersion="2.0.2"
                    ExtensionBundleName="ai_layout"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
@@ -18,7 +18,8 @@
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="ai_layout" Version="2.0.1"/>
+        <Extension Id="ai_layout_panel" Version="2.0.2"/>
+        <Extension Id="ai_layout_dialog" Version="2.0.2"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -28,22 +29,29 @@
             <Locale Code="All"/>
         </LocaleList>
         <RequiredRuntimeList>
-            <RequiredRuntime Name="CSXS" Version="4.0"/>
+            <RequiredRuntime Name="CSXS" Version="7.0"/>
         </RequiredRuntimeList>
     </ExecutionEnvironment>
     <DispatchInfoList>
-        <Extension Id="ai_layout">
+
+        <Extension Id="ai_layout_panel">
             <DispatchInfo>
                 <Resources>
                     <MainPath>./index.html</MainPath>
                     <ScriptPath>./jsx/hostscript.jsx</ScriptPath>
+                    <CEFCommandLine>
+                        <Parameter>--enable-nodejs</Parameter>
+                        <Parameter>--mixed-context</Parameter>
+                        <Parameter>--allow-file-access</Parameter>
+                        <Parameter>--allow-file-access-from-files</Parameter>
+                    </CEFCommandLine>
                 </Resources>
                 <Lifecycle>
                     <AutoVisible>true</AutoVisible>
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>ai_layout 2.0.1</Menu>
+                    <Menu>ai_layout 2.0.2</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
@@ -68,5 +76,29 @@
                 </UI>
             </DispatchInfo>
         </Extension>
+
+        <Extension Id="ai_layout_dialog">
+            <DispatchInfo>
+                <Resources>
+                    <MainPath>./dialog.html</MainPath>
+                    <CEFCommandLine>
+                    </CEFCommandLine>
+                </Resources>
+                <Lifecycle>
+                    <AutoVisible>false</AutoVisible>
+                </Lifecycle>
+                <UI>
+                    <Type>ModalDialog</Type>
+                    <Menu>ai_layout [service]</Menu>
+                    <Geometry>
+                        <Size>
+                            <Height>1</Height>
+                            <Width>1</Width>
+                        </Size>
+                    </Geometry>
+                </UI>
+            </DispatchInfo>
+        </Extension>
+
     </DispatchInfoList>
 </ExtensionManifest>

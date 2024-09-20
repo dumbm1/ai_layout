@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <ExtensionList>
-    <Extension Id="ai_layout">
+    <Extension Id="ai_layout_panel">
         <HostList>
             
             <!-- Illustrator -->
