@@ -18,6 +18,7 @@ function makeLayout(str) {
  _addGuides(str);
  _addTestElems(str);
  _delAllUnused();
+
  (function setZeroPoint() {
   var d = activeDocument;
   d.rulerOrigin = [
@@ -63,6 +64,11 @@ function makeLayout(str) {
   __addVrAndPrPlates(opts, doc);
   addLayer({rgb: [128, 128, 0], doc: doc, title: 'test'});
   doc.layers[doc.layers.length - 1].remove();
+
+  /** !!! WARN !!! This function working correctrly.
+   * But other code worked non-correct - needs to refactoring
+   * */
+  // __setZero();
 
   function __addVrAndPrPlates(opts, doc) {
    var colArr = opts.col;
@@ -152,6 +158,24 @@ function makeLayout(str) {
     }
    }
 
+  }
+
+  /** !!! WARN !!! This function working correctrly.
+   * But other code worked non-correct - needs to refactoring
+   * */
+  function __setZero() {
+   if (documents.length == 0) return;
+
+   activeDocument.rulerOrigin = [0, activeDocument.height]; // Set Zero point ruler on Document
+
+   if (selection.length != 0) {
+    var left = selection[0].left,
+        top  = -selection[0].top;
+
+    activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [left, top];
+    return;
+   }
+   activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [0, 0];
   }
  }
 
@@ -265,16 +289,39 @@ function makeLayout(str) {
   var lay      = getLayByName('test'),
       fontName = __getFonts()[0];
 
-  var mainGr  = lay.groupItems.add(),
-      railGr  = mainGr.groupItems.add(),
-      crossGr = mainGr.groupItems.add(),
-      titleGr = lay.groupItems.add(),
-      colorGr = lay.groupItems.add();
+  var mainGr         = lay.groupItems.add(),
+      railGr         = mainGr.groupItems.add(),
+      crossGr        = mainGr.groupItems.add(),
+      titleGr        = lay.groupItems.add(),
+      colorGr        = lay.groupItems.add(),
+      trafficLightGr = lay.groupItems.add(),
+      squardsGr      = lay.groupItems.add();
 
   __addRails(opts, railGr);
   __addCrossGr(opts, crossGr);
   __addTitle(opts, titleGr);
   __addColors(opts, colorGr);
+
+  /**
+   * !!! WARN !!! Patch
+   * */
+  (function setZero() {
+   if (documents.length == 0) return;
+
+   activeDocument.rulerOrigin = [0, activeDocument.height]; // Set Zero point ruler on Document
+
+   if (selection.length != 0) {
+    var left = selection[0].left,
+        top  = -selection[0].top;
+
+    activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [left, top];
+    return;
+   }
+   activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [0, 0];
+  }());
+
+  __addTrafficLightsGr(opts, trafficLightGr);
+  try { __addSquardsGr(opts, squardsGr);} catch (e) {alert(e.line + '. ' + e.message); }
 
   // duplicate the rails to right
   var mainGrCopy = mainGr.duplicate();
@@ -589,6 +636,173 @@ function makeLayout(str) {
        crossGrBottom = crossGr.duplicate();
    crossGrTop.translate(0, (-opts.nmb.crossWidth * 1.5 + +opts.sel.z / 2) * PT_TO_MM);
    crossGrBottom.translate(0, (opts.nmb.crossWidth * 1.5 - +opts.sel.z / 2) * PT_TO_MM);
+  }
+
+  /**
+   * Светофоры
+   * */
+  function __addTrafficLightsGr(opts, trafficLightsGr) {
+   var arr = opts.col;
+   var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
+   var lightShift = BASE_W * 3;
+
+   var LIGHT_BG_D     = 3.5 * PT_TO_MM,
+       LIGHT_STROKE_D = 2.5 * PT_TO_MM,
+       LIGHT_D        = 1.5 * PT_TO_MM;
+
+   var wPlate = false;
+
+   try {
+    for (var i = 0; i < arr.length; i++) {
+     if (arr[i].name.match(/^W(#\d)?$/)) wPlate = true;
+    }
+   } catch (e) {
+    alert('Error in first circle\nline ' + e.line + '. ' + e.message);
+   }
+
+   try {
+    for (var i = 0; i < arr.length; i++) {
+     var obj = arr[i];
+
+     if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) continue;
+
+     var cmykArr = obj.cmyk.split(',');
+
+     var lightGr = trafficLightsGr.groupItems.add();
+
+     var lightBg = lightGr.pathItems.ellipse(
+      -lightShift, (BASE_W - LIGHT_BG_D) / 2, LIGHT_BG_D, LIGHT_BG_D
+     );
+     var lightStroke = lightGr.pathItems.ellipse(
+      -lightShift - (LIGHT_BG_D - LIGHT_STROKE_D) / 2, (BASE_W - LIGHT_STROKE_D) / 2, LIGHT_STROKE_D, LIGHT_STROKE_D
+     );
+     var light = lightGr.pathItems.ellipse(
+      -lightShift - (LIGHT_BG_D - LIGHT_D) / 2, (BASE_W - LIGHT_D) / 2, LIGHT_D, LIGHT_D
+     );
+
+     lightShift += LIGHT_BG_D;
+
+     lightStroke.filled = false;
+     light.stroked = false;
+     lightBg.stroked = false;
+
+     light.fillOverprint = true;
+     lightStroke.strokeOverprint = true;
+
+     light.fillColor = getColor(obj.name, cmykArr, 100);
+     lightStroke.strokeColor = getRegistration();
+     lightBg.fillColor = getColor(obj.name, cmykArr, 100);
+
+     lightStroke.strokeWidth = opts.nmb.crossStroke * PT_TO_MM;
+
+     if (wPlate) lightBg.fillColor = makeSpot('W');
+
+     // пост обработка - убираем заливку подложки с элемента 'W'
+     if (obj.name.match(/^W(#\d)?$/)) lightBg.fillColor = getColor('white');
+
+    }
+   } catch (e) {
+    alert('Error in second circle\n' + e.line + '. ' + e.message);
+   }
+
+   trafficLightsGr.translate(
+    activeDocument.width - opts.nmb.railWidth * PT_TO_MM, 0
+   );
+   var trafficLightsGrBottom = trafficLightsGr.duplicate();
+   trafficLightsGrBottom.translate(
+    0, -opts.sel.z * PT_TO_MM + trafficLightsGrBottom.height + BASE_W * 6);
+
+  }
+
+  /**
+   * Квадратики
+   * */
+  function __addSquardsGr(opts, squardsGr) {
+
+   var colors = opts.col;
+   var SQRD_W = 5 * PT_TO_MM;
+   var SAMPLE_SQRDS = opts.chk.one_color_squards;
+   var shift = 0;
+   var squardsBg;
+
+   for (var i = 0; i < colors.length; i++) {
+    if (colors[i].name.match(/^L(#\d)?$/) || colors[i].name.match(/^Pr(#\d)?$/) || colors[i].name.match(/^W(#\d)?$/)) continue;
+
+    var sqrd = squardsGr.pathItems.rectangle(shift, 0, SQRD_W, SQRD_W);
+    sqrd.fillColor = getColor(colors[i].name, colors[i].cmyk.split(','), 100);
+    sqrd.stroked = false;
+    sqrd.fillOverprint = true;
+    shift -= SQRD_W;
+   }
+
+   for (var i = 0; i < colors.length; i++) {
+
+    if (colors[i].name.match(/^W(#\d)?$/)) {
+     shift -= SQRD_W;
+     squardsBg = squardsGr.pathItems.rectangle(0, 0, SQRD_W, -shift);
+     squardsBg.stroked = false;
+     squardsBg.fillColor = getColor("W");
+     break;
+    } else if (i >= colors.length - 1) {
+     squardsBg = squardsGr.pathItems.rectangle(0, 0, SQRD_W, -shift);
+     squardsBg.stroked = false;
+     squardsBg.fillColor = getColor("white");
+    }
+
+   }
+   squardsBg.move(squardsGr, ElementPlacement.PLACEATEND);
+
+   squardsGr.translate(
+    activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
+    -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
+  )
+   ;
+
+  }
+
+  /**
+   * Мира
+   * */
+  function __addMiraGr(opts, miraGr) {
+
+   var colors = opts.col;
+   var MIRA_D = 5 * PT_TO_MM;
+   var shift = 0;
+   var squardsBg;
+
+   for (var i = 0; i < colors.length; i++) {
+    if (colors[i].name.match(/^L(#\d)?$/) || colors[i].name.match(/^Pr(#\d)?$/) || colors[i].name.match(/^W(#\d)?$/)) continue;
+
+    var sqrd = squardsGr.pathItems.rectangle(shift, 0, MIRA_D, MIRA_D);
+    sqrd.fillColor = getColor(colors[i].name, colors[i].cmyk.split(','), 100);
+    sqrd.stroked = false;
+    sqrd.fillOverprint = true;
+    shift -= MIRA_D;
+   }
+
+   for (var i = 0; i < colors.length; i++) {
+
+    if (colors[i].name.match(/^W(#\d)?$/)) {
+     shift -= MIRA_D;
+     squardsBg = squardsGr.pathItems.rectangle(0, 0, MIRA_D, -shift);
+     squardsBg.stroked = false;
+     squardsBg.fillColor = getColor("W");
+     break;
+    } else if (i >= colors.length - 1) {
+     squardsBg = squardsGr.pathItems.rectangle(0, 0, MIRA_D, -shift);
+     squardsBg.stroked = false;
+     squardsBg.fillColor = getColor("white");
+    }
+
+   }
+   squardsBg.move(squardsGr, ElementPlacement.PLACEATEND);
+
+   squardsGr.translate(
+    activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
+    -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
+   )
+   ;
+
   }
 
   /**
