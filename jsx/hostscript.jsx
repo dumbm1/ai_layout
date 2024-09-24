@@ -295,7 +295,8 @@ function makeLayout(str) {
       titleGr        = lay.groupItems.add(),
       colorGr        = lay.groupItems.add(),
       trafficLightGr = lay.groupItems.add(),
-      squardsGr      = lay.groupItems.add();
+      squardsGr      = lay.groupItems.add(),
+      miraGr         = lay.groupItems.add();
 
   __addRails(opts, railGr);
   __addCrossGr(opts, crossGr);
@@ -322,6 +323,7 @@ function makeLayout(str) {
 
   __addTrafficLightsGr(opts, trafficLightGr);
   try { __addSquardsGr(opts, squardsGr);} catch (e) {alert(e.line + '. ' + e.message); }
+  try { __addMiraGr(opts, miraGr);} catch (e) {alert(e.line + '. ' + e.message); }
 
   // duplicate the rails to right
   var mainGrCopy = mainGr.duplicate();
@@ -642,6 +644,8 @@ function makeLayout(str) {
    * Светофоры
    * */
   function __addTrafficLightsGr(opts, trafficLightsGr) {
+   if (opts.nmb.railWidth < 3.5) return;
+
    var arr = opts.col;
    var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
    var lightShift = BASE_W * 3;
@@ -718,6 +722,7 @@ function makeLayout(str) {
    * Квадратики
    * */
   function __addSquardsGr(opts, squardsGr) {
+   if (opts.nmb.railWidth < 5) return;
 
    var colors = opts.col;
    var SQRD_W = 5 * PT_TO_MM;
@@ -755,7 +760,7 @@ function makeLayout(str) {
    squardsGr.translate(
     activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
     -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
-  )
+   )
    ;
 
   }
@@ -765,43 +770,112 @@ function makeLayout(str) {
    * */
   function __addMiraGr(opts, miraGr) {
 
+   if (opts.nmb.railWidth < 5) return;
+
    var colors = opts.col;
    var MIRA_D = 5 * PT_TO_MM;
    var shift = 0;
-   var squardsBg;
+   var elBg = getColor("white");
 
    for (var i = 0; i < colors.length; i++) {
-    if (colors[i].name.match(/^L(#\d)?$/) || colors[i].name.match(/^Pr(#\d)?$/) || colors[i].name.match(/^W(#\d)?$/)) continue;
+    if (colors[i].name.match(/^W(#\d)?$/)) {
+     elBg = getColor("W");
+     break;
+    }
+   }
 
-    var sqrd = squardsGr.pathItems.rectangle(shift, 0, MIRA_D, MIRA_D);
-    sqrd.fillColor = getColor(colors[i].name, colors[i].cmyk.split(','), 100);
-    sqrd.stroked = false;
-    sqrd.fillOverprint = true;
+   for (var i = 0; i < colors.length; i++) {
+
+    if (colors[i].name.match(/^L(#\d)?$/) || colors[i].name.match(/^Pr(#\d)?$/)) continue;
+
+    var elGr;
+
+    if (colors[i].name.match(/^W(#\d)?$/)) {
+     elGr = __makeMira(miraGr, getColor(colors[i].name), getColor('white'), shift);
+    } else {
+     elGr = __makeMira(miraGr, getColor(colors[i].name), elBg, shift);
+    }
+
     shift -= MIRA_D;
    }
 
-   for (var i = 0; i < colors.length; i++) {
+   miraGr.translate(
+    activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
+    -opts.nmb.crossWidth * 4 * PT_TO_MM + shift / 5 * 3.5
+   );
 
-    if (colors[i].name.match(/^W(#\d)?$/)) {
-     shift -= MIRA_D;
-     squardsBg = squardsGr.pathItems.rectangle(0, 0, MIRA_D, -shift);
-     squardsBg.stroked = false;
-     squardsBg.fillColor = getColor("W");
-     break;
-    } else if (i >= colors.length - 1) {
-     squardsBg = squardsGr.pathItems.rectangle(0, 0, MIRA_D, -shift);
-     squardsBg.stroked = false;
-     squardsBg.fillColor = getColor("white");
+   function __makeMira(miraGr, color, bgColor, shift) {
+    var color,
+        bgColor;
+
+    if (!color) {
+     color = new CMYKColor();
+     color.cyan = 100;
+    } else {
+     color = color;
     }
 
-   }
-   squardsBg.move(squardsGr, ElementPlacement.PLACEATEND);
+    if (!bgColor) {
+     bgColor = new CMYKColor();
+     bgColor.magenta = 10;
+    } else {
+     bgColor = bgColor;
+    }
 
-   squardsGr.translate(
-    activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
-    -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
-   )
-   ;
+    var miraEl = miraGr.groupItems.add();
+    miraEl.name = '__mira_element__';
+
+    var elBg = miraEl.pathItems.ellipse(shift, 0, 7.0866 * 2, 7.0866 * 2);
+    elBg.stroked = false;
+    elBg.fillColor = bgColor;
+
+    var el = miraEl.pathItems.add();
+
+    el.setEntirePath([
+                      [6.8882, shift - 0],
+                      [7.285, shift - 0],
+                      [7.0866, shift - 7.0866]
+                     ]);
+
+    el.closed = true;
+    el.fillColor = color;
+    el.stroked = false;
+    el.overprintFill = true;
+
+    var el_1 = el.duplicate();
+    el_1.rotate(-10, true, true, true, true, Transformation.BOTTOM);
+
+    for (var i = 0; i < 8; i++) {
+     el_1 = el_1.duplicate();
+     el_1.rotate(-10, true, true, true, true, Transformation.BOTTOMLEFT);
+    }
+
+    var el_2 = el_1.duplicate();
+    el_2.rotate(-10, true, true, true, true, Transformation.LEFT);
+
+    for (var i = 0; i < 8; i++) {
+     el_2 = el_2.duplicate();
+     el_2.rotate(-10, true, true, true, true, Transformation.TOPLEFT);
+    }
+
+    var el_3 = el_2.duplicate();
+    el_3.rotate(-10, true, true, true, true, Transformation.TOP);
+
+    for (var i = 0; i < 8; i++) {
+     el_3 = el_3.duplicate();
+     el_3.rotate(-10, true, true, true, true, Transformation.TOPRIGHT);
+    }
+
+    var el_4 = el_3.duplicate();
+    el_4.rotate(-10, true, true, true, true, Transformation.RIGHT);
+
+    for (var i = 0; i < 7; i++) {
+     el_4 = el_4.duplicate();
+     el_4.rotate(-10, true, true, true, true, Transformation.BOTTOMRIGHT);
+    }
+
+    return miraEl;
+   }
 
   }
 
