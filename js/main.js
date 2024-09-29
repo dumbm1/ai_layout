@@ -14,11 +14,15 @@
   loadJSX('json2.js');
 
   $('#btnReset').click(reloadPanel);
+
   document.getElementById('btnKillCEP').addEventListener('click', () => {
-   const apiVersion = csInterface.getCurrentApiVersion();
-   if (apiVersion.major <= 6) return;
-   csInterface.requestOpenExtension('ai_layout_dialog');
-   csInterface.closeExtension();
+   let apiVersion = csInterface.getCurrentApiVersion();
+   if (apiVersion.major > 6) {
+    csInterface.requestOpenExtension('ai_layout_dialog');
+    csInterface.closeExtension();
+   } else {
+    csInterface.closeExtension();
+   }
   });
 
   addLayout();

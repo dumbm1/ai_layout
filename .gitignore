@@ -1,4 +1,18 @@
+#ignore all temporary files
 *~
-/.idea
-*.ini
-test.jsx
+.~*
+
+#ignore all files with names that begin with the "_tmp_"
+_tmp_*
+
+#ignore all files in folder "_tmp_"
+_tmp_/*
+
+#ingnore WebStorm settings folder
+.idea/*
+
+.vscode
+node_modules
+package-lock.json
+yarn.lock
+.DS_Store

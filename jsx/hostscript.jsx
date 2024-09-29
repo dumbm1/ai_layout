@@ -791,9 +791,9 @@ function makeLayout(str) {
     var elGr;
 
     if (colors[i].name.match(/^W(#\d)?$/)) {
-     elGr = __makeMira(miraGr, getColor(colors[i].name), getColor('white'), shift);
+     elGr = __makeMira(miraGr, getColor(colors[i].name, colors[i].cmyk.split(','), 100), getColor('white'), shift);
     } else {
-     elGr = __makeMira(miraGr, getColor(colors[i].name), elBg, shift);
+     elGr = __makeMira(miraGr, getColor(colors[i].name, colors[i].cmyk.split(','), 100), elBg, shift);
     }
 
     shift -= MIRA_D;
@@ -805,21 +805,19 @@ function makeLayout(str) {
    );
 
    function __makeMira(miraGr, color, bgColor, shift) {
-    var color,
-        bgColor;
 
     if (!color) {
-     color = new CMYKColor();
+     var color = new CMYKColor();
      color.cyan = 100;
     } else {
-     color = color;
+     var color = color;
     }
 
     if (!bgColor) {
-     bgColor = new CMYKColor();
+     var bgColor = new CMYKColor();
      bgColor.magenta = 10;
     } else {
-     bgColor = bgColor;
+     var bgColor = bgColor;
     }
 
     var miraEl = miraGr.groupItems.add();

@@ -1,13 +1,14 @@
 (function () {
  'use strict';
- const csInterface = new CSInterface();
+
  try {
   init();
- } catch (e) {
+ } catch (e){
   alert(e);
  }
 
  function init() {
+  var csInterface = new CSInterface();
   themeManager.init();
   if (csInterface.isWindowVisible()) {
    csInterface.requestOpenExtension('ai_layout_panel');
@@ -15,3 +16,4 @@
   }
  }
 }());
+
