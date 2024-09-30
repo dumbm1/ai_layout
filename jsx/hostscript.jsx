@@ -838,7 +838,7 @@ function makeLayout(str) {
     el.closed = true;
     el.fillColor = color;
     el.stroked = false;
-    el.overprintFill = true;
+    el.fillOverprint = true;
 
     var el_1 = el.duplicate();
     el_1.rotate(-10, true, true, true, true, Transformation.BOTTOM);
