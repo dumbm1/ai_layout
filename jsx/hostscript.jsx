@@ -816,6 +816,7 @@ function makeLayout(str) {
    * Квадратики
    * */
   function __addSquardsGr(opts, squardsGr) {
+
    if (opts.nmb.railWidth < 5) return;
 
    var colors = opts.col;
@@ -823,15 +824,32 @@ function makeLayout(str) {
    var SAMPLE_SQRDS = opts.chk.one_color_squards;
    var shift = 0;
    var squardsBg;
+   var colStepsArr;
 
    for (var i = 0; i < colors.length; i++) {
     if (colors[i].name.match(/^L(#\d)?$/) || colors[i].name.match(/^Pr(#\d)?$/) || colors[i].name.match(/^W(#\d)?$/)) continue;
 
-    var sqrd = squardsGr.pathItems.rectangle(shift, 0, SQRD_W, SQRD_W);
-    sqrd.fillColor = getColor(colors[i].name, colors[i].cmyk.split(','), 100);
-    sqrd.stroked = false;
-    sqrd.fillOverprint = true;
-    shift -= SQRD_W;
+    var sqrdSteps = +opts.nmb['shift_' + (i + 1)];
+    if (sqrdSteps == 5) {
+     colStepsArr = [100, 75, 50, 25, 2];
+    } else if (sqrdSteps == 4) {
+     colStepsArr = [100, 70, 35, 2];
+    } else if (sqrdSteps == 3) {
+     colStepsArr = [100, 50, 2];
+    } else if (sqrdSteps == 2) {
+     colStepsArr = [100, 2];
+    } else if (sqrdSteps == 1) {
+     colStepsArr = [100];
+    } else throw new Error('Неверное количество патчей.');
+
+    for (var j = 0; j < sqrdSteps; j++) {
+
+     var sqrd = squardsGr.pathItems.rectangle(shift, 0, SQRD_W, SQRD_W);
+     sqrd.fillColor = getColor(colors[i].name, colors[i].cmyk.split(','), colStepsArr[j]);
+     sqrd.stroked = false;
+     sqrd.fillOverprint = true;
+     shift -= SQRD_W;
+    }
    }
 
    for (var i = 0; i < colors.length; i++) {
@@ -855,7 +873,6 @@ function makeLayout(str) {
     activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
     -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
    )
-   ;
 
   }
 
@@ -1348,10 +1365,10 @@ function getColor(colorName, cmyk, tint) {
 }
 
 function makeSpot(name, cmyk, tint) {
- if (tint === 0) {
-  tint = tint;
+ if (+tint === 0) {
+  tint = 0;
  } else {
-  tint = tint || 100;
+  tint = +tint || 100;
  }
 
  name = name || 'Ze_Test';
@@ -1365,6 +1382,7 @@ function makeSpot(name, cmyk, tint) {
 
  try {
   newSpotColor = activeDocument.swatches.getByName(name);
+  newSpotColor.color.tint = tint;
   return newSpotColor.color;
  } catch (e) {
   newSpot = activeDocument.spots.add();
@@ -1381,7 +1399,7 @@ function makeSpot(name, cmyk, tint) {
   newSpot.color = newColor;
 
   newSpotColor.spot = newSpot;
-  newSpotColor.tint = +tint;
+  newSpotColor.tint = tint;
 
   return newSpotColor;
  }
