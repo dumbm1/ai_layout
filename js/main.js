@@ -144,12 +144,12 @@
      $(this).attr('id') == 'railWidth'
     ) {
      ($('#filmWidth').val(function () {
-      var indentIn_val    = $('#indentIn').val(),
-          margLeft_val    = $('#margLeft').val(),
-          margRight_val   = $('#margRight').val(),
-          streams_val     = $('#streams').val(),
-          railWidth_val   = $('#railWidth').val(),
-          layoutWidth_val = $('#layoutWidth').val();
+      var indentIn_val = $('#indentIn').val(),
+       margLeft_val = $('#margLeft').val(),
+       margRight_val = $('#margRight').val(),
+       streams_val = $('#streams').val(),
+       railWidth_val = $('#railWidth').val(),
+       layoutWidth_val = $('#layoutWidth').val();
       return +indentIn_val * 2 + +margLeft_val + +margRight_val + +streams_val * +layoutWidth_val + +railWidth_val * 2;
      }));
     }
@@ -164,7 +164,7 @@
    var layoutName = document.getElementById('layoutName');
    var fileName = document.getElementById('fileName');
    layoutName.onkeyup = function () {
-    fileName.value = trnsRuToEn(document.getElementById('layoutName').value);
+    fileName.value = 'out_' + trnsRuToEn(document.getElementById('layoutName').value);
    };
 
    function trnsRuToEn(text) {
@@ -323,7 +323,7 @@
 
    function defTxt() {
     return {
-     fileName: 'OUT_000000_CLIENT_MAKET',
+     fileName: 'out_000000_client_maket',
      layoutName: '000000 КЛИЕНТ МАКЕТ'
     };
    }
@@ -357,14 +357,14 @@
 
      indentIn: 2,
 
-     shift_1: 0,
-     shift_2: 0,
-     shift_3: 0,
-     shift_4: 0,
-     shift_5: 0,
-     shift_6: 0,
-     shift_7: 0,
-     shift_8: 0
+     shift_1: 5,
+     shift_2: 5,
+     shift_3: 5,
+     shift_4: 5,
+     shift_5: 1,
+     shift_6: 1,
+     shift_7: 1,
+     shift_8: 1
     };
    }
 
@@ -418,14 +418,20 @@
    function setNmb(obj) {
 
     $('input[type=number]').each(function () {
+/*          for (var key in obj) {
+           var re = /shift_\d/;
+           if (key == $(this).attr('id') && !($(this).attr('id').match(re))) {
+            $(this).val(obj[key]);
+           } else if ($(this).attr('id').match(re)) {
+            $(this).val(+obj[key]);
+           }
+          }*/
      for (var key in obj) {
-      var re = /shift_\d/;
-      if (key == $(this).attr('id') && !($(this).attr('id').match(re))) {
+      if (key == $(this).attr('id')) {
        $(this).val(obj[key]);
-      } else if ($(this).attr('id').match(re)) {
-       $(this).val(0);
       }
      }
+
     });
    }
 
@@ -538,13 +544,13 @@
 
    function addPantList(pantBook) {
     var pntDiv = document.getElementById('pantList').getElementsByTagName('div')[0],
-        ul     = document.createElement('ul');
+     ul = document.createElement('ul');
 
     for (var key in pantBook) {
-     var li    = document.createElement('li'),
-         spn   = document.createElement('span'),
-         bgCol = convertCmykToRgb(pantBook[key]),
-         fgCol = getContrastYIQ(bgCol);
+     var li = document.createElement('li'),
+      spn = document.createElement('span'),
+      bgCol = convertCmykToRgb(pantBook[key]),
+      fgCol = getContrastYIQ(bgCol);
 
      spn.innerHTML = key.slice(1);
      li.appendChild(spn);
@@ -562,7 +568,7 @@
      * */
     function convertCmykToRgb(cmykValue) {
      var _cmyk = cmykValue.split(','),
-         _rgb  = [];
+      _rgb = [];
      _rgb.push(Math.ceil(255 * (1 - _cmyk[0] / 100) * (1 - _cmyk[3] / 100)));
      _rgb.push(Math.ceil(255 * (1 - _cmyk[1] / 100) * (1 - _cmyk[3] / 100)));
      _rgb.push(Math.ceil(255 * (1 - _cmyk[2] / 100) * (1 - _cmyk[3] / 100)));
@@ -602,7 +608,7 @@
 
     function _addColBtn(e) {
      var targ = e.target,
-         col, bgCol, txt;
+      col, bgCol, txt;
 
      if (targ.nodeName == 'UL') return;
 
@@ -629,18 +635,18 @@
    }
 
    function makeColBtn(/*txt, col, bgCol*/) {
-    var txt       = arguments[0],
-        col       = arguments[1],
-        bgCol     = arguments[2],
-        container = document.getElementById('colBtns'),
-        colLen    = 8,
-        btnsLen   = container.getElementsByClassName('col-btn').length;
+    var txt = arguments[0],
+     col = arguments[1],
+     bgCol = arguments[2],
+     container = document.getElementById('colBtns'),
+     colLen = 8,
+     btnsLen = container.getElementsByClassName('col-btn').length;
 
     if (btnsLen == colLen) return;
 
-    var btn      = document.createElement('div'),
-        btnTitle = document.createElement('span'),
-        btnClose = document.createElement('span');
+    var btn = document.createElement('div'),
+     btnTitle = document.createElement('span'),
+     btnClose = document.createElement('span');
 
     btn.className = 'col-btn';
     btnTitle.className = 'col-btn-title';

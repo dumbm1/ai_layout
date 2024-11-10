@@ -6,10 +6,10 @@ var MM_TO_PT = 0.352777778;
 var DISTORS = 0;
 
 function makeLayout(str) {
- var margTop   = +str.nmb.margTop,
-     margBott  = +str.nmb.margBott,
-     margLeft  = +str.nmb.margLeft,
-     margRight = +str.nmb.margRight;
+ var margTop = +str.nmb.margTop,
+  margBott = +str.nmb.margBott,
+  margLeft = +str.nmb.margLeft,
+  margRight = +str.nmb.margRight;
 
  // scrollWin (showObjDeep (str));
 
@@ -75,7 +75,7 @@ function makeLayout(str) {
    var sw = 0;
    var lay, vr, pr;
    var plateX = 0,
-       plateY = 0;
+    plateY = 0;
 
    // alert(opts.chk.white_layer);
 
@@ -170,7 +170,7 @@ function makeLayout(str) {
 
    if (selection.length != 0) {
     var left = selection[0].left,
-        top  = -selection[0].top;
+     top = -selection[0].top;
 
     activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [left, top];
     return;
@@ -234,15 +234,15 @@ function makeLayout(str) {
 
  function _addGuides(opts) {
 
-  var doc  = activeDocument,
-      lay  = getLayByName('test'),
-      docW = doc.width,
-      docH = doc.height;
+  var doc = activeDocument,
+   lay = getLayByName('test'),
+   docW = doc.width,
+   docH = doc.height;
 
   var topGuide, bottGuide, centerGuide, leftGuide, rightGuide;
 
   var topX, topY, topLen,
-      leftX, leftY, leftLen;
+   leftX, leftY, leftLen;
 
   var guideBleeds = 1000;
 
@@ -251,9 +251,9 @@ function makeLayout(str) {
   topLen = docH + guideBleeds * 2 * PT_TO_MM;
   topGuide = lay.pathItems.add();
   topGuide.setEntirePath([
-                          [topX, topY],
-                          [topX + topLen, topY]
-                         ]);
+   [topX, topY],
+   [topX + topLen, topY]
+  ]);
   topGuide.guides = true;
 
   bottGuide = topGuide.duplicate();
@@ -267,9 +267,9 @@ function makeLayout(str) {
   leftLen = docH + guideBleeds * 2 * PT_TO_MM;
   leftGuide = lay.pathItems.add();
   leftGuide.setEntirePath([
-                           [leftX, leftY],
-                           [leftX, leftY + leftLen]
-                          ]);
+   [leftX, leftY],
+   [leftX, leftY + leftLen]
+  ]);
   leftGuide.guides = true;
 
   rightGuide = leftGuide.duplicate();
@@ -286,17 +286,18 @@ function makeLayout(str) {
  }
 
  function _addTestElems(opts) {
-  var lay      = getLayByName('test'),
-      fontName = __getFonts()[0];
+  var lay = getLayByName('test'),
+   fontName = __getFonts()[0];
 
-  var mainGr         = lay.groupItems.add(),
-      railGr         = mainGr.groupItems.add(),
-      crossGr        = mainGr.groupItems.add(),
-      titleGr        = lay.groupItems.add(),
-      colorGr        = lay.groupItems.add(),
-      trafficLightGr = lay.groupItems.add(),
-      squardsGr      = lay.groupItems.add(),
-      miraGr         = lay.groupItems.add();
+  var mainGr = lay.groupItems.add(),
+   railGr = mainGr.groupItems.add(),
+   crossGr = mainGr.groupItems.add(),
+   dotsGr = lay.groupItems.add(),
+   titleGr = lay.groupItems.add(),
+   colorGr = lay.groupItems.add(),
+   trafficLightGr = lay.groupItems.add(),
+   squardsGr = lay.groupItems.add(),
+   miraGr = lay.groupItems.add();
 
   __addRails(opts, railGr);
   __addCrossGr(opts, crossGr);
@@ -313,7 +314,7 @@ function makeLayout(str) {
 
    if (selection.length != 0) {
     var left = selection[0].left,
-        top  = -selection[0].top;
+     top = -selection[0].top;
 
     activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [left, top];
     return;
@@ -321,9 +322,19 @@ function makeLayout(str) {
    activeDocument.artboards[activeDocument.artboards.getActiveArtboardIndex()].rulerOrigin = [0, 0];
   }());
 
+  __addDotsGr(opts, dotsGr);
+
   __addTrafficLightsGr(opts, trafficLightGr);
-  try { __addSquardsGr(opts, squardsGr);} catch (e) {alert(e.line + '. ' + e.message); }
-  try { __addMiraGr(opts, miraGr);} catch (e) {alert(e.line + '. ' + e.message); }
+  try {
+   __addSquardsGr(opts, squardsGr);
+  } catch (e) {
+   alert(e.line + '. ' + e.message);
+  }
+  try {
+   __addMiraGr(opts, miraGr);
+  } catch (e) {
+   alert(e.line + '. ' + e.message);
+  }
 
   // duplicate the rails to right
   var mainGrCopy = mainGr.duplicate();
@@ -333,7 +344,7 @@ function makeLayout(str) {
   ];
 
   colorGr.translate((+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
-                    0);
+   0);
 
   /**
    * LIB TO ADD TEST ELEMENTS
@@ -343,11 +354,11 @@ function makeLayout(str) {
    var labelGr = colorGr.groupItems.add();
    var fontSize = 20;
    var bgH = (+opts.nmb.railWidth - +opts.nmb.railWidth / 3) * PT_TO_MM,
-       bgW;
+    bgW;
    var colArr = opts.col;
 
    var labelX = 0,
-       labelY = 0;
+    labelY = 0;
 
    for (var i = 0; i < colArr.length; i++) {
     var obj = colArr[i];
@@ -429,7 +440,7 @@ function makeLayout(str) {
     (-(+opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth / 2 - 3) * PT_TO_MM,
     (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
     opts.nmb.railWidth * PT_TO_MM,
-    ((opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth - 10) * PT_TO_MM
+    ((opts.sel.z - DISTORS) / 2 - opts.nmb.crossWidth - 15) * PT_TO_MM
    ];
    var titleCharSize;
    var titleFrameSize;
@@ -451,7 +462,7 @@ function makeLayout(str) {
    title.rotate(90, true);
 
    // tune text frame width
-   while (calcCharSize(title).h * MM_TO_PT > opts.nmb.railWidth - 1) {
+   while (calcCharSize(title).h * MM_TO_PT > opts.nmb.railWidth - 1.5) {
     fontSize -= 0.1;
     title.textRange.characterAttributes.size = fontSize;
    }
@@ -497,7 +508,7 @@ function makeLayout(str) {
 
   }
 
-  function __addRails(opts, railGr) {
+  /*function __addRails(opts, railGr) {
    var arr = opts.col;
    var shift_count = 1;
 
@@ -524,6 +535,43 @@ function makeLayout(str) {
     rail.fillOverprint = true;
 
     shift_count++;
+   }
+   var railTopLine = railGr.pathItems.rectangle(
+    0,
+    (-opts.nmb.railWidth / 2 - opts.nmb.indentIn - 0.1) * PT_TO_MM,
+    0.2 * PT_TO_MM,
+    (opts.sel.z - DISTORS) * PT_TO_MM);
+   railTopLine.name = 'rail_topLine';
+   railTopLine.fillColor = makeSpot('film', [0, 0, 0, 30], 100);
+   railTopLine.fillOverprint = false;
+   railTopLine.stroked = false;
+  }*/
+
+  function __addRails(opts, railGr) {
+   var arr = opts.col;
+
+   for (var i = 0; i < arr.length; i++) {
+    var obj = arr[i];
+
+    if (obj.name == 'Pr') continue;
+
+    var rail = railGr.pathItems.rectangle(
+     0,
+     (-opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+     opts.nmb.railWidth * PT_TO_MM,
+     (opts.sel.z - DISTORS) * PT_TO_MM
+    );
+    rail.name = 'rail_' + obj.name;
+    var cmykArr = obj.cmyk.split(',');
+    if (obj.name.match(/^L(#\d)?$/)) {
+     rail.fillColor = getColor(obj.name, cmykArr, 100);
+    } else {
+     rail.fillColor = getColor(obj.name, cmykArr, 20);
+    }
+
+    rail.stroked = false;
+    rail.fillOverprint = true;
+
    }
    var railTopLine = railGr.pathItems.rectangle(
     0,
@@ -597,9 +645,9 @@ function makeLayout(str) {
     line.strokeColor = getColor(obj.name, cmykArr, 100);
 
     line.setEntirePath([
-                        [0, 0],
-                        [0, +opts.nmb.crossWidth * PT_TO_MM]
-                       ]);
+     [0, 0],
+     [0, +opts.nmb.crossWidth * PT_TO_MM]
+    ]);
 
     var lineClon = line.duplicate();
     lineClon.rotate(90, true, undefined, undefined, undefined, Transformation.CENTER);
@@ -634,10 +682,56 @@ function makeLayout(str) {
     -(+opts.sel.z - DISTORS - opts.nmb.crossWidth) / 2 * PT_TO_MM
    ];
 
-   var crossGrTop    = crossGr.duplicate(),
-       crossGrBottom = crossGr.duplicate();
+   var crossGrTop = crossGr.duplicate(),
+    crossGrBottom = crossGr.duplicate();
    crossGrTop.translate(0, (-opts.nmb.crossWidth * 1.5 + +opts.sel.z / 2) * PT_TO_MM);
    crossGrBottom.translate(0, (opts.nmb.crossWidth * 1.5 - +opts.sel.z / 2) * PT_TO_MM);
+  }
+
+  function __addDotsGr(opts, dotsGr) {
+   var DOT_DIAMETER = .3;
+
+   try {
+    var streamsNumb = +opts.nmb.streams;
+    var layoutWidth = +opts.nmb.layoutWidth;
+    var indentIn = +opts.nmb.indentIn;
+    var railWidth = +opts.nmb.railWidth;
+    var z = +opts.sel.z;
+
+    var dotNextPositionX = 0;
+
+    var dot = dotsGr.pathItems.ellipse(0, 0, DOT_DIAMETER * PT_TO_MM, DOT_DIAMETER * PT_TO_MM);
+    dot.fillColor = getRegistration();
+    dot.stroked = false;
+    dot.overprintFill = true;
+
+    dot.position = [
+     (railWidth + indentIn / 2 - DOT_DIAMETER / 2) * PT_TO_MM,
+     -(z - DISTORS - DOT_DIAMETER) / 2 * PT_TO_MM
+    ]
+
+    for (var i = 0; i < streamsNumb; i++) {
+     var dotNext = dot.duplicate();
+     if (streamsNumb == 1) {
+      dotNext.translate((layoutWidth + indentIn) * PT_TO_MM, 0);
+      break;
+     }
+     if (i == 0) {
+      dotNext.translate((layoutWidth + indentIn / 2) * PT_TO_MM, 0);
+      dotNextPositionX += layoutWidth + indentIn / 2;
+      continue;
+     }
+     if (i == streamsNumb - 1) {
+      dotNext.translate((layoutWidth + dotNextPositionX + indentIn / 2) * PT_TO_MM, 0);
+      continue;
+     }
+     dotNext.translate((layoutWidth + dotNextPositionX) * PT_TO_MM, 0);
+     dotNextPositionX += layoutWidth;
+    }
+
+   } catch (e) {
+    alert('__addDotsGr\n' + e.line + ' ' + e.message);
+   }
   }
 
   /**
@@ -650,9 +744,9 @@ function makeLayout(str) {
    var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
    var lightShift = BASE_W * 3;
 
-   var LIGHT_BG_D     = 3.5 * PT_TO_MM,
-       LIGHT_STROKE_D = 2.5 * PT_TO_MM,
-       LIGHT_D        = 1.5 * PT_TO_MM;
+   var LIGHT_BG_D = 3.5 * PT_TO_MM,
+    LIGHT_STROKE_D = 2.5 * PT_TO_MM,
+    LIGHT_D = 1.5 * PT_TO_MM;
 
    var wPlate = false;
 
@@ -830,10 +924,10 @@ function makeLayout(str) {
     var el = miraEl.pathItems.add();
 
     el.setEntirePath([
-                      [6.8882, shift - 0],
-                      [7.285, shift - 0],
-                      [7.0866, shift - 7.0866]
-                     ]);
+     [6.8882, shift - 0],
+     [7.285, shift - 0],
+     [7.0866, shift - 7.0866]
+    ]);
 
     el.closed = true;
     el.fillColor = color;
@@ -883,18 +977,18 @@ function makeLayout(str) {
    * @return {Array} fonts - available bold fonts
    */
   function __getFonts() {
-   var fonts       = [],
-       fontsCommon = [
-        'MyriadPro-BoldCond', 'MyriadPro-Black', 'MyriadPro-Bold', 'Monaco-Bold',
-        'Arial-Bold', 'Arial-BoldMT', 'Arial-Black',
-        'ComicSansMS-Bold', 'Calibri-Bold', 'CourierNewPS-BoldMT', 'Courier-Bold',
-        'Charcoal',
-        'DejaVuSans-Bold',
-        'Geneva-Bold', 'Impact',
-        'Nimbus-Sans-Bold', 'NimbusMonoL-Bold',
-        'TrebuchetMS-Bold', 'Tahoma-Bold',
-        'Verdana-Bold'
-       ];
+   var fonts = [],
+    fontsCommon = [
+     'MyriadPro-BoldCond', 'MyriadPro-Black', 'MyriadPro-Bold', 'Monaco-Bold',
+     'Arial-Bold', 'Arial-BoldMT', 'Arial-Black',
+     'ComicSansMS-Bold', 'Calibri-Bold', 'CourierNewPS-BoldMT', 'Courier-Bold',
+     'Charcoal',
+     'DejaVuSans-Bold',
+     'Geneva-Bold', 'Impact',
+     'Nimbus-Sans-Bold', 'NimbusMonoL-Bold',
+     'TrebuchetMS-Bold', 'Tahoma-Bold',
+     'Verdana-Bold'
+    ];
 
    // записать шрифты с поддержкой всех символов логических операций в массив
    for (var i = 0; i < fontsCommon.length; i++) {
@@ -1304,7 +1398,7 @@ function makeCMYK(cmyk) {
 
 function getRegistration() {
  var tint = 100,
-     name = '[Registration]';
+  name = '[Registration]';
 
  var newSpot, newColor, newSpotColor;
 
@@ -1373,9 +1467,9 @@ function runAction(actName, setName, actStr) {
  * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
  */
 function calcCharSize(frame) {
- var txt2meas     = activeDocument.activeLayer.textFrames.add(),
-     fullH,
-     fontMeasures = {};
+ var txt2meas = activeDocument.activeLayer.textFrames.add(),
+  fullH,
+  fontMeasures = {};
 
  txt2meas.contents = 'C';
 

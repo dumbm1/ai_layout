@@ -1,213 +1,214 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-  <!--<link rel="stylesheet" href="css/fonts.css"/>--> <!--and there I have a piece of shit...-->
-    <link rel="stylesheet" href="css/topcoat-desktop-dark.min.css"/>
-    <link id="hostStyle" rel="stylesheet" href="css/styles.css"/>
-    <link id="oayoutStyle" rel="stylesheet" href="css/layout.css"/>
+ <meta charset="utf-8">
+ <!--<link rel="stylesheet" href="css/fonts.css"/>--> <!--and there I have a piece of shit...-->
+ <link rel="stylesheet" href="css/topcoat-desktop-dark.min.css"/>
+ <link id="hostStyle" rel="stylesheet" href="css/styles.css"/>
+ <link id="oayoutStyle" rel="stylesheet" href="css/layout.css"/>
 
-    <title>layout</title>
-    <style type="text/css">
-        #engineList {
-          width  : 129px;
-          height : 20px;
-          float  : left;
-        }
+ <title>layout</title>
+ <style>
+  #engineList {
+   width: 129px;
+   height: 20px;
+   float: left;
+  }
 
-        #engineRow {
-          width : 258px;
-        }
+  #engineRow {
+   width: 258px;
+  }
 
-        .col-btn {
-          cursor : pointer;
-        }
+  .col-btn {
+   cursor: pointer;
+  }
 
-        .col-btn:hover {
-          opacity : .7;
-        }
+  .col-btn:hover {
+   opacity: .7;
+  }
 
-        /**
-        RAILS SHIFT
-        */
-        input[type=number].shift {
-          width : 36px;
-          /*text-align: center;*/
-        }
+  /**
+  RAILS SHIFT
+  */
+  input[type=number].shift {
+   width: 36px;
+   /*text-align: center;*/
+  }
 
-        .title-label {
-          margin          : 0 4px;
-          text-decoration : underline;
-          height          : 18px;
-          float           : left;
-        }
+  .title-label {
+   margin: 0 4px;
+   text-decoration: underline;
+   height: 18px;
+   float: left;
+  }
 
-        .title-label::first-letter {
-          text-transform : capitalize;
-        }
+  .title-label::first-letter {
+   text-transform: capitalize;
+  }
 
-        #shift_4 {
-          margin-right : 12px;
-        }
+  #shift_4 {
+   margin-right: 12px;
+  }
 
-    </style>
+ </style>
 </head>
 
 <body class="hostElt main-pan">
 
 <div id="content">
 
-    <!--FILE NAME-->
-    <div class="block">
-        <div class="row" id="fileNameRow">
-            <span class="left-label">file name:</span>
-            <textarea class="hostTextarea" id="fileName"></textarea>
-        </div>
-        <div class="row" id="fileNameRow">
-            <span class="left-label">layout name:</span>
-            <textarea class="hostTextarea" id="layoutName"></textarea>
-        </div>
-    </div>
-    <div class="sep-horiz"></div>
+ <!--FILE NAME-->
+ <div class="block">
+  <div class="row" id="fileNameRow">
+   <span class="left-label">file name:</span>
+   <textarea class="hostTextarea" id="fileName"></textarea>
+  </div>
+  <div class="row" id="layoutNameRow">
+   <span class="left-label">layout name:</span>
+   <textarea class="hostTextarea" id="layoutName"></textarea>
+  </div>
+ </div>
+ <div class="sep-horiz"></div>
 
-    <!--LAYOUT-->
-    <div class="block">
-        <div class="row">
-            <span class="left-label">film width</span>
-            <input id="filmWidth" class="hostTextarea" type="number" disabled>
-        </div>
-        <div class="row">
-            <span class="left-label">streams</span>
-            <input id="streams" class="hostTextarea" type="number" min="1">
-            <span class="left-label">stream width</span>
-            <input id="layoutWidth" class="hostTextarea" type="number" step="0.5" min="10">
-        </div>
-        <div id="engineRow" class="row">
-            <select name="engineList" id="engineList" class="hostTextarea">
-                <option selected>soloflex</option>
-                <option>miraflex</option>
-            </select>
-            <span class="left-label">plate cylinder</span>
-            <select class="hostTextarea fl-left" name="z" id="z">
-                <!--<option selected value="">360</option>-->
-            </select>
-        </div>
-    </div>
-    <div class="sep-horiz"></div>
+ <!--LAYOUT-->
+ <div class="block">
+  <div class="row">
+   <span class="left-label">film width</span>
+   <input id="filmWidth" class="hostTextarea" type="number" disabled>
+  </div>
+  <div class="row">
+   <span class="left-label">streams</span>
+   <input id="streams" class="hostTextarea" type="number" min="1">
+   <span class="left-label">stream width</span>
+   <input id="layoutWidth" class="hostTextarea" type="number" step="0.5" min="10">
+  </div>
+  <div id="engineRow" class="row">
+   <select name="engineList" id="engineList" class="hostTextarea">
+    <option selected>soloflex</option>
+    <option>miraflex</option>
+   </select>
+   <span class="left-label">plate cylinder</span>
+   <select class="hostTextarea fl-left" name="z" id="z">
+    <!--<option selected value="">360</option>-->
+   </select>
+  </div>
+ </div>
+ <div class="sep-horiz"></div>
 
  <div class="block">
-        <div class="btn-link-div">
-            <div class="btn-link">
-                <input id="margChkHorLink" class="btn-link-chk" type="checkbox" checked="checked">
-            </div>
-        </div>
-        <div class="row">
-            <span class="left-label">margin left</span>
-            <input id="margLeft" class="hostTextarea" type="number" step="0.5">
-            <span class="left-label">margin right</span>
-            <input id="margRight" class="hostTextarea" type="number" step="0.5">
-        </div>
-        <div class="btn-link-div">
-            <div class="btn-link">
-                <input id="margChkVertLink" class="btn-link-chk" type="checkbox" checked="checked">
-            </div>
-        </div>
-        <div class="row ">
-            <span class="left-label">margin top</span>
-            <input id="margTop" class="hostTextarea" type="number" step="0.5">
-            <span class="left-label">margin bott.</span>
-            <input id="margBott" class="hostTextarea" type="number" step="0.5">
-        </div>
+  <div class="btn-link-div">
+   <div class="btn-link">
+    <input id="margChkHorLink" class="btn-link-chk" type="checkbox" checked="checked">
+   </div>
+  </div>
+  <div class="row">
+   <span class="left-label">margin left</span>
+   <input id="margLeft" class="hostTextarea" type="number" step="0.5">
+   <span class="left-label">margin right</span>
+   <input id="margRight" class="hostTextarea" type="number" step="0.5">
+  </div>
+  <div class="btn-link-div">
+   <div class="btn-link">
+    <input id="margChkVertLink" class="btn-link-chk" type="checkbox" checked="checked">
+   </div>
+  </div>
+  <div class="row ">
+   <span class="left-label">margin top</span>
+   <input id="margTop" class="hostTextarea" type="number" step="0.5">
+   <span class="left-label">margin bott.</span>
+   <input id="margBott" class="hostTextarea" type="number" step="0.5">
+  </div>
+ </div>
+ <div class="sep-horiz"></div>
+
+ <!--CROSS, RAILS, INDENTS-->
+ <div class="block">
+  <div class="row">
+   <span class="left-label">cross size</span>
+   <input id="crossWidth" class="hostTextarea" type="number" step="0.5" min="1">
+   <span class="left-label">cross stroke</span>
+   <input id="crossStroke" class="hostTextarea" type="number" step="0.05" min="0.05">
+  </div>
+  <div class="row">
+   <span class="left-label">indent inside</span>
+   <input id="indentIn" class="hostTextarea" type="number" step="0.5" min="0">
+   <span class="left-label">rail width</span>
+   <input id="railWidth" class="hostTextarea" type="number" step="0.5" min="2">
+  </div>
+ </div>
+
+ <!--COLORS-->
+ <div class="block">
+  <!--SEARCH PANTONES-->
+  <div class="row">
+   <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">
+  </div>
+  <!--PANTNE LIST-->
+  <div class="row" id="pantList">
+   <div class="hostTextarea">
+    <!--the list of pantones generated by javascript-->
+    <!--
+    <ul id="pantListUl">
+        <li class="" style="background-color: rgb(255, 253, 0);"><span style="color: black;"> Yellow 012</span></li>
+        <li class="hidden" style="background-color: rgb(255, 120, 0);"><span style="color: black;"> Orange 021</span></li>
+        ....</ul>
+        -->
+   </div>
+  </div>
+  <!--OUT COLORS-->
+  <p class="title-label">Output colors:</p>
+  <div class="row col-btns">
+   <div id="colBtns">
+    <!--COLOR BUTTON TMPLATE-->
+    <!--
+    <div class="col-btn" style="background-color: rgb(0, 255, 255); color: rgb(0, 0, 0);">
+        <span class="col-btn-title">C</span>
+        <span class="hostButton col-btn-close-btn">×</span>
     </div>
-    <div class="sep-horiz"></div>
+    -->
+   </div>
+  </div>
+ </div>
 
-    <!--CROSS, RAILS, INDENTS-->
-    <div class="block">
-        <div class="row">
-            <span class="left-label">cross size</span>
-            <input id="crossWidth" class="hostTextarea" type="number" step="0.5" min="1">
-            <span class="left-label">cross stroke</span>
-            <input id="crossStroke" class="hostTextarea" type="number" step="0.05" min="0.05">
-        </div>
-        <div class="row">
-            <span class="left-label">indent inside</span>
-            <input id="indentIn" class="hostTextarea" type="number" step="0.5" min="0">
-            <span class="left-label">rail width</span>
-            <input id="railWidth" class="hostTextarea" type="number" step="0.5" min="2">
-        </div>
-    </div>
+ <!--WHITE LAYER-->
+ <div class="block">
+  <div class="row">
+   <label for="white_layer" class="left-label">white layer</label>
+   <input id="white_layer" type="checkbox">
+   <label for="dots" class="left-label">dots</label>
+   <input id="dots" type="checkbox" checked>
+  </div>
+ </div>
 
-    <!--COLORS-->
-    <div class="block">
-        <!--SEARCH PANTONES-->
-        <div class="row">
-            <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">
-        </div>
-        <!--PANTNE LIST-->
-        <div class="row" id="pantList">
-            <div class="hostTextarea">
-                <!--the list of pantones generated by javascript-->
-                <!--
-                <ul id="pantListUl">
-                    <li class="" style="background-color: rgb(255, 253, 0);"><span style="color: black;"> Yellow 012</span></li>
-                    <li class="hidden" style="background-color: rgb(255, 120, 0);"><span style="color: black;"> Orange 021</span></li>
-                    ....</ul>
-                    -->
-            </div>
-        </div>
-        <!--OUT COLORS-->
-        <p class="title-label">Output colors:</p>
-        <div class="row col-btns">
-            <div id="colBtns">
-                <!--COLOR BUTTON TMPLATE-->
-                <!--
-                <div class="col-btn" style="background-color: rgb(0, 255, 255); color: rgb(0, 0, 0);">
-                    <span class="col-btn-title">C</span>
-                    <span class="hostButton col-btn-close-btn">×</span>
-                </div>
-                -->
-            </div>
-        </div>
-    </div>
+ <div class="block">
+  <p class="title-label">rails shift:</p>
+  <div class="row">
+   <input type="number" class="shift hostTextarea" id="shift_1" min="0" max="5" step="1" value="5">
+   <input type="number" class="shift hostTextarea" id="shift_2" min="0" max="5" step="1" value="5">
+   <input type="number" class="shift hostTextarea" id="shift_3" min="0" max="5" step="1" value="5">
+   <input type="number" class="shift hostTextarea" id="shift_4" min="0" max="5" step="1" value="5">
+   <input type="number" class="shift hostTextarea" id="shift_5" min="0" max="5" step="1" value="1">
+   <input type="number" class="shift hostTextarea" id="shift_6" min="0" max="5" step="1" value="1">
+   <input type="number" class="shift hostTextarea" id="shift_7" min="0" max="5" step="1" value="1">
+   <input type="number" class="shift hostTextarea" id="shift_8" min="0" max="5" step="1" value="1">
+  </div>
+ </div>
 
-    <!--WHITE LAYER-->
-    <div class="block">
-        <div class="row">
-            <span class="left-label">white layer</span>
-            <input id="white_layer" type="checkbox">
-        </div>
-    </div>
+ <div class="sep-horiz"></div>
 
-    <div class="block hidden">
-        <p class="title-label">rails shift:</p>
-        <div class="row">
-            <input type="number" class="shift hostTextarea" id="shift_1">
-            <input type="number" class="shift hostTextarea" id="shift_2">
-            <input type="number" class="shift hostTextarea" id="shift_3">
-            <input type="number" class="shift hostTextarea" id="shift_4">
-            <input type="number" class="shift hostTextarea" id="shift_5">
-            <input type="number" class="shift hostTextarea" id="shift_6">
-            <input type="number" class="shift hostTextarea" id="shift_7">
-            <input type="number" class="shift hostTextarea" id="shift_8">
-        </div>
-    </div>
-
-
-    <div class="sep-horiz"></div>
-
-    <!--MAIN BUTTONS-->
-    <ul id="mainButtons">
-        <li class="main-btn main-btn-dark" id="btnOk" title="Make Layout"></li>
-        <li class="main-btn main-btn-dark" id="btnFactoryDefaults" title="Restore Factory Defaults"></li>
-        <li class="main-btn main-btn-dark" id="btnReset" title="Reset Panel"></li>
-        <li class="main-btn main-btn-dark" id="btnSave" title="Save Settings"></li>
-        <li class="main-btn main-btn-dark" id="btnSaveToProfile" title="Save To Favorites"></li>
-        <li class="main-btn main-btn-dark" id="btnLoadFromProfile" title="Load From Favorites"></li>
-        <li class="main-btn main-btn-dark" id="btnSettings" title="Panel Settings"></li>
-        <li class="main-btn main-btn-dark" id="btnKillCEP" title="Reload Extend Script"></li>
-        <li class="main-btn main-btn-dark" id="btn_github"
-            title="Open source on https://github.com/dumbm1/ai_layout"></li>
-    </ul>
+ <!--MAIN BUTTONS-->
+ <ul id="mainButtons">
+  <li class="main-btn main-btn-dark" id="btnOk" title="Make Layout"></li>
+  <li class="main-btn main-btn-dark" id="btnFactoryDefaults" title="Restore Factory Defaults"></li>
+  <li class="main-btn main-btn-dark" id="btnReset" title="Reset Panel"></li>
+  <li class="main-btn main-btn-dark" id="btnSave" title="Save Settings"></li>
+  <li class="main-btn main-btn-dark" id="btnSaveToProfile" title="Save To Favorites"></li>
+  <li class="main-btn main-btn-dark" id="btnLoadFromProfile" title="Load From Favorites"></li>
+  <li class="main-btn main-btn-dark" id="btnSettings" title="Panel Settings"></li>
+  <li class="main-btn main-btn-dark" id="btnKillCEP" title="Reload Extend Script"></li>
+  <li class="main-btn main-btn-dark" id="btn_github"
+      title="Open source on https://github.com/dumbm1/ai_layout"></li>
+ </ul>
 
 </div>
 
