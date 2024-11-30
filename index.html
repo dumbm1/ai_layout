@@ -27,9 +27,9 @@
    opacity: .7;
   }
 
-  /**
-  RAILS SHIFT
-  */
+   /**
+   RAILS SHIFT
+   */
   input[type=number].shift {
    width: 36px;
    /*text-align: center;*/
@@ -50,6 +50,22 @@
    margin-right: 12px;
   }
 
+  .p-rel {
+   position: relative;
+  }
+
+  .p-abs {
+   position: absolute;
+  }
+
+  #setColorsFromXmlBtn {
+   top: -19px;
+   right: 0;
+   height: 20px;
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+   border-bottom: none;
+  }
  </style>
 </head>
 
@@ -137,11 +153,15 @@
   </div>
  </div>
 
- <!--COLORS-->
+ <!--COLORS BLOCK-->
  <div class="block">
+
   <!--SEARCH PANTONES-->
-  <div class="row">
-   <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">
+  <div class="row p-rel">
+<!--      <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">-->
+   <textarea id="pantSearch" class="hostTextarea" placeholder="Search pantone name"
+             name="pantSearch" ></textarea>
+   <input id="setColorsFromXmlBtn" class="hostButton p-abs" type="button" value="xml">
   </div>
   <!--PANTNE LIST-->
   <div class="row" id="pantList">

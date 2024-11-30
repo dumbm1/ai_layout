@@ -76,6 +76,7 @@
    setSel(defSel());
    setCol(defCol());
    setChk(defChk());
+   setColorsFromXml();
 
    $('#btnFactoryDefaults').click(function () {
     var conf = confirm('Are you sure that want to return to the factory defaults?');
@@ -418,14 +419,14 @@
    function setNmb(obj) {
 
     $('input[type=number]').each(function () {
-/*          for (var key in obj) {
-           var re = /shift_\d/;
-           if (key == $(this).attr('id') && !($(this).attr('id').match(re))) {
-            $(this).val(obj[key]);
-           } else if ($(this).attr('id').match(re)) {
-            $(this).val(+obj[key]);
-           }
-          }*/
+     /*          for (var key in obj) {
+                var re = /shift_\d/;
+                if (key == $(this).attr('id') && !($(this).attr('id').match(re))) {
+                 $(this).val(obj[key]);
+                } else if ($(this).attr('id').match(re)) {
+                 $(this).val(+obj[key]);
+                }
+               }*/
      for (var key in obj) {
       if (key == $(this).attr('id')) {
        $(this).val(obj[key]);
@@ -469,6 +470,72 @@
         $(this).parent().parent().addClass('btn-link-div-checked');
        }
       }
+     }
+    });
+   }
+
+   function setColorsFromXml() {
+    const TOTAL_INKS = 8;
+    const setColorsFromXmlBtn = document.querySelector('#setColorsFromXmlBtn');
+    const output = document.querySelector("#pantSearch");
+
+
+    setColorsFromXmlBtn.addEventListener('click', (e) => {
+     let colors = [];
+     let colorsOutputString = '';
+
+     try {
+      csInterface.evalScript('getXmlStr();', function (result) {
+       let xmlString = result;
+
+       if (xmlString.match('Не найден xml-файл')) return;
+
+       let xmlParser = new DOMParser();
+       let xmlDoc = xmlParser.parseFromString(xmlString, 'text/xml');
+
+       let inks = xmlDoc.getElementsByTagName("Ink");
+
+       // alert(inks.length);
+
+       try {
+        Object.values(inks).forEach(function (ink, k, inks) {
+         let currColor = ink.getAttribute('Name');
+         if (!currColor.match(/^Process/) && currColor != 'W') {
+          colors.push(currColor.slice(8, -2));
+         }
+
+        })
+       } catch (e) {
+        alert(e);
+       }
+       colorsOutputString = colors.join('|');
+       output.value = colorsOutputString;
+       __showP(colorsOutputString);
+
+       function __showP(elemVal) {
+        var searchFld = document.getElementById('pantSearch');
+        var pantListDiv = document.getElementById('pantList');
+        var pantUl = pantListDiv.getElementsByTagName('ul')[0];
+        var pantLiElems = pantUl.getElementsByTagName('li');
+
+        for (var i = 0; i < pantLiElems.length; i++) {
+         var elem = pantLiElems[i];
+         var liElemText = ((elem.getElementsByTagName('span')[0].textContent).slice(0)).toLowerCase();
+         var re = elemVal.toLowerCase();
+         if (!~liElemText.search(re)) {
+          elem.className = 'hidden';
+          // elem.style.display = 'none'; // cose the css-li style has a hight preority
+         } else {
+          elem.className = '';
+          // elem.style.display = 'inline-block';
+         }
+        }
+       }
+
+
+      });
+     } catch (e) {
+      return ('Error in setColorsFromXml(). ' + e);
      }
     });
    }
