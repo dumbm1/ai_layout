@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="7.0"
+<ExtensionManifest Version="4.0"
                    ExtensionBundleId="ai_layout"
-                   ExtensionBundleVersion="2.3"
+                   ExtensionBundleVersion="2.4"
                    ExtensionBundleName="ai_layout"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
@@ -14,22 +14,22 @@
         <![CDATA[Legal stuff...]]>
     </Legal>
     <Abstract href="https://github.com/dumbm1/ai_layout">
-        <![CDATA[FlexoPrint layout to output]]>
+        <![CDATA[PoligraphResourses layout to output]]>
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="ai_layout_panel" Version="2.3"/>
-        <Extension Id="ai_layout_dialog" Version="2.3"/>
+        <Extension Id="ai_layout_panel" Version="2.4"/>
+        <Extension Id="ai_layout_dialog" Version="2.4"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
-            <Host Name="ILST" Version="17.0"/>
+            <Host Name="ILST" Version="14.0"/>
         </HostList>
         <LocaleList>
             <Locale Code="All"/>
         </LocaleList>
         <RequiredRuntimeList>
-            <RequiredRuntime Name="CSXS" Version="7.0"/>
+            <RequiredRuntime Name="CSXS" Version="4.0"/>
         </RequiredRuntimeList>
     </ExecutionEnvironment>
     <DispatchInfoList>
@@ -51,7 +51,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>ai_layout 2.3</Menu>
+                    <Menu>ai_layout 2.4</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>
@@ -82,6 +82,10 @@
                 <Resources>
                     <MainPath>./dialog.html</MainPath>
                     <CEFCommandLine>
+                        <Parameter>--enable-nodejs</Parameter>
+                        <Parameter>--mixed-context</Parameter>
+                        <Parameter>--allow-file-access</Parameter>
+                        <Parameter>--allow-file-access-from-files</Parameter>
                     </CEFCommandLine>
                 </Resources>
                 <Lifecycle>
