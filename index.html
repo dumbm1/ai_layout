@@ -27,9 +27,9 @@
    opacity: .7;
   }
 
-   /**
-   RAILS SHIFT
-   */
+  /**
+  RAILS SHIFT
+  */
   input[type=number].shift {
    width: 36px;
    /*text-align: center;*/
@@ -67,9 +67,18 @@
    border-bottom: none;
   }
 
-  #chooseFileBtn{
+  #chooseFileBtn {
+   top: -5000px;
+   left: -5000px;
+  }
+
+  #labelForChooseFileBtn {
    bottom: 0;
-   left:0;
+   left: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0 5px;
   }
  </style>
 </head>
@@ -80,10 +89,15 @@
 
  <!--FILE NAME-->
  <div class="block">
-  <div class="row p-rel" id="fileNameRow">
+  <div class="row p-rel" id="fileNameRow" style="overflow: hidden">
    <span class="left-label">file name:</span>
    <textarea class="hostTextarea" id="fileName"></textarea>
    <input type="file" id="chooseFileBtn" accept=".xlsx" class="p-abs">
+   <label class="p-abs hostButton" for="chooseFileBtn" id="labelForChooseFileBtn">
+    <span>
+    xlsx-ff
+   </span>
+   </label>
   </div>
   <div class="row" id="layoutNameRow">
    <span class="left-label">layout name:</span>
@@ -164,9 +178,9 @@
 
   <!--SEARCH PANTONES-->
   <div class="row p-rel">
-<!--      <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">-->
+   <!--      <input id="pantSearch" class="hostTextarea" type="text" placeholder="Search pantone name" name="pantSearch">-->
    <textarea id="pantSearch" class="hostTextarea" placeholder="Search pantone name"
-             name="pantSearch" ></textarea>
+             name="pantSearch"></textarea>
    <input id="setColorsFromXmlBtn" class="hostButton p-abs" type="button" value="xml">
   </div>
   <!--PANTNE LIST-->
@@ -223,7 +237,7 @@
  <div class="sep-horiz"></div>
 
  <!-- TEST -->
- <textarea name="test" id="testOutputTextarea" >***</textarea>
+ <!-- <textarea name="test" id="testOutputTextarea" >***</textarea>-->
 
  <!--MAIN BUTTONS-->
  <ul id="mainButtons">

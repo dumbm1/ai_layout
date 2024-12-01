@@ -24,7 +24,7 @@ async function getFf(e) {
  const workBook = XLSX.read(data);
  const workSheet = workBook.Sheets[workBook.SheetNames[0]];
 
- const dataForTable = {
+ const xlsxData = {
   customerCompanyName: workSheet.C4?.v,
   orderNumber: workSheet.C5?.v,
   // orderName: workSheet.E6?.v,
@@ -60,13 +60,46 @@ async function getFf(e) {
   windingSchema: workSheet.L46?.v,
  };
 
- for (let key in dataForTable) {
-  let val = dataForTable[key];
+/* for (let key in xlsxData) {
+  let val = xlsxData[key];
   outStr += key + ': ' + val + ' (' + typeof val + ')\n\n';
+ }*/
+
+ // testOutputTextarea.value = outStr ;
+
+ _setFromXlsxFf(xlsxData);
+
+ function _setFromXlsxFf(xlsxData) {
+  const streamWidthField = document.querySelector('#layoutWidth');
+  const streamsNumberField = document.querySelector('#streams');
+  const layoutNameField = document.querySelector('#layoutName');
+  const zList = document.querySelector('#z');
+
+  streamWidthField.value = +xlsxData.streamWidth;
+  streamsNumberField.value = +__getStreamNumb(xlsxData.streamsNumber);
+  zList.value = +xlsxData.formCylinder;
+  layoutNameField.value = xlsxData.orderNumber + ' ' + xlsxData.customerCompanyName + ' ' + __getStreamNames(xlsxData.orderName);
+
+
+  function __getStreamNumb(arr) {
+   let streamNumb = 0;
+   for (let i = 0; i < arr.length; i++) {
+    if (!arr[i]) continue;
+    streamNumb += +arr[i];
+   }
+   return streamNumb;
+  }
+
+  function __getStreamNames(arr) {
+   var arr2 = [];
+   for (var i = 0; i < arr.length; i++) {
+    if (!arr[i]) continue;
+    arr2.push(arr[i]);
+   }
+   return arr2.join(' + ');
+  }
  }
 
- testOutputTextarea.value = outStr /*+
-  dataForTable.getPrintSide() + '\n' + dataForTable.getFilmComposition() + '\n' + dataForTable.getMountWidth()*/;
-
- return dataForTable;
+ // return xlsxData;
 }
+
