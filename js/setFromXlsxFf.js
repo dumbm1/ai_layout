@@ -78,7 +78,7 @@ async function getFf(e) {
   streamWidthField.value = +xlsxData.streamWidth;
   streamsNumberField.value = +__getStreamNumb(xlsxData.streamsNumber);
   zList.value = +xlsxData.formCylinder;
-  layoutNameField.value = xlsxData.orderNumber + ' ' + xlsxData.customerCompanyName + ' ' + __getStreamNames(xlsxData.orderName);
+  layoutNameField.value = (xlsxData.orderNumber + ' ' + xlsxData.customerCompanyName + ' ' + __getStreamNames(xlsxData.orderName)).toLowerCase();
 
   // post process
   const fileNameField = document.querySelector('#fileName');
