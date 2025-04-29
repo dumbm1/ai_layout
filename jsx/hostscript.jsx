@@ -689,6 +689,8 @@ function makeLayout(str) {
   }
 
   function __addDotsGr(opts, dotsGr) {
+   // alert(typeof opts.chk['dots']);
+   if (!opts.chk['dots']) return;
    var DOT_DIAMETER = .3;
 
    try {

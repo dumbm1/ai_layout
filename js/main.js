@@ -62,7 +62,6 @@
    addPantList(pantBook);
    searchPantByName();
    makeEngines();
-   setChkHandler();
    addOutColors();
 
    var storeOpts = JSON.parse(localStorage.getItem('opts'));
@@ -75,7 +74,6 @@
    setTxt(defTxt());
    setSel(defSel());
    setCol(defCol());
-   setChk(defChk());
    setColorsFromXml();
 
    $('#btnFactoryDefaults').click(function () {
@@ -86,7 +84,6 @@
      setSel(defSel());
      setNmb(defNmb());
      setCol(defCol());
-     setChk(defChk());
     }
    });
    $('#btnSaveToProfile').click(function () {
@@ -158,6 +155,9 @@
    $('#white_layer').click(function (e) {
     // alert($('#white_layer').prop('checked'));
    });
+   $('#dots').click(function (e) {
+    // alert($('#dots').prop('checked'));
+   });
 
    /* $("#layoutName").onkeypress(function() {
     $("#fileName").val($(this).val());
@@ -198,6 +198,7 @@
     * THE LIBRARY
     * */
 
+/*
    function setChkHandler() {
 
     $('input[type=checkbox].btn-link-chk').each(function () {
@@ -228,6 +229,7 @@
     });
 
    }
+*/
 
    /**
     * GETTERS
@@ -369,14 +371,7 @@
     };
    }
 
-   function defChk() {
-    return {
-     margChkHorLink: false,
-     margChkVertLink: false,
-     crossChkLink: false,
-     indentChkLink: false
-    };
-   }
+
 
    function defSel() {
     return {
@@ -456,23 +451,7 @@
     }
    }
 
-   function setChk(obj) {
-    $(':checkbox').each(function () {
-     for (var key in obj) {
-      if (key == $(this).attr('id')) {
-       if (!obj[key]) {
-        $(this).removeAttr('checked');
-        $(this).parent().removeClass('btn-link-checked');
-        $(this).parent().parent().removeClass('btn-link-div-checked');
-       } else {
-        $(this).attr('checked', 'checked');
-        $(this).parent().addClass('btn-link-checked');
-        $(this).parent().parent().addClass('btn-link-div-checked');
-       }
-      }
-     }
-    });
-   }
+
 
    function setColorsFromXml() {
     const TOTAL_INKS = 8;
