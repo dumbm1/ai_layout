@@ -739,80 +739,83 @@ function makeLayout(str) {
   /**
    * Светофоры
    * */
-  function __addTrafficLightsGr(opts, trafficLightsGr) {
-   if (opts.nmb.railWidth < 3.5) return;
 
-   var arr = opts.col;
-   var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
-   var lightShift = BASE_W * 3;
+   function __addTrafficLightsGr(opts, trafficLightsGr) {
+    if (opts.nmb.railWidth < 3.5) return;
 
-   var LIGHT_BG_D = 3.5 * PT_TO_MM,
-    LIGHT_STROKE_D = 2.5 * PT_TO_MM,
-    LIGHT_D = 1.5 * PT_TO_MM;
+    var arr = opts.col;
+    var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
+    var lightShift = BASE_W * 3;
 
-   var wPlate = false;
+    var LIGHT_BG_D = 3.5 * PT_TO_MM,
+     LIGHT_STROKE_D = 2.5 * PT_TO_MM,
+     LIGHT_D = 1.5 * PT_TO_MM;
 
-   try {
-    for (var i = 0; i < arr.length; i++) {
-     if (arr[i].name.match(/^W(#\d)?$/)) wPlate = true;
+    var wPlate = false;
+
+    try {
+     for (var i = 0; i < arr.length; i++) {
+      if (arr[i].name.match(/^W(#\d)?$/)) wPlate = true;
+     }
+    } catch (e) {
+     alert('Error in first circle\nline ' + e.line + '. ' + e.message);
     }
-   } catch (e) {
-    alert('Error in first circle\nline ' + e.line + '. ' + e.message);
-   }
 
-   try {
-    for (var i = 0; i < arr.length; i++) {
-     var obj = arr[i];
+    try {
+     for (var i = 0; i < arr.length; i++) {
+      var obj = arr[i];
 
-     if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) continue;
+      if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) continue;
 
-     var cmykArr = obj.cmyk.split(',');
+      var cmykArr = obj.cmyk.split(',');
 
-     var lightGr = trafficLightsGr.groupItems.add();
+      var lightGr = trafficLightsGr.groupItems.add();
 
-     var lightBg = lightGr.pathItems.ellipse(
-      -lightShift, (BASE_W - LIGHT_BG_D) / 2, LIGHT_BG_D, LIGHT_BG_D
-     );
-     var lightStroke = lightGr.pathItems.ellipse(
-      -lightShift - (LIGHT_BG_D - LIGHT_STROKE_D) / 2, (BASE_W - LIGHT_STROKE_D) / 2, LIGHT_STROKE_D, LIGHT_STROKE_D
-     );
-     var light = lightGr.pathItems.ellipse(
-      -lightShift - (LIGHT_BG_D - LIGHT_D) / 2, (BASE_W - LIGHT_D) / 2, LIGHT_D, LIGHT_D
-     );
+      var lightBg = lightGr.pathItems.ellipse(
+       -lightShift, (BASE_W - LIGHT_BG_D) / 2, LIGHT_BG_D, LIGHT_BG_D
+      );
+      var lightStroke = lightGr.pathItems.ellipse(
+       -lightShift - (LIGHT_BG_D - LIGHT_STROKE_D) / 2, (BASE_W - LIGHT_STROKE_D) / 2, LIGHT_STROKE_D, LIGHT_STROKE_D
+      );
+      var light = lightGr.pathItems.ellipse(
+       -lightShift - (LIGHT_BG_D - LIGHT_D) / 2, (BASE_W - LIGHT_D) / 2, LIGHT_D, LIGHT_D
+      );
 
-     lightShift += LIGHT_BG_D;
+      lightShift += LIGHT_BG_D;
 
-     lightStroke.filled = false;
-     light.stroked = false;
-     lightBg.stroked = false;
+      lightStroke.filled = false;
+      light.stroked = false;
+      lightBg.stroked = false;
 
-     light.fillOverprint = true;
-     lightStroke.strokeOverprint = true;
+      light.fillOverprint = true;
+      lightStroke.strokeOverprint = true;
 
-     light.fillColor = getColor(obj.name, cmykArr, 100);
-     lightStroke.strokeColor = getRegistration();
-     lightBg.fillColor = getColor(obj.name, cmykArr, 100);
+      light.fillColor = getColor(obj.name, cmykArr, 100);
+      lightStroke.strokeColor = getRegistration();
+      // lightBg.fillColor = getColor(obj.name, cmykArr, 100);
+      lightBg.fillColor = getColor('white');
 
-     lightStroke.strokeWidth = opts.nmb.crossStroke * PT_TO_MM;
+      lightStroke.strokeWidth = opts.nmb.crossStroke * PT_TO_MM;
 
-     if (wPlate) lightBg.fillColor = makeSpot('W');
+      if (wPlate) lightBg.fillColor = makeSpot('W');
 
-     // пост обработка - убираем заливку подложки с элемента 'W'
-     if (obj.name.match(/^W(#\d)?$/)) lightBg.fillColor = getColor('white');
 
+      // пост обработка - убираем заливку подложки с элемента 'W'
+      if (obj.name.match(/^W(#\d)?$/)) lightBg.fillColor = getColor('white');
+
+     }
+    } catch (e) {
+     alert('Error in second circle\n' + e.line + '. ' + e.message);
     }
-   } catch (e) {
-    alert('Error in second circle\n' + e.line + '. ' + e.message);
+
+    trafficLightsGr.translate(
+     activeDocument.width - opts.nmb.railWidth * PT_TO_MM, 0
+    );
+    var trafficLightsGrBottom = trafficLightsGr.duplicate();
+    trafficLightsGrBottom.translate(
+     0, -opts.sel.z * PT_TO_MM + trafficLightsGrBottom.height + BASE_W * 6);
+
    }
-
-   trafficLightsGr.translate(
-    activeDocument.width - opts.nmb.railWidth * PT_TO_MM, 0
-   );
-   var trafficLightsGrBottom = trafficLightsGr.duplicate();
-   trafficLightsGrBottom.translate(
-    0, -opts.sel.z * PT_TO_MM + trafficLightsGrBottom.height + BASE_W * 6);
-
-  }
 
   /**
    * Квадратики
@@ -1266,9 +1269,9 @@ function setPantAlias(pantName) {
  for (var key in aliases) {
   if (pantName == key) return aliases[key];
 
- /* if (pantName.match(key)) {
-   return aliases[key] + pantName.slice(-2);
-  }*/
+  /* if (pantName.match(key)) {
+    return aliases[key] + pantName.slice(-2);
+   }*/
  }
  return pantName;
 }
