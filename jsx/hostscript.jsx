@@ -1225,20 +1225,20 @@ function setPantAlias(pantName) {
   'Warm Red': 'WR',
   'Red 032': '032',
   'Rubine Red': 'Rub',
-  'Rhodamine Red': 'Rhod',
-  'Purple': 'Purp',
-  'Violet': 'Viol',
+  'Rhodamine Red': 'Rh',
+  'Purple': 'Pu',
+  'Violet': 'V',
   'Blue 072': '072',
-  'Reflex Blue': 'Refl',
-  'Process Blue': 'PrBlue',
+  'Reflex Blue': 'Ref',
+  'Process Blue': 'PrBlu',
   'Green': 'Gr',
   'Black': 'K2',
-  'Black 2': 'Black2',
-  'Black 3': 'Black3',
-  'Black 4': 'Black4',
-  'Black 5': 'Black5',
-  'Black 6': 'Black6',
-  'Black 7': 'Black7',
+  'Black 2': 'B2',
+  'Black 3': 'B3',
+  'Black 4': 'B4',
+  'Black 5': 'B5',
+  'Black 6': 'B6',
+  'Black 7': 'B7',
   'Warm Gray 1': 'WG1',
   'Warm Gray 2': 'WG2',
   'Warm Gray 3': 'WG3',
@@ -1266,9 +1266,9 @@ function setPantAlias(pantName) {
  for (var key in aliases) {
   if (pantName == key) return aliases[key];
 
-  if (pantName.match(key)) {
+ /* if (pantName.match(key)) {
    return aliases[key] + pantName.slice(-2);
-  }
+  }*/
  }
  return pantName;
 }
@@ -1378,7 +1378,7 @@ function makeSpot(name, cmyk, tint) {
 
  var newSpot, newColor, newSpotColor;
 
- if (name != 'L' && name != 'W' && name != 'Pr' && name != 'film') {
+ if (name != 'L' && name != 'W' && name != 'Pr' && name != 'film' && name != 'W 2' && name != 'MatLak') {
   name = 'PANTONE ' + name + ' C';
  }
 
