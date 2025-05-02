@@ -564,7 +564,9 @@
     var pantUl = pantListDiv.getElementsByTagName('ul')[0];
     var pantLiElems = pantUl.getElementsByTagName('li');
 
-    searchFld.addEventListener('input', function () {
+    searchFld.addEventListener('input', __filterNames);
+
+    function __filterNames() {
      var elemVal = this.value;
 
      for (var i = 0; i < pantLiElems.length; i++) {
@@ -579,7 +581,7 @@
        // elem.style.display = 'inline-block';
       }
      }
-    });
+    }
    }
 
    function addPantList(pantBook) {

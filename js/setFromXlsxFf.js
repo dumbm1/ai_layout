@@ -58,6 +58,10 @@ async function getFf(e) {
   filmCover: workSheet.F54?.v,
 
   windingSchema: workSheet.L46?.v,
+  colors: [
+   workSheet.C29?.v, workSheet.C30?.v, workSheet.C31?.v, workSheet.C32?.v,
+   workSheet.C33?.v, workSheet.C34?.v, workSheet.C35?.v, workSheet.C36?.v
+  ]
  };
 
  /* for (let key in xlsxData) {
@@ -74,6 +78,7 @@ async function getFf(e) {
   const streamsNumberField = document.querySelector('#streams');
   const layoutNameField = document.querySelector('#layoutName');
   const zList = document.querySelector('#z');
+  const pantSearchField = document.querySelector('#pantSearch');
 
   streamWidthField.value = +xlsxData.streamWidth;
   streamsNumberField.value = +__getStreamNumb(xlsxData.streamsNumber);
@@ -85,6 +90,8 @@ async function getFf(e) {
   fileNameField.value = 'out_' + _trnsRuToEn(layoutNameField.value);
   const mountWidthField = document.querySelector('#filmWidth');
   mountWidthField.value = _calcFilmWidth();
+
+  __processColors(xlsxData.colors, pantSearchField);
 
   function __getStreamNumb(arr) {
    let streamNumb = 0;
@@ -102,6 +109,52 @@ async function getFf(e) {
     arr2.push(arr[i]);
    }
    return arr2.join(' + ');
+  }
+
+  function __processColors(xlsxDataColors, pantSearchField) {
+   resultColors = [];
+   for (let i = 0; i < xlsxDataColors.length; i++) {
+    let col = xlsxDataColors[i];
+    if (!col) continue;
+    if (col == 'C' || col == 'M' || col == 'Y' || col == 'K') {
+     col = '^'+col+'$';
+    };
+    if (col == 'White') {
+     col = '^W$';
+    };
+    col = col.replace(/ C$/gmi, '');
+    col = '(' + col + ')';
+    resultColors.push(col);
+   }
+   pantSearchField.value = resultColors.join('|');
+
+   searchPantByName();
+
+   function searchPantByName() {
+    var searchFld = document.getElementById('pantSearch');
+    var pantListDiv = document.getElementById('pantList');
+    var pantUl = pantListDiv.getElementsByTagName('ul')[0];
+    var pantLiElems = pantUl.getElementsByTagName('li');
+
+    __filterNames();
+
+    function __filterNames () {
+     var elemVal = searchFld.value;
+
+     for (var i = 0; i < pantLiElems.length; i++) {
+      var elem = pantLiElems[i];
+      var liElemText = ((elem.getElementsByTagName('span')[0].textContent).slice(0)).toLowerCase();
+      var re = elemVal.toLowerCase();
+      if (!~liElemText.search(re)) {
+       elem.className = 'hidden';
+       // elem.style.display = 'none'; // cose the css-li style has a hight preority
+      } else {
+       elem.className = '';
+       // elem.style.display = 'inline-block';
+      }
+     }
+    }
+   }
   }
  }
 
