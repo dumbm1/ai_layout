@@ -33,8 +33,13 @@ function makeLayout(str) {
 
  function _addDoc(opts) {
   var docName, doc;
+  var testLayName = '__test-lay__';
+  var primerLayName = '__primer-lay__';
+  var lakLayName = '__lak-lay__';
+  var whiteLayName = '__white-lay__';
+  var lakPrimerLayName = '__lak_primer-lay__';
 
-
+  rmWhitePrLakLays([testLayName, primerLayName, lakLayName, whiteLayName, lakPrimerLayName]);
 
   var railW = +opts.nmb.railWidth;
   var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
@@ -66,17 +71,15 @@ function makeLayout(str) {
    // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
   }
 
-
-
-
   doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
    (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
   ];
 
-  addLayer({rgb: [0, 128, 128], doc: doc, title: 'color'});
+  // addLayer({rgb: [0, 128, 128], doc: doc, title: 'color'});
   __addVrAndPrPlates(opts, doc);
-  addLayer({rgb: [128, 128, 0], doc: doc, title: 'test'});
-  doc.layers[doc.layers.length - 1].remove();
+  addLayer({rgb: [128, 128, 0], doc: doc, title: testLayName});
+
+  // doc.layers[doc.layers.length - 1].remove();
 
   /** !!! WARN !!! This function working correctrly.
    * But other code worked non-correct - needs to refactoring
@@ -102,34 +105,34 @@ function makeLayout(str) {
 
    switch (sw) {
     case 1:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName});
      ___addVr();
      break;
     case 2:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'Pr'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName});
      ___addPr();
      break;
     case 3:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L+Pr'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName});
      ___addVr();
      ___addPr();
      break;
     case 4:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
      break;
     case 5:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName});
      ___addVr();
      break;
     case 6:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'Pr'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName});
      ___addPr();
      break;
     case 7:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'W'});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: 'L+Pr'});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
+     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName});
      ___addVr();
      ___addPr();
      break;
@@ -1469,10 +1472,16 @@ function getLayByName(name) {
 function addLayer(o/*{o.rgb, o.doc, o.title}*/) {
  var rgb = o.rgb || [128, 255, 128];
  var doc = o.doc || activeDocument;
- var title = o.title || 'test';
+ var title = o.title || '__test-lay__';
+ var lay;
+ /* try {
+   lay = doc.layers.getByName(title);
+   if (doc.layers.length > 1) lay.remove();
+  } catch (e) {
+  }*/
 
  var col = new RGBColor();
- var lay = o.doc.layers.add();
+ lay = doc.layers.add();
 
  col.red = rgb[0];
  col.green = rgb[1];
@@ -1482,6 +1491,17 @@ function addLayer(o/*{o.rgb, o.doc, o.title}*/) {
  lay.color = col;
 
  return lay;
+}
+
+function rmWhitePrLakLays(layNamesArr) {
+ for (var i = 0; i < layNamesArr.length; i++) {
+  var layName = layNamesArr[i];
+  try {
+   var lay = activeDocument.layers.getByName(layName);
+   if (activeDocument.layers.length > 1) lay.remove();
+  } catch (e) {
+  }
+ }
 }
 
 function getXmlStr() {
