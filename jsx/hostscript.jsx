@@ -140,11 +140,23 @@ function makeLayout(str) {
      break;
    }
 
-   function ___addVr() {
+/*   function ___addVr() {
     vr = lay.pathItems.rectangle(
      plateY,
      (plateX - opts.nmb.indentIn) * PT_TO_MM,
      (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
+     (+opts.sel.z - DISTORS) * PT_TO_MM
+    );
+    vr.stroked = false;
+    vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
+    vr.fillOverprint = true;
+   }*/
+
+   function ___addVr() {
+    vr = lay.pathItems.rectangle(
+     plateY,
+     (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
      (+opts.sel.z - DISTORS) * PT_TO_MM
     );
     vr.stroked = false;
