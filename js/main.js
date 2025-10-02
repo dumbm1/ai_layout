@@ -15,7 +15,7 @@
 
   $('#btnReset').click(reloadPanel);
 
-  document.getElementById('btnKillCEP').addEventListener('click', () => {
+/*  document.getElementById('btnKillCEP').addEventListener('click', () => {
    let apiVersion = csInterface.getCurrentApiVersion();
    if (apiVersion.major > 6) {
     csInterface.requestOpenExtension('ai_layout_dialog');
@@ -23,7 +23,7 @@
    } else {
     csInterface.closeExtension();
    }
-  });
+  });*/
 
   addLayout();
 
@@ -157,6 +157,9 @@
    });
    $('#dots').click(function (e) {
     // alert($('#dots').prop('checked'));
+   });
+   $('#active_doc').click(function (e) {
+    // alert($('#active_doc').prop('checked'));
    });
 
    /* $("#layoutName").onkeypress(function() {
@@ -3623,7 +3626,6 @@
    }
 
   }
-
  }
 
  function reloadPanel() {

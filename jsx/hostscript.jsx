@@ -32,30 +32,43 @@ function makeLayout(str) {
  }());
 
  function _addDoc(opts) {
+  var docName, doc;
 
-  var docName = opts.txt.fileName;
+
+
   var railW = +opts.nmb.railWidth;
   var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
   var margHor = +opts.nmb.margLeft + +(opts.nmb.margRight);
   var docW = (+opts.nmb.layoutWidth * +opts.nmb.streams + margHor + +opts.nmb.indentIn * 2 + railW * 2) * PT_TO_MM;
   var docH = (+opts.sel.z + margVert - DISTORS) * PT_TO_MM;
 
-  var pres = new DocumentPreset();
+  if (opts.chk['active_doc']) {
+   docName = activeDocument.name;
+   doc = activeDocument;
+   // alert('hi!');
+  } else {
+   docName = opts.txt.fileName;
+   var pres = new DocumentPreset();
 
-  pres.title = docName;
-  pres.colorMode = DocumentColorSpace.CMYK;
-  pres.height = docH;
-  pres.width = docW;
-  pres.units = RulerUnits.Millimeters;
-  pres.previewMode = DocumentPreviewMode.OverprintPreview;
-  pres.rasterResolution = DocumentRasterResolution.HighResolution;
-  // pres.numArtboards       = 10;
-  // pres.artboardLayout     = DocumentArtboardLayout.Row;
-  // pres.artboardRowsOrCols = 5;
-  // pres.transparencyGrid   = DocumentTransparencyGrid.TransparencyGridOrange;
+   pres.title = docName;
+   pres.colorMode = DocumentColorSpace.CMYK;
+   pres.height = docH;
+   pres.width = docW;
+   pres.units = RulerUnits.Millimeters;
+   pres.previewMode = DocumentPreviewMode.OverprintPreview;
+   pres.rasterResolution = DocumentRasterResolution.HighResolution;
+   // pres.numArtboards       = 10;
+   // pres.artboardLayout     = DocumentArtboardLayout.Row;
+   // pres.artboardRowsOrCols = 5;
+   // pres.transparencyGrid   = DocumentTransparencyGrid.TransparencyGridOrange;
 
-  var doc = documents.addDocument('', pres, false);
-  // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
+   doc = documents.addDocument('', pres, false);
+   // doc.saveAs (new File (Folder.desktop + '/ze_test.ai'), new IllustratorSaveOptions ());
+  }
+
+
+
+
   doc.artboards[0].rulerOrigin = doc.rulerOrigin = [
    (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
   ];
@@ -740,82 +753,81 @@ function makeLayout(str) {
    * Светофоры
    * */
 
-   function __addTrafficLightsGr(opts, trafficLightsGr) {
-    if (opts.nmb.railWidth < 3.5) return;
+  function __addTrafficLightsGr(opts, trafficLightsGr) {
+   if (opts.nmb.railWidth < 3.5) return;
 
-    var arr = opts.col;
-    var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
-    var lightShift = BASE_W * 3;
+   var arr = opts.col;
+   var BASE_W = +opts.nmb.railWidth * PT_TO_MM;
+   var lightShift = BASE_W * 3;
 
-    var LIGHT_BG_D = 3.5 * PT_TO_MM,
-     LIGHT_STROKE_D = 2.5 * PT_TO_MM,
-     LIGHT_D = 1.5 * PT_TO_MM;
+   var LIGHT_BG_D = 3.5 * PT_TO_MM,
+    LIGHT_STROKE_D = 2.5 * PT_TO_MM,
+    LIGHT_D = 1.5 * PT_TO_MM;
 
-    var wPlate = false;
+   var wPlate = false;
 
-    try {
-     for (var i = 0; i < arr.length; i++) {
-      if (arr[i].name.match(/^W(#\d)?$/)) wPlate = true;
-     }
-    } catch (e) {
-     alert('Error in first circle\nline ' + e.line + '. ' + e.message);
+   try {
+    for (var i = 0; i < arr.length; i++) {
+     if (arr[i].name.match(/^W(#\d)?$/)) wPlate = true;
     }
-
-    try {
-     for (var i = 0; i < arr.length; i++) {
-      var obj = arr[i];
-
-      if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) continue;
-
-      var cmykArr = obj.cmyk.split(',');
-
-      var lightGr = trafficLightsGr.groupItems.add();
-
-      var lightBg = lightGr.pathItems.ellipse(
-       -lightShift, (BASE_W - LIGHT_BG_D) / 2, LIGHT_BG_D, LIGHT_BG_D
-      );
-      var lightStroke = lightGr.pathItems.ellipse(
-       -lightShift - (LIGHT_BG_D - LIGHT_STROKE_D) / 2, (BASE_W - LIGHT_STROKE_D) / 2, LIGHT_STROKE_D, LIGHT_STROKE_D
-      );
-      var light = lightGr.pathItems.ellipse(
-       -lightShift - (LIGHT_BG_D - LIGHT_D) / 2, (BASE_W - LIGHT_D) / 2, LIGHT_D, LIGHT_D
-      );
-
-      lightShift += LIGHT_BG_D;
-
-      lightStroke.filled = false;
-      light.stroked = false;
-      lightBg.stroked = false;
-
-      light.fillOverprint = true;
-      lightStroke.strokeOverprint = true;
-
-      light.fillColor = getColor(obj.name, cmykArr, 100);
-      lightStroke.strokeColor = getRegistration();
-      // lightBg.fillColor = getColor(obj.name, cmykArr, 100);
-      lightBg.fillColor = getColor('white');
-
-      lightStroke.strokeWidth = opts.nmb.crossStroke * PT_TO_MM;
-
-      if (wPlate) lightBg.fillColor = makeSpot('W');
-
-
-      // пост обработка - убираем заливку подложки с элемента 'W'
-      if (obj.name.match(/^W(#\d)?$/)) lightBg.fillColor = getColor('white');
-
-     }
-    } catch (e) {
-     alert('Error in second circle\n' + e.line + '. ' + e.message);
-    }
-
-    trafficLightsGr.translate(
-     activeDocument.width - opts.nmb.railWidth * PT_TO_MM, 0
-    );
-    var trafficLightsGrBottom = trafficLightsGr.duplicate();
-    trafficLightsGrBottom.translate(
-     0, -opts.sel.z * PT_TO_MM + trafficLightsGrBottom.height + BASE_W * 6);
-
+   } catch (e) {
+    alert('Error in first circle\nline ' + e.line + '. ' + e.message);
    }
+
+   try {
+    for (var i = 0; i < arr.length; i++) {
+     var obj = arr[i];
+
+     if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) continue;
+
+     var cmykArr = obj.cmyk.split(',');
+
+     var lightGr = trafficLightsGr.groupItems.add();
+
+     var lightBg = lightGr.pathItems.ellipse(
+      -lightShift, (BASE_W - LIGHT_BG_D) / 2, LIGHT_BG_D, LIGHT_BG_D
+     );
+     var lightStroke = lightGr.pathItems.ellipse(
+      -lightShift - (LIGHT_BG_D - LIGHT_STROKE_D) / 2, (BASE_W - LIGHT_STROKE_D) / 2, LIGHT_STROKE_D, LIGHT_STROKE_D
+     );
+     var light = lightGr.pathItems.ellipse(
+      -lightShift - (LIGHT_BG_D - LIGHT_D) / 2, (BASE_W - LIGHT_D) / 2, LIGHT_D, LIGHT_D
+     );
+
+     lightShift += LIGHT_BG_D;
+
+     lightStroke.filled = false;
+     light.stroked = false;
+     lightBg.stroked = false;
+
+     light.fillOverprint = true;
+     lightStroke.strokeOverprint = true;
+
+     light.fillColor = getColor(obj.name, cmykArr, 100);
+     lightStroke.strokeColor = getRegistration();
+     // lightBg.fillColor = getColor(obj.name, cmykArr, 100);
+     lightBg.fillColor = getColor('white');
+
+     lightStroke.strokeWidth = opts.nmb.crossStroke * PT_TO_MM;
+
+     if (wPlate) lightBg.fillColor = makeSpot('W');
+
+     // пост обработка - убираем заливку подложки с элемента 'W'
+     if (obj.name.match(/^W(#\d)?$/)) lightBg.fillColor = getColor('white');
+
+    }
+   } catch (e) {
+    alert('Error in second circle\n' + e.line + '. ' + e.message);
+   }
+
+   trafficLightsGr.translate(
+    activeDocument.width - opts.nmb.railWidth * PT_TO_MM, 0
+   );
+   var trafficLightsGrBottom = trafficLightsGr.duplicate();
+   trafficLightsGrBottom.translate(
+    0, -opts.sel.z * PT_TO_MM + trafficLightsGrBottom.height + BASE_W * 6);
+
+  }
 
   /**
    * Квадратики
