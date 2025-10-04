@@ -17,7 +17,7 @@ function makeLayout(str) {
  _showRulers(str);
  _addGuides(str);
  _addTestElems(str);
- _delAllUnused();
+ // _delAllUnused();
 
  (function setZeroPoint() {
   var d = activeDocument;
