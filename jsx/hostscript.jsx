@@ -11,12 +11,23 @@ function makeLayout(str) {
   margLeft = +str.nmb.margLeft,
   margRight = +str.nmb.margRight;
 
+ var testLayName = '__test-lay__',
+  primerLayName = '__primer-lay__',
+  lakLayName = '__lak-lay__',
+  whiteLayName = '__white-lay__',
+  lakPrimerLayName = '__lak_primer-lay__';
+
+ var outLay = false,
+  outLayName = 'out';
+
  // scrollWin (showObjDeep (str));
 
  _addDoc(str);
+ _addLakAndPrimer(str);
  _showRulers(str);
  _addGuides(str);
  _addTestElems(str);
+
  // _delAllUnused();
 
  (function setZeroPoint() {
@@ -33,13 +44,8 @@ function makeLayout(str) {
 
  function _addDoc(opts) {
   var docName, doc;
-  var testLayName = '__test-lay__';
-  var primerLayName = '__primer-lay__';
-  var lakLayName = '__lak-lay__';
-  var whiteLayName = '__white-lay__';
-  var lakPrimerLayName = '__lak_primer-lay__';
 
-  rmWhitePrLakLays([testLayName, primerLayName, lakLayName, whiteLayName, lakPrimerLayName]);
+  rmWhitePrLakLays([testLayName, primerLayName, lakLayName, whiteLayName, lakPrimerLayName], outLayName);
 
   var railW = +opts.nmb.railWidth;
   var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
@@ -75,118 +81,21 @@ function makeLayout(str) {
    (+opts.nmb.margLeft + +opts.nmb.railWidth + +opts.nmb.indentIn) * PT_TO_MM, docH - opts.nmb.margTop * PT_TO_MM
   ];
 
+  try {
+   outLay = doc.layers.getByName(outLayName);
+  } catch (e) {
+  }
+
   // addLayer({rgb: [0, 128, 128], doc: doc, title: 'color'});
-  __addVrAndPrPlates(opts, doc);
-  addLayer({rgb: [128, 128, 0], doc: doc, title: testLayName});
+  addLayer({rgb: [128, 128, 0], doc: doc, title: testLayName, parentLayName: outLayName});
 
   // doc.layers[doc.layers.length - 1].remove();
 
   /** !!! WARN !!! This function working correctrly.
    * But other code worked non-correct - needs to refactoring
    * */
+
   // __setZero();
-
-  function __addVrAndPrPlates(opts, doc) {
-   var colArr = opts.col;
-   var sw = 0;
-   var lay, vr, pr;
-   var plateX = 0,
-    plateY = 0;
-
-   // alert(opts.chk.white_layer);
-
-   for (var i = 0; i < colArr.length; i++) {
-    var obj = colArr[i];
-    // if (obj.name != 'L' && obj.name != 'Pr') continue;
-    if (obj.name == 'L') sw += 1;
-    if (obj.name == 'Pr') sw += 2;
-    if (obj.name == 'W' && opts.chk.white_layer) sw += 4;
-   }
-
-   switch (sw) {
-    case 1:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName});
-     ___addVr();
-     break;
-    case 2:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName});
-     ___addPr();
-     break;
-    case 3:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName});
-     ___addVr();
-     ___addPr();
-     break;
-    case 4:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
-     break;
-    case 5:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName});
-     ___addVr();
-     break;
-    case 6:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName});
-     ___addPr();
-     break;
-    case 7:
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName});
-     lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName});
-     ___addVr();
-     ___addPr();
-     break;
-    default:
-     break;
-   }
-
-/*   function ___addVr() {
-    vr = lay.pathItems.rectangle(
-     plateY,
-     (plateX - opts.nmb.indentIn) * PT_TO_MM,
-     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
-     (+opts.sel.z - DISTORS) * PT_TO_MM
-    );
-    vr.stroked = false;
-    vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
-    vr.fillOverprint = true;
-   }*/
-
-   function ___addVr() {
-    vr = lay.pathItems.rectangle(
-     plateY,
-     (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
-     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
-     (+opts.sel.z - DISTORS) * PT_TO_MM
-    );
-    vr.stroked = false;
-    vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
-    vr.fillOverprint = true;
-   }
-
-   function ___addPr() {
-    pr = lay.pathItems.rectangle(
-     plateY,
-     (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
-     (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
-     (+opts.sel.z - DISTORS) * PT_TO_MM
-    );
-    pr.stroked = false;
-    pr.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
-    pr.fillOverprint = true;
-   }
-
-   function ___getCmyk(opts, name) {
-    var arr = opts.col;
-    for (var i = 0; i < arr.length; i++) {
-     var obj = arr[i];
-     if (obj.name == name) {
-      return obj.cmyk.split(',');
-     }
-    }
-   }
-
-  }
 
   /** !!! WARN !!! This function working correctrly.
    * But other code worked non-correct - needs to refactoring
@@ -261,11 +170,19 @@ function makeLayout(str) {
  }
 
  function _addGuides(opts) {
-
   var doc = activeDocument,
-   lay = getLayByName('test'),
+   lay, outLay = false,
    docW = doc.width,
    docH = doc.height;
+
+  try {
+   outLay = doc.layers.getByName(outLayName);
+   lay = outLay.layers.getByName(testLayName);
+   // alert(testLayName);
+  } catch (e) {
+  }
+
+  if (!outLay) lay = doc.layers.getByName(testLayName);
 
   var topGuide, bottGuide, centerGuide, leftGuide, rightGuide;
 
@@ -314,8 +231,18 @@ function makeLayout(str) {
  }
 
  function _addTestElems(opts) {
-  var lay = getLayByName('test'),
-   fontName = __getFonts()[0];
+  var fontName = __getFonts()[0];
+  var lay, outLay = false;
+  var doc = activeDocument;
+
+  try {
+   outLay = doc.layers.getByName(outLayName);
+   lay = outLay.layers.getByName(testLayName);
+   // alert(testLayName);
+  } catch (e) {
+  }
+
+  if (!outLay) lay = doc.layers.getByName(testLayName);
 
   var mainGr = lay.groupItems.add(),
    railGr = mainGr.groupItems.add(),
@@ -1054,6 +981,133 @@ function makeLayout(str) {
   }
  }
 
+ function _addLakAndPrimer(opts) {
+  var doc = activeDocument;
+  var colArr = opts.col;
+  var sw = 0;
+  var lay, wLay, vr, pr;
+  var plateX = 0, plateY = 0;
+
+  /*  try {
+     outLay = doc.layers.getByName(outLayName);
+     lay = outLay.layers.getByName(testLayName);
+     // alert(testLayName);
+    } catch (e) {
+    }
+
+    if (!outLay) lay = doc.layers.getByName(testLayName);*/
+
+  // alert(opts.chk.white_layer);
+
+  for (var i = 0; i < colArr.length; i++) {
+   var obj = colArr[i];
+   // if (obj.name != 'L' && obj.name != 'Pr') continue;
+   if (obj.name == 'L') sw += 1;
+   if (obj.name == 'Pr') sw += 2;
+   if (obj.name == 'W' && opts.chk.white_layer) sw += 4;
+  }
+
+  switch (sw) {
+   case 1:
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName, parentLayName: outLayName});
+    ___addVr();
+    break;
+   case 2:
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName, parentLayName: outLayName});
+    ___addPr();
+    break;
+   case 3:
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName, parentLayName: outLayName});
+    ___addVr();
+    ___addPr();
+    break;
+   case 4:
+    wLay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName, parentLayName: outLayName});
+    ___moveWhiteLay();
+    break;
+   case 5:
+    wLay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName, parentLayName: outLayName});
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakLayName, parentLayName: outLayName});
+    ___addVr();
+    ___moveWhiteLay();
+    break;
+   case 6:
+    wLay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName, parentLayName: outLayName});
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: primerLayName, parentLayName: outLayName});
+    ___addPr();
+    ___moveWhiteLay();
+    break;
+   case 7:
+    wLay = addLayer({rgb: [128, 0, 128], doc: doc, title: whiteLayName, parentLayName: outLayName});
+    lay = addLayer({rgb: [128, 0, 128], doc: doc, title: lakPrimerLayName, parentLayName: outLayName});
+    ___addVr();
+    ___addPr();
+    ___moveWhiteLay();
+    break;
+   default:
+    break;
+  }
+
+  /*   function ___addVr() {
+      vr = lay.pathItems.rectangle(
+       plateY,
+       (plateX - opts.nmb.indentIn) * PT_TO_MM,
+       (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2) * PT_TO_MM,
+       (+opts.sel.z - DISTORS) * PT_TO_MM
+      );
+      vr.stroked = false;
+      vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
+      vr.fillOverprint = true;
+     }*/
+
+  function ___addVr() {
+   vr = lay.pathItems.rectangle(
+    plateY,
+    (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+    (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
+    (+opts.sel.z - DISTORS) * PT_TO_MM
+   );
+   vr.stroked = false;
+   vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
+   vr.fillOverprint = true;
+  }
+
+  function ___addPr() {
+   pr = lay.pathItems.rectangle(
+    plateY,
+    (plateX - opts.nmb.railWidth - opts.nmb.indentIn) * PT_TO_MM,
+    (+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.railWidth * 2 + +opts.nmb.indentIn * 2) * PT_TO_MM,
+    (+opts.sel.z - DISTORS) * PT_TO_MM
+   );
+   pr.stroked = false;
+   pr.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
+   pr.fillOverprint = true;
+  }
+
+  function ___getCmyk(opts, name) {
+   var arr = opts.col;
+   for (var i = 0; i < arr.length; i++) {
+    var obj = arr[i];
+    if (obj.name == name) {
+     return obj.cmyk.split(',');
+    }
+   }
+  }
+
+  function ___moveWhiteLay() {
+   var outLay = false;
+   var testLay;
+   try {
+    outLay = activeDocument.layers.getByName(outLayName);
+    testLay = outLay.layers.getByName(testLayName);
+   } catch (e) {
+    testLay = activeDocument.layers.getByName(testLayName);
+   }
+   wLay.move(testLay, ElementPlacement.PLACEAFTER);
+  }
+
+ }
+
  function _delAllUnused() {
   activeDocument.swatchGroups[1].remove();
 
@@ -1238,361 +1292,386 @@ function makeLayout(str) {
    '}';
   runAction('delAllUnused', 'delAllUnused', str);
  }
-}
 
-/**
- * COMMON LIB
- * */
-function setPantAlias(pantName) {
+ /**
+  * COMMON LIB
+  * */
+ function setPantAlias(pantName) {
 
- var aliases = {
-  'Process Yellow': 'PrY',
-  'Process Magenta': 'PrM',
-  'Process Cyan': 'PrC',
-  'Process Black': 'K2',
-  'Yellow 012': '012',
-  'Orange 021': '021',
-  'Warm Red': 'WR',
-  'Red 032': '032',
-  'Rubine Red': 'Rub',
-  'Rhodamine Red': 'Rh',
-  'Purple': 'Pu',
-  'Violet': 'V',
-  'Blue 072': '072',
-  'Reflex Blue': 'Ref',
-  'Process Blue': 'PrBlu',
-  'Green': 'Gr',
-  'Black': 'K2',
-  'Black 2': 'B2',
-  'Black 3': 'B3',
-  'Black 4': 'B4',
-  'Black 5': 'B5',
-  'Black 6': 'B6',
-  'Black 7': 'B7',
-  'Warm Gray 1': 'WG1',
-  'Warm Gray 2': 'WG2',
-  'Warm Gray 3': 'WG3',
-  'Warm Gray 4': 'WG4',
-  'Warm Gray 5': 'WG5',
-  'Warm Gray 6': 'WG6',
-  'Warm Gray 7': 'WG7',
-  'Warm Gray 8': 'WG8',
-  'Warm Gray 9': 'WG9',
-  'Warm Gray 10': 'WG10',
-  'Warm Gray 11': 'WG11',
-  'Cool Gray 1': 'CG1',
-  'Cool Gray 2': 'CG2',
-  'Cool Gray 3': 'CG3',
-  'Cool Gray 4': 'CG4',
-  'Cool Gray 5': 'CG5',
-  'Cool Gray 6': 'CG6',
-  'Cool Gray 7': 'CG7',
-  'Cool Gray 8': 'CG8',
-  'Cool Gray 9': 'CG9',
-  'Cool Gray 10': 'CG10',
-  'Cool Gray 11': 'CG11'
- };
+  var aliases = {
+   'Process Yellow': 'PrY',
+   'Process Magenta': 'PrM',
+   'Process Cyan': 'PrC',
+   'Process Black': 'K2',
+   'Yellow 012': '012',
+   'Orange 021': '021',
+   'Warm Red': 'WR',
+   'Red 032': '032',
+   'Rubine Red': 'Rub',
+   'Rhodamine Red': 'Rh',
+   'Purple': 'Pu',
+   'Violet': 'V',
+   'Blue 072': '072',
+   'Reflex Blue': 'Ref',
+   'Process Blue': 'PrBlu',
+   'Green': 'Gr',
+   'Black': 'K2',
+   'Black 2': 'B2',
+   'Black 3': 'B3',
+   'Black 4': 'B4',
+   'Black 5': 'B5',
+   'Black 6': 'B6',
+   'Black 7': 'B7',
+   'Warm Gray 1': 'WG1',
+   'Warm Gray 2': 'WG2',
+   'Warm Gray 3': 'WG3',
+   'Warm Gray 4': 'WG4',
+   'Warm Gray 5': 'WG5',
+   'Warm Gray 6': 'WG6',
+   'Warm Gray 7': 'WG7',
+   'Warm Gray 8': 'WG8',
+   'Warm Gray 9': 'WG9',
+   'Warm Gray 10': 'WG10',
+   'Warm Gray 11': 'WG11',
+   'Cool Gray 1': 'CG1',
+   'Cool Gray 2': 'CG2',
+   'Cool Gray 3': 'CG3',
+   'Cool Gray 4': 'CG4',
+   'Cool Gray 5': 'CG5',
+   'Cool Gray 6': 'CG6',
+   'Cool Gray 7': 'CG7',
+   'Cool Gray 8': 'CG8',
+   'Cool Gray 9': 'CG9',
+   'Cool Gray 10': 'CG10',
+   'Cool Gray 11': 'CG11'
+  };
 
- for (var key in aliases) {
-  if (pantName == key) return aliases[key];
+  for (var key in aliases) {
+   if (pantName == key) return aliases[key];
 
-  /* if (pantName.match(key)) {
-    return aliases[key] + pantName.slice(-2);
-   }*/
- }
- return pantName;
-}
-
-/*
- function setPantAlias (pantName) {
- var aliases = {
- "Process Yellow":  "PrY",
- "Process Magenta": "PrM",
- "Process Cyan":    "PrC",
- "Process Black":   "PrK",
- "Yellow 012":      "012",
- "Orange 021":      "021",
- "Warm Red":        "WR",
- "Red 032":         "032",
- "Rubine Red":      "Rub",
- "Rhodamine Red":   "Rhod",
- "Purple":          "Purp",
- "Violet":          "Viol",
- "Blue 072":        "072",
- "Reflex Blue":     "Refl",
- "Process Blue":    "PrBlue",
- "Green":           "Gr",
- "Black":           "Black",
- "Black 2":         "Black2",
- "Black 3":         "Black3",
- "Black 4":         "Black4",
- "Black 5":         "Black5",
- "Black 6":         "Black6",
- "Black 7":         "Black7",
- "Warm Gray 1":     "WG1",
- "Warm Gray 2":     "WG2",
- "Warm Gray 3":     "WG3",
- "Warm Gray 4":     "WG4",
- "Warm Gray 5":     "WG5",
- "Warm Gray 6":     "WG6",
- "Warm Gray 7":     "WG7",
- "Warm Gray 8":     "WG8",
- "Warm Gray 9":     "WG9",
- "Warm Gray 10":    "WG10",
- "Warm Gray 11":    "WG11",
- "Cool Gray 1":     "CG1",
- "Cool Gray 2":     "CG2",
- "Cool Gray 3":     "CG3",
- "Cool Gray 4":     "CG4",
- "Cool Gray 5":     "CG5",
- "Cool Gray 6":     "CG6",
- "Cool Gray 7":     "CG7",
- "Cool Gray 8":     "CG8",
- "Cool Gray 9":     "CG9",
- "Cool Gray 10":    "CG10",
- "Cool Gray 11":    "CG11"
+   /* if (pantName.match(key)) {
+     return aliases[key] + pantName.slice(-2);
+    }*/
+  }
+  return pantName;
  }
 
- for (var key in aliases) {
- if (pantName == key) {
- return aliases[key];
+ /*
+  function setPantAlias (pantName) {
+  var aliases = {
+  "Process Yellow":  "PrY",
+  "Process Magenta": "PrM",
+  "Process Cyan":    "PrC",
+  "Process Black":   "PrK",
+  "Yellow 012":      "012",
+  "Orange 021":      "021",
+  "Warm Red":        "WR",
+  "Red 032":         "032",
+  "Rubine Red":      "Rub",
+  "Rhodamine Red":   "Rhod",
+  "Purple":          "Purp",
+  "Violet":          "Viol",
+  "Blue 072":        "072",
+  "Reflex Blue":     "Refl",
+  "Process Blue":    "PrBlue",
+  "Green":           "Gr",
+  "Black":           "Black",
+  "Black 2":         "Black2",
+  "Black 3":         "Black3",
+  "Black 4":         "Black4",
+  "Black 5":         "Black5",
+  "Black 6":         "Black6",
+  "Black 7":         "Black7",
+  "Warm Gray 1":     "WG1",
+  "Warm Gray 2":     "WG2",
+  "Warm Gray 3":     "WG3",
+  "Warm Gray 4":     "WG4",
+  "Warm Gray 5":     "WG5",
+  "Warm Gray 6":     "WG6",
+  "Warm Gray 7":     "WG7",
+  "Warm Gray 8":     "WG8",
+  "Warm Gray 9":     "WG9",
+  "Warm Gray 10":    "WG10",
+  "Warm Gray 11":    "WG11",
+  "Cool Gray 1":     "CG1",
+  "Cool Gray 2":     "CG2",
+  "Cool Gray 3":     "CG3",
+  "Cool Gray 4":     "CG4",
+  "Cool Gray 5":     "CG5",
+  "Cool Gray 6":     "CG6",
+  "Cool Gray 7":     "CG7",
+  "Cool Gray 8":     "CG8",
+  "Cool Gray 9":     "CG9",
+  "Cool Gray 10":    "CG10",
+  "Cool Gray 11":    "CG11"
+  }
+
+  for (var key in aliases) {
+  if (pantName == key) {
+  return aliases[key];
+  }
+  }
+  return pantName;
+  }
+  */
+
+ function getColor(colorName, cmyk, tint) {
+  colorName = colorName || 'Ze_Test';
+  cmyk = cmyk || [11, 11, 11, 11];
+  tint = tint || 100;
+
+  var col;
+
+  switch (colorName) {
+   case 'C':
+    col = makeCMYK(cmyk);
+    if (tint) col.cyan = tint;
+    break;
+   case 'M':
+    col = makeCMYK(cmyk);
+    if (tint) col.magenta = tint;
+    break;
+   case 'Y':
+    col = makeCMYK(cmyk);
+    if (tint) col.yellow = tint;
+    break;
+   case 'K':
+    col = makeCMYK(cmyk);
+    if (tint) col.black = tint;
+    break;
+   case 'white':
+    col = makeCMYK([0, 0, 0, 0]);
+    break;
+   default:
+    col = makeSpot(colorName, cmyk, tint);
+    break;
+  }
+  return col;
  }
- }
- return pantName;
- }
- */
 
-function getColor(colorName, cmyk, tint) {
- colorName = colorName || 'Ze_Test';
- cmyk = cmyk || [11, 11, 11, 11];
- tint = tint || 100;
+ function makeSpot(name, cmyk, tint) {
+  if (+tint === 0) {
+   tint = 0;
+  } else {
+   tint = +tint || 100;
+  }
 
- var col;
+  name = name || 'Ze_Test';
+  cmyk = cmyk || [11, 11, 11, 11];
 
- switch (colorName) {
-  case 'C':
-   col = makeCMYK(cmyk);
-   if (tint) col.cyan = tint;
-   break;
-  case 'M':
-   col = makeCMYK(cmyk);
-   if (tint) col.magenta = tint;
-   break;
-  case 'Y':
-   col = makeCMYK(cmyk);
-   if (tint) col.yellow = tint;
-   break;
-  case 'K':
-   col = makeCMYK(cmyk);
-   if (tint) col.black = tint;
-   break;
-  case 'white':
-   col = makeCMYK([0, 0, 0, 0]);
-   break;
-  default:
-   col = makeSpot(colorName, cmyk, tint);
-   break;
- }
- return col;
-}
+  var newSpot, newColor, newSpotColor;
 
-function makeSpot(name, cmyk, tint) {
- if (+tint === 0) {
-  tint = 0;
- } else {
-  tint = +tint || 100;
- }
+  if (name != 'L' && name != 'W' && name != 'Pr' && name != 'film' && name != 'W 2' && name != 'MatLak') {
+   name = 'PANTONE ' + name + ' C';
+  }
 
- name = name || 'Ze_Test';
- cmyk = cmyk || [11, 11, 11, 11];
-
- var newSpot, newColor, newSpotColor;
-
- if (name != 'L' && name != 'W' && name != 'Pr' && name != 'film' && name != 'W 2' && name != 'MatLak') {
-  name = 'PANTONE ' + name + ' C';
- }
-
- try {
-  newSpotColor = activeDocument.swatches.getByName(name);
-  newSpotColor.color.tint = tint;
-  return newSpotColor.color;
- } catch (e) {
-  newSpot = activeDocument.spots.add();
-  newColor = new CMYKColor();
-  newSpotColor = new SpotColor();
-
-  newColor.cyan = cmyk[0];
-  newColor.magenta = cmyk[1];
-  newColor.yellow = cmyk[2];
-  newColor.black = cmyk[3];
-
-  newSpot.name = name;
-  newSpot.colorType = ColorModel.SPOT;
-  newSpot.color = newColor;
-
-  newSpotColor.spot = newSpot;
-  newSpotColor.tint = tint;
-
-  return newSpotColor;
- }
-}
-
-function makeCMYK(cmyk) {
- var col = new CMYKColor();
- col.cyan = cmyk[0];
- col.magenta = cmyk[1];
- col.yellow = cmyk[2];
- col.black = cmyk[3];
- return col;
-}
-
-function getRegistration() {
- var tint = 100,
-  name = '[Registration]';
-
- var newSpot, newColor, newSpotColor;
-
- try {
-  newSpotColor = activeDocument.swatches.getByName('[Registration]');
-  return newSpotColor.color;
- } catch (e) {
-  newSpot = activeDocument.spots.add();
-  newColor = new CMYKColor();
-  newSpotColor = new SpotColor();
-
-  newSpot.name = name;
-  newSpot.colorType = ColorModel.REGISTRATION;
-  newSpot.color = newColor;
-
-  newSpotColor.spot = newSpot;
-
-  return newSpotColor;
- }
-}
-
-function getLayByName(name) {
- if (!documents.length) return;
- var lay;
- try {
-  lay = activeDocument.layers.getByName(name);
- } catch (e) {
-  lay = activeDocument.activeLayer;
- }
- return lay;
-}
-
-function addLayer(o/*{o.rgb, o.doc, o.title}*/) {
- var rgb = o.rgb || [128, 255, 128];
- var doc = o.doc || activeDocument;
- var title = o.title || '__test-lay__';
- var lay;
- /* try {
-   lay = doc.layers.getByName(title);
-   if (doc.layers.length > 1) lay.remove();
-  } catch (e) {
-  }*/
-
- var col = new RGBColor();
- lay = doc.layers.add();
-
- col.red = rgb[0];
- col.green = rgb[1];
- col.blue = rgb[2];
-
- lay.name = title;
- lay.color = col;
-
- return lay;
-}
-
-function rmWhitePrLakLays(layNamesArr) {
- for (var i = 0; i < layNamesArr.length; i++) {
-  var layName = layNamesArr[i];
   try {
-   var lay = activeDocument.layers.getByName(layName);
-   if (activeDocument.layers.length > 1) lay.remove();
+   newSpotColor = activeDocument.swatches.getByName(name);
+   newSpotColor.color.tint = tint;
+   return newSpotColor.color;
   } catch (e) {
+   newSpot = activeDocument.spots.add();
+   newColor = new CMYKColor();
+   newSpotColor = new SpotColor();
+
+   newColor.cyan = cmyk[0];
+   newColor.magenta = cmyk[1];
+   newColor.yellow = cmyk[2];
+   newColor.black = cmyk[3];
+
+   newSpot.name = name;
+   newSpot.colorType = ColorModel.SPOT;
+   newSpot.color = newColor;
+
+   newSpotColor.spot = newSpot;
+   newSpotColor.tint = tint;
+
+   return newSpotColor;
   }
  }
-}
 
-function getXmlStr() {
-
- if (!documents.length) {
-  var errNoDocs = new Error('Нет активных документов!');
-  alert(errNoDocs);
-  return errNoDocs;
+ function makeCMYK(cmyk) {
+  var col = new CMYKColor();
+  col.cyan = cmyk[0];
+  col.magenta = cmyk[1];
+  col.yellow = cmyk[2];
+  col.black = cmyk[3];
+  return col;
  }
 
- var a = ('' + activeDocument.fullName).slice(0, -3);
- var x = new File(a + '.xml');
+ function getRegistration() {
+  var tint = 100,
+   name = '[Registration]';
 
- if (!x.exists) {
-  var errNoXml = new Error('Не найден xml-файл!');
-  alert(errNoXml);
-  return errNoXml;
+  var newSpot, newColor, newSpotColor;
+
+  try {
+   newSpotColor = activeDocument.swatches.getByName('[Registration]');
+   return newSpotColor.color;
+  } catch (e) {
+   newSpot = activeDocument.spots.add();
+   newColor = new CMYKColor();
+   newSpotColor = new SpotColor();
+
+   newSpot.name = name;
+   newSpot.colorType = ColorModel.REGISTRATION;
+   newSpot.color = newColor;
+
+   newSpotColor.spot = newSpot;
+
+   return newSpotColor;
+  }
  }
 
- var s = '';
- x.open('r');
- s = x.read();
- x.close();
-
- return s;
-}
-
-function runAction(actName, setName, actStr) {
- var f = new File('~/ScriptAction.aia');
- f.open('w');
- f.write(actStr);
- f.close();
- app.loadAction(f);
- f.remove();
- app.doScript(actName, setName, false); // action name, set name
- app.unloadAction(setName, ''); // set name
-}
-
-/**
- * calculate top, bottom spasing and the real height of the capital character F
- *
- * @param {TextFrameItem} frame - object of the TextFrameItem class
- * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
- */
-function calcCharSize(frame) {
- var txt2meas = activeDocument.activeLayer.textFrames.add(),
-  fullH,
-  fontMeasures = {};
-
- txt2meas.contents = 'C';
-
- txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
- txt2meas.textRange.characterAttributes.size = frame.textRange.characterAttributes.size;
-
- var txt2meas_curv = (txt2meas.duplicate()).createOutline();
-
- fullH = txt2meas.height;
- fontMeasures.h = txt2meas_curv.height;
- fontMeasures.top = Math.abs(txt2meas.position[1] - txt2meas_curv.position[1]);
- fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
-
- txt2meas.remove();
- txt2meas_curv.remove();
-
- return fontMeasures;
-}
-
-function formatDate2(date) {
- var d = date;
- // форматировать дату, с учетом того, что месяцы начинаются с 0
- d = [
-  '0' + d.getDate(),
-  '0' + (d.getMonth() + 1),
-  '' + d.getFullYear(),
-  '0' + d.getHours(),
-  '0' + d.getMinutes()
- ];
- for (var i = 0; i < d.length; i++) {
-  d[i] = d[i].slice(-2);
+ function getLayByName(name) {
+  if (!documents.length) return;
+  var lay;
+  try {
+   lay = activeDocument.layers.getByName(name);
+  } catch (e) {
+   lay = activeDocument.activeLayer;
+  }
+  return lay;
  }
- return d.slice(0, 3).join('.') /*+ ' ' + d.slice(3).join(':')*/;
+
+ function addLayer(o/*{o.rgb, o.doc, o.title, o.parentLayName}*/) {
+  var rgb = o.rgb || [128, 255, 128];
+  var doc = o.doc || activeDocument;
+  var title = o.title || '__test-lay__';
+  var lay, parentLay = false;
+  var parentLayName = o.parentLayName;
+  /* try {
+    lay = doc.layers.getByName(title);
+    if (doc.layers.length > 1) lay.remove();
+   } catch (e) {
+   }*/
+
+  var col = new RGBColor();
+
+  try {
+   parentLay = doc.layers.getByName(parentLayName);
+   lay = parentLay.layers.add();
+  } catch (e) {
+   lay = doc.layers.add();
+  }
+
+  col.red = rgb[0];
+  col.green = rgb[1];
+  col.blue = rgb[2];
+
+  lay.name = title;
+  lay.color = col;
+
+  return lay;
+ }
+
+ function rmWhitePrLakLays(layNamesArr, parentLayName) {
+  var lay, layName, parentLay = false;
+  var doc = activeDocument;
+
+  try {
+   parentLay = doc.layers.getByName(parentLayName);
+  } catch (e) {
+  }
+
+  for (var i = 0; i < layNamesArr.length; i++) {
+   layName = layNamesArr[i];
+   try {
+    if (parentLay) {
+     lay = parentLay.layers.getByName(layName);
+    } else {
+     lay = doc.layers.getByName(layName);
+    }
+    if (parentLay) {
+     lay.remove();
+     continue;
+    }
+    if (doc.layers.length > 1) lay.remove();
+   } catch (e) {
+   }
+  }
+ }
+
+ function getXmlStr() {
+
+  if (!documents.length) {
+   var errNoDocs = new Error('Нет активных документов!');
+   alert(errNoDocs);
+   return errNoDocs;
+  }
+
+  var a = ('' + activeDocument.fullName).slice(0, -3);
+  var x = new File(a + '.xml');
+
+  if (!x.exists) {
+   var errNoXml = new Error('Не найден xml-файл!');
+   alert(errNoXml);
+   return errNoXml;
+  }
+
+  var s = '';
+  x.open('r');
+  s = x.read();
+  x.close();
+
+  return s;
+ }
+
+ function runAction(actName, setName, actStr) {
+  var f = new File('~/ScriptAction.aia');
+  f.open('w');
+  f.write(actStr);
+  f.close();
+  app.loadAction(f);
+  f.remove();
+  app.doScript(actName, setName, false); // action name, set name
+  app.unloadAction(setName, ''); // set name
+ }
+
+ /**
+  * calculate top, bottom spasing and the real height of the capital character F
+  *
+  * @param {TextFrameItem} frame - object of the TextFrameItem class
+  * @return {Object} fontMeasures - result object {chr, top, bot, toString()}
+  */
+ function calcCharSize(frame) {
+  var txt2meas = activeDocument.activeLayer.textFrames.add(),
+   fullH,
+   fontMeasures = {};
+
+  txt2meas.contents = 'C';
+
+  txt2meas.textRange.characterAttributes.textFont = frame.textRange.characterAttributes.textFont;
+  txt2meas.textRange.characterAttributes.size = frame.textRange.characterAttributes.size;
+
+  var txt2meas_curv = (txt2meas.duplicate()).createOutline();
+
+  fullH = txt2meas.height;
+  fontMeasures.h = txt2meas_curv.height;
+  fontMeasures.top = Math.abs(txt2meas.position[1] - txt2meas_curv.position[1]);
+  fontMeasures.bot = (fullH - fontMeasures.h - fontMeasures.top);
+
+  txt2meas.remove();
+  txt2meas_curv.remove();
+
+  return fontMeasures;
+ }
+
+ function formatDate2(date) {
+  var d = date;
+  // форматировать дату, с учетом того, что месяцы начинаются с 0
+  d = [
+   '0' + d.getDate(),
+   '0' + (d.getMonth() + 1),
+   '' + d.getFullYear(),
+   '0' + d.getHours(),
+   '0' + d.getMinutes()
+  ];
+  for (var i = 0; i < d.length; i++) {
+   d[i] = d[i].slice(-2);
+  }
+  return d.slice(0, 3).join('.') /*+ ' ' + d.slice(3).join(':')*/;
+ }
 }
+
+
