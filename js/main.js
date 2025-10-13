@@ -4276,19 +4276,29 @@ function makeLayout(str) {
     +opts.nmb.crossWidth * PT_TO_MM
    );
    crossBg.stroked = false;
+   crossBg.name = '__cross-bg__';
+   crossBg.fillColor = getColor('white');
+   crossBg.overprintFill = false;
 
-   var crossCircle = crossGr.pathItems.ellipse(
-    +opts.nmb.crossWidth * PT_TO_MM,
-    -opts.nmb.crossWidth * PT_TO_MM / 2,
-    +opts.nmb.crossWidth * PT_TO_MM,
-    +opts.nmb.crossWidth * PT_TO_MM
-   );
+   try {
+    var crossCircle = crossGr.pathItems.ellipse(
+     +opts.nmb.crossWidth * PT_TO_MM,
+     -opts.nmb.crossWidth * PT_TO_MM / 2,
+     +opts.nmb.crossWidth * PT_TO_MM,
+     +opts.nmb.crossWidth * PT_TO_MM
+    );
 
-   crossCircle.filled = false;
-   crossCircle.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
-   crossCircle.strokeColor = getRegistration();
-   crossCircle.resize(50, 50);
-   crossCircle.strokeOverprint = true;
+    crossCircle.name = '__cross-circle__';
+
+    crossCircle.filled = false;
+    crossCircle.stroked = true;
+    crossCircle.strokeWidth = +opts.nmb.crossStroke * PT_TO_MM;
+    crossCircle.strokeColor = getRegistration();
+    crossCircle.resize(50, 50);
+    crossCircle.strokeOverprint = true;
+   } catch (e) {
+    alert('Blya!!!')
+   }
 
    for (var m = 0; m < arr.length; m++) {
     var obj1 = arr[m];
