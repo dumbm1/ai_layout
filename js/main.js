@@ -3655,6 +3655,7 @@ function makeLayout(str) {
   if (opts.chk['active_doc']) {
    docName = activeDocument.name;
    doc = activeDocument;
+   ___setArtb2HW(0, docW, docH);
    // alert('hi!');
   } else {
    docName = opts.txt.fileName;
@@ -3695,6 +3696,37 @@ function makeLayout(str) {
    * */
 
   // __setZero();
+  /**
+   * Set artboard to target height and weight
+   *
+   * взять ортборд
+   * добавить прямоугольник по ортборду, без заливки и обводки
+   * привести прямоугольник к переданным параметрам высоты и ширины, относительно нижней точки
+   * привести артборд к прямоугольнику
+   * удалить прямоугольник
+   *
+   * @param {number} n номер артборда
+   * @param {number} h высота
+   * @param {number} w ширина
+   * */
+  function ___setArtb2HW(n, h, w) {
+   executeMenuCommand('deselectall');
+
+   var doc = activeDocument;
+   doc.artboards.setActiveArtboardIndex(0);
+   doc.rulerOrigin = [0, doc.height]; // Set Zero point ruler on Document
+
+   var lay = doc.activeLayer;
+   var artbRect = doc.artboards[n].artboardRect;
+   var rectParams = [artbRect[1], artbRect[0], artbRect[2], -artbRect[3]]; //[top, left, width, height]
+   var rect = lay.pathItems.rectangle(w - rectParams[3], (rectParams[2] - h) / 2, h, w);
+
+   rect.stroked = false;
+   rect.filled = false;
+   rect.selected = true;
+   doc.fitArtboardToSelectedArt(n);
+   rect.remove();
+  }
 
   /** !!! WARN !!! This function working correctrly.
    * But other code worked non-correct - needs to refactoring
