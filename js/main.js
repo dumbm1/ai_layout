@@ -3623,7 +3623,7 @@ function makeLayout(str) {
 
  _addDoc(str);
  _addLakAndPrimer(str);
- _showRulers(str);
+ // _showRulers(str);
  _addGuides(str);
  _addTestElems(str);
 
@@ -3644,8 +3644,6 @@ function makeLayout(str) {
  function _addDoc(opts) {
   var docName, doc;
 
-  rmWhitePrLakLays([testLayName, primerLayName, lakLayName, whiteLayName, lakPrimerLayName], outLayName);
-
   var railW = +opts.nmb.railWidth;
   var margVert = +opts.nmb.margTop + +(opts.nmb.margBott);
   var margHor = +opts.nmb.margLeft + +(opts.nmb.margRight);
@@ -3657,6 +3655,7 @@ function makeLayout(str) {
    doc = activeDocument;
    ___setArtb2HW(0, docW, docH);
    // alert('hi!');
+   rmWhitePrLakLays([testLayName, primerLayName, lakLayName, whiteLayName, lakPrimerLayName], outLayName);
   } else {
    docName = opts.txt.fileName;
    var pres = new DocumentPreset();
@@ -4112,10 +4111,13 @@ function makeLayout(str) {
 
    try {
     outLay = doc.layers.getByName(outLayName);
-    layPrimerLak = ___getLakPrimerLay(layPrimerLakNames, outLay);
-    // alert(testLayName);
    } catch (e) {
-    layPrimerLak = ___getLakPrimerLay(layPrimerLakNames, activeDocument);
+   }
+
+   if (outLay) {
+    layPrimerLak = __getLakPrimerLay(layPrimerLakNames, outLay);
+   } else {
+    layPrimerLak = __getLakPrimerLay(layPrimerLakNames, activeDocument);
    }
 
    // add test title template rectangle:
@@ -4157,30 +4159,17 @@ function makeLayout(str) {
     if (currCol.name == "Pr") {
      var primerColor = title.duplicate();
      primerColor.textRange.characterAttributes.strokeWeight = 0;
-     primerColor.textRange.characterAttributes.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 0);
+     primerColor.textRange.characterAttributes.fillColor = getColor('Pr', getCMYK(opts, 'Pr'), 0);
      primerColor.textRange.characterAttributes.overprintFill = true;
      primerColor.move(layPrimerLak, ElementPlacement.INSIDE);
     }
     if (currCol.name == "L") {
      var lakColor = title.duplicate();
      lakColor.textRange.characterAttributes.strokeWeight = 0;
-     lakColor.textRange.characterAttributes.fillColor = getColor('L', ___getCmyk(opts, 'L'), 0);
+     lakColor.textRange.characterAttributes.fillColor = getColor('L', getCMYK(opts, 'L'), 0);
      lakColor.textRange.characterAttributes.overprintFill = true;
      lakColor.move(layPrimerLak, ElementPlacement.INSIDE);
     }
-   }
-
-   function ___getLakPrimerLay(layNames, parentObject) {
-    var lay = false;
-    for (var i = 0; i < layNames.length; i++) {
-     var layName = layNames[i];
-     try {
-      lay = parentObject.layers.getByName(layName);
-     } catch (e) {
-      continue;
-     }
-    }
-    return lay;
    }
 
   }
@@ -4223,6 +4212,20 @@ function makeLayout(str) {
    railTopLine.fillOverprint = false;
    railTopLine.stroked = false;
   }*/
+
+  function __getLakPrimerLay(layNames, parentObject) {
+   var lay = false;
+   for (var i = 0; i < layNames.length; i++) {
+    var layName = layNames[i];
+    try {
+     lay = parentObject.layers.getByName(layName);
+    } catch (e) {
+     continue;
+    }
+    return lay;
+   }
+
+  }
 
   function __addRails(opts, railGr) {
    var arr = opts.col;
@@ -4473,6 +4476,7 @@ function makeLayout(str) {
      lightStroke.filled = false;
      light.stroked = false;
      lightBg.stroked = false;
+     light.filled = true;
 
      light.fillOverprint = true;
      lightStroke.strokeOverprint = true;
@@ -4788,7 +4792,7 @@ function makeLayout(str) {
        (+opts.sel.z - DISTORS) * PT_TO_MM
       );
       vr.stroked = false;
-      vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
+      vr.fillColor = getColor('L', getCMYK(opts, 'L'), 100);
       vr.fillOverprint = true;
      }*/
 
@@ -4800,7 +4804,7 @@ function makeLayout(str) {
     (+opts.sel.z - DISTORS) * PT_TO_MM
    );
    vr.stroked = false;
-   vr.fillColor = getColor('L', ___getCmyk(opts, 'L'), 100);
+   vr.fillColor = getColor('L', getCMYK(opts, 'L'), 100);
    vr.fillOverprint = true;
   }
 
@@ -4812,18 +4816,8 @@ function makeLayout(str) {
     (+opts.sel.z - DISTORS) * PT_TO_MM
    );
    pr.stroked = false;
-   pr.fillColor = getColor('Pr', ___getCmyk(opts, 'Pr'), 100);
+   pr.fillColor = getColor('Pr', getCMYK(opts, 'Pr'), 100);
    pr.fillOverprint = true;
-  }
-
-  function ___getCmyk(opts, name) {
-   var arr = opts.col;
-   for (var i = 0; i < arr.length; i++) {
-    var obj = arr[i];
-    if (obj.name == name) {
-     return obj.cmyk.split(',');
-    }
-   }
   }
 
   function ___moveWhiteLay() {
@@ -5150,7 +5144,7 @@ function makeLayout(str) {
  function getColor(colorName, cmyk, tint) {
   colorName = colorName || 'Ze_Test';
   cmyk = cmyk || [11, 11, 11, 11];
-  tint = tint || 100;
+  // if (tint !== 0) tint = tint || 100;
 
   var col;
 
@@ -5403,5 +5397,15 @@ function makeLayout(str) {
    d[i] = d[i].slice(-2);
   }
   return d.slice(0, 3).join('.') /*+ ' ' + d.slice(3).join(':')*/;
+ }
+
+ function getCMYK(opts, name) {
+  var arr = opts.col;
+  for (var i = 0; i < arr.length; i++) {
+   var obj = arr[i];
+   if (obj.name == name) {
+    return obj.cmyk.split(',');
+   }
+  }
  }
 }
