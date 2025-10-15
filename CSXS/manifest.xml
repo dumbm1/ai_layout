@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExtensionManifest Version="4.0"
                    ExtensionBundleId="ai_layout"
-                   ExtensionBundleVersion="3.1.2"
+                   ExtensionBundleVersion="3.1.3"
                    ExtensionBundleName="pr_mount"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Author>
@@ -18,8 +18,8 @@
     </Abstract>
 
     <ExtensionList>
-        <Extension Id="ai_layout_panel" Version="3.1.2"/>
-        <Extension Id="ai_layout_dialog" Version="3.1.2"/>
+        <Extension Id="ai_layout_panel" Version="3.1.3"/>
+        <Extension Id="ai_layout_dialog" Version="3.1.3"/>
     </ExtensionList>
     <ExecutionEnvironment>
         <HostList>
@@ -51,7 +51,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>ai_layout 3.1.2</Menu>
+                    <Menu>ai_layout 3.1.3</Menu>
                     <Geometry>
                         <Size>
                             <Width>320</Width>

@@ -3614,7 +3614,7 @@ function makeLayout(str) {
   primerLayName = '__primer-lay__',
   lakLayName = '__lak-lay__',
   whiteLayName = '__white-lay__',
-  lakPrimerLayName = '__lak_primer-lay__';
+  lakPrimerLayName = '__lak-primer-lay__';
 
  var outLay = false,
   outLayName = 'out';
@@ -3862,7 +3862,8 @@ function makeLayout(str) {
 
  function _addTestElems(opts) {
   var fontName = __getFonts()[0];
-  var lay, outLay = false;
+  var lay,
+   outLay = false;
   var doc = activeDocument;
 
   try {
@@ -3931,9 +3932,71 @@ function makeLayout(str) {
   colorGr.translate((+opts.nmb.layoutWidth * +opts.nmb.streams + +opts.nmb.indentIn * 2 + +opts.nmb.railWidth) * PT_TO_MM,
    0);
 
+  try {
+   __moveLakPrimerElements();
+  } catch (e) {
+   alert('__moveLakPrimerElements error\n' + e);
+  }
+
   /**
    * LIB TO ADD TEST ELEMENTS
    * */
+
+  function __moveLakPrimerElements() {
+
+   var layPrimerLakNames = [primerLayName, lakLayName, lakPrimerLayName],
+    outLay = false,
+    layPrLak = false,
+    crossLakGroups = false,
+    crossPrGroups = false,
+    lakLabel = false,
+    primerLabel = false;
+
+   try {
+    outLay = activeDocument.layers.getByName(outLayName);
+   } catch (e) {
+   }
+
+   if (outLay) {
+    layPrLak = __getLakPrimerLay(layPrimerLakNames, outLay);
+   } else {
+    layPrLak = __getLakPrimerLay(layPrimerLakNames, activeDocument);
+   }
+
+   if (!layPrLak) return;
+
+   try {
+    crossLakGroups = getAllGroupsByName('cross_L', 6);
+    for (var i = 0; i < crossLakGroups.length; i++) {
+     var crossLakGr = crossLakGroups[i];
+     crossLakGr.move(layPrLak, ElementPlacement.INSIDE);
+    }
+   } catch (e) {
+   }
+
+   try {
+    crossPrGroups = getAllGroupsByName('cross_Pr', 6);
+    for (var j = 0; j < crossPrGroups.length; j++) {
+     var crossPrGr = crossPrGroups[j];
+     crossPrGr.move(layPrLak, ElementPlacement.INSIDE);
+    }
+   } catch (e) {
+   }
+
+   try {
+    lakLabel = activeDocument.pageItems.getByName('__lak-label__');
+    lakLabel.move(layPrLak, ElementPlacement.INSIDE);
+   } catch (e) {
+   }
+
+   try {
+    primerLabel = activeDocument.pageItems.getByName('__primer-label__');
+    primerLabel.move(layPrLak, ElementPlacement.INSIDE);
+   } catch (e) {
+   }
+
+  }
+
   function __addColors(opts, colorGr) {
    var colorGr = colorGr.groupItems.add();
    var labelGr = colorGr.groupItems.add();
@@ -3963,6 +4026,14 @@ function makeLayout(str) {
     if (obj.name.match(/^W(#\d)?$/)) {
      colorLabel.textRange.characterAttributes.fillColor = getColor('white');
      colorLabel.textRange.characterAttributes.overprintFill = false;
+    } else if (obj.name == 'L') {
+     colorLabel.textRange.characterAttributes.fillColor = getColor(obj.name, obj.cmyk.split(','), 0);
+     colorLabel.textRange.characterAttributes.overprintFill = true;
+     colorLabel.name = '__lak-label__';
+    } else if (obj.name == 'Pr') {
+     colorLabel.textRange.characterAttributes.fillColor = getColor(obj.name, obj.cmyk.split(','), 0);
+     colorLabel.textRange.characterAttributes.overprintFill = true;
+     colorLabel.name = '__primer-label__';
     } else {
      colorLabel.textRange.characterAttributes.fillColor = getColor(obj.name, obj.cmyk.split(','), 100);
      colorLabel.textRange.characterAttributes.overprintFill = true;
@@ -4220,10 +4291,11 @@ function makeLayout(str) {
     try {
      lay = parentObject.layers.getByName(layName);
     } catch (e) {
-     continue;
+     // continue;
     }
-    return lay;
+
    }
+   return lay;
 
   }
 
@@ -4300,7 +4372,6 @@ function makeLayout(str) {
     crossCircle.resize(50, 50);
     crossCircle.strokeOverprint = true;
    } catch (e) {
-    alert('Blya!!!')
    }
 
    for (var m = 0; m < arr.length; m++) {
@@ -4332,7 +4403,12 @@ function makeLayout(str) {
     }
 
     var cmykArr = obj.cmyk.split(',');
-    line.strokeColor = getColor(obj.name, cmykArr, 100);
+
+    if (obj.name.match(/^L(#\d)?$/) || obj.name.match(/^Pr(#\d)?$/)) {
+     line.strokeColor = getColor(obj.name, cmykArr, 0);
+    } else {
+     line.strokeColor = getColor(obj.name, cmykArr, 100);
+    }
 
     line.setEntirePath([
      [0, 0],
@@ -4376,6 +4452,7 @@ function makeLayout(str) {
     crossGrBottom = crossGr.duplicate();
    crossGrTop.translate(0, (-opts.nmb.crossWidth * 1.5 + +opts.sel.z / 2) * PT_TO_MM);
    crossGrBottom.translate(0, (opts.nmb.crossWidth * 1.5 - +opts.sel.z / 2) * PT_TO_MM);
+
   }
 
   function __addDotsGr(opts, dotsGr) {
@@ -5022,6 +5099,25 @@ function makeLayout(str) {
  /**
   * COMMON LIB
   * */
+ /**
+  * Возвращает массив групп активного документа
+  * @param {String} name имя группы
+  * @param {Number} max длинна массива
+  * @return {Array} массив всех найденных групп активного документа с именем name
+  * */
+ function getAllGroupsByName(name, max) {
+  var d = activeDocument;
+  var groups = d.groupItems;
+  var arr = [];
+  for (var i = 0, j = 0; i < groups.length, j < max; i++) {
+   var gr = groups[i];
+   if (gr.name != name) continue;
+   arr.push(gr);
+   j++;
+  }
+  return arr;
+ }
+
  function setPantAlias(pantName) {
 
   var aliases = {
