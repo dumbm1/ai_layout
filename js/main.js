@@ -4325,15 +4325,18 @@ function makeLayout(str) {
     rail.fillOverprint = true;
 
    }
-   var railTopLine = railGr.pathItems.rectangle(
-    0,
-    (-opts.nmb.railWidth / 2 - opts.nmb.indentIn - 0.1) * PT_TO_MM,
-    0.2 * PT_TO_MM,
-    (opts.sel.z - DISTORS) * PT_TO_MM);
-   railTopLine.name = 'rail_topLine';
-   railTopLine.fillColor = makeSpot('film', [0, 0, 0, 30], 100);
-   railTopLine.fillOverprint = false;
-   railTopLine.stroked = false;
+if(opts.chk['rail_lines']) __addRailTopLine();
+   function __addRailTopLine() {
+    var railTopLine = railGr.pathItems.rectangle(
+     0,
+     (-opts.nmb.railWidth / 2 - opts.nmb.indentIn - 0.1) * PT_TO_MM,
+     0.2 * PT_TO_MM,
+     (opts.sel.z - DISTORS) * PT_TO_MM);
+    railTopLine.name = 'rail_topLine';
+    railTopLine.fillColor = makeSpot('film', [0, 0, 0, 30], 100);
+    railTopLine.fillOverprint = false;
+    railTopLine.stroked = false;
+   }
   }
 
   function __addCrossGr(opts, crossGr) {

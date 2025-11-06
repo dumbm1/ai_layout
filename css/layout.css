@@ -74,6 +74,9 @@ input[type=checkbox] { cursor: pointer; }
   box-sizing:    border-box;
   padding-top:   3px;
 }
+.left-label__70{
+  width:70px;
+}
 
 .label-marg-dark { background-image: url(../img/margins-labels-dark.svg); }
 

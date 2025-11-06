@@ -54,6 +54,6 @@ by the settings of the CC application
   font-size:      inherit;
 }
 
-#white_layer, #dots, #active_doc{
+#white_layer, #dots, #active_doc, #rail_lines{
   opacity :1;
   }
