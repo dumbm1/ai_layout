@@ -4606,11 +4606,11 @@ if(opts.chk['rail_lines']) __addRailTopLine();
 
     var sqrdSteps = +opts.nmb['shift_' + (i + 1)];
     if (sqrdSteps == 5) {
-     colStepsArr = [100, 75, 50, 25, 2];
+     colStepsArr = [100, 85, 55, 20, 2];
     } else if (sqrdSteps == 4) {
-     colStepsArr = [100, 70, 35, 2];
+     colStepsArr = [100, 70, 30, 2];
     } else if (sqrdSteps == 3) {
-     colStepsArr = [100, 50, 2];
+     colStepsArr = [100, 55, 2];
     } else if (sqrdSteps == 2) {
      colStepsArr = [100, 2];
     } else if (sqrdSteps == 1) {
