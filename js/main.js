@@ -440,7 +440,7 @@ function main() {
           colors.push(currColor.slice(8, -2));
          }
 
-        })
+        });
        } catch (e) {
         alert(e);
        }
@@ -493,6 +493,13 @@ function main() {
      500, 520, 530, 540, 550, 560, 580,
      600, 640, 700
     ];
+    var hlupiki = [
+     350, 360, 370, 380,
+     420, 440, 480,
+     510, 520, 546, 550, 560, 570, 580, 590,
+     600, 610, 634, 640, 680,
+     760
+    ];
     var z = document.getElementById('z');
     var engineList = document.getElementById('engineList');
     _loadCylinders();
@@ -501,23 +508,27 @@ function main() {
     function _loadCylinders() {
      if (engineList.value == 'miraflex') {
       z.innerHTML = '';
-
       for (var i = 0; i < miraflex.length; i++) {
        var optElem = document.createElement('option');
        optElem.innerHTML = miraflex[i];
        z.appendChild(optElem);
       }
-     } else  /*if (engineList.value == 'soloflex')*/ {
+     } else if (engineList.value == 'soloflex') {
       z.innerHTML = '';
       for (var i = 0; i < soloflex.length; i++) {
        var optElem = document.createElement('option');
        optElem.innerHTML = soloflex[i];
        z.appendChild(optElem);
-
+      }
+     } else if (engineList.value == 'hlupiki') {
+      z.innerHTML = '';
+      for (var i = 0; i < hlupiki.length; i++) {
+       var optElem = document.createElement('option');
+       optElem.innerHTML = hlupiki[i];
+       z.appendChild(optElem);
       }
      }
     }
-
    }
 
    function searchPantByName() {
@@ -3581,7 +3592,7 @@ function main() {
      ' 9601': '1,0,12,9',
      ' 9602': '0,0,13,14',
      ' 9603': '0,1,11,14'
-    }
+    };
    }
 
   }
@@ -4325,7 +4336,8 @@ function makeLayout(str) {
     rail.fillOverprint = true;
 
    }
-if(opts.chk['rail_lines']) __addRailTopLine();
+   if (opts.chk['rail_lines']) __addRailTopLine();
+
    function __addRailTopLine() {
     var railTopLine = railGr.pathItems.rectangle(
      0,
@@ -4480,7 +4492,7 @@ if(opts.chk['rail_lines']) __addRailTopLine();
     dot.position = [
      (railWidth + indentIn / 2 - DOT_DIAMETER / 2) * PT_TO_MM,
      -(z - DISTORS - DOT_DIAMETER) / 2 * PT_TO_MM
-    ]
+    ];
 
     for (var i = 0; i < streamsNumb; i++) {
      var dotNext = dot.duplicate();
@@ -4647,7 +4659,7 @@ if(opts.chk['rail_lines']) __addRailTopLine();
    squardsGr.translate(
     activeDocument.width - opts.nmb.railWidth * PT_TO_MM,
     -opts.sel.z * PT_TO_MM / 2 - opts.nmb.crossWidth * 1.5 * PT_TO_MM
-   )
+   );
 
   }
 
