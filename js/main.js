@@ -500,6 +500,12 @@ function main() {
      600, 610, 634, 640, 680,
      760
     ];
+    /*    var bizCanter = {
+         'полимер 1,14': [380, 390, 420, 460, 490, 540],
+         'полимер 1,7': [580, 660, 720, 750],
+        };*/
+    var bizCanter = [1.14, 380, 390, 420, 460, 490, 540, 1.7, 580, 660, 720, 750];
+
     var z = document.getElementById('z');
     var engineList = document.getElementById('engineList');
     _loadCylinders();
@@ -525,6 +531,25 @@ function main() {
       for (var i = 0; i < hlupiki.length; i++) {
        var optElem = document.createElement('option');
        optElem.innerHTML = hlupiki[i];
+       z.appendChild(optElem);
+      }
+     } else if (engineList.value == 'bizCanter') {
+      /*      z.innerHTML = '';
+            for (let key in bizCanter) {
+             let optGr = document.createElement('optgroup');
+             optGr.label = key;
+             let printTypeObj = bizCanter[key];
+             for (let j=0; j<printTypeObj.length; j++) {
+              let optEl = document.createElement('option');
+              optEl.innerHTML = printTypeObj[j];
+              optGr.append(optEl);
+             }
+             z.append(optGr);
+            }*/
+      z.innerHTML = '';
+      for (var i = 0; i < bizCanter.length; i++) {
+       var optElem = document.createElement('option');
+       optElem.innerHTML = bizCanter[i];
        z.appendChild(optElem);
       }
      }
