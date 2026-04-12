@@ -336,7 +336,7 @@ function main() {
    function defSel() {
     return {
      engineList: 'soloflex',
-     z: 320
+     z: 270
     };
    }
 
@@ -479,32 +479,34 @@ function main() {
     * @param {String} engineName - 'mira' or 'solo'
     * @return {Array} miraflex or soloflex cylinder diameter values
     * */
+
    function makeEngines() {
-    var soloflex = [ // формный цилиндр Soloflex
-     270, 280, 285, 290,
-     300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390,
-     400, 410, 420, 430, 440, 450, 460, 480, 495,
-     500, 520, 530, 540, 560,
-     600
-    ];
-    var miraflex = [ // формный цилиндр Miraflex
-     300, 320, 330, 340, 345, 350, 360, 370, 380, 390,
-     400, 410, 420, 430, 440, 450, 460, 470, 480,
-     500, 520, 530, 540, 550, 560, 580,
-     600, 640, 700
-    ];
-    var hlupiki = [
-     350, 360, 370, 380,
-     420, 440, 480,
-     510, 520, 546, 550, 560, 570, 580, 590,
-     600, 610, 634, 640, 680,
-     760
-    ];
-    /*    var bizCanter = {
-         'полимер 1,14': [380, 390, 420, 460, 490, 540],
-         'полимер 1,7': [580, 660, 720, 750],
-        };*/
-    var bizCanter = [1.14, 380, 390, 420, 460, 490, 540, 1.7, 580, 660, 720, 750];
+    let cilinders = {
+     "soloflex": [ // формный цилиндр Soloflex
+      270, 280, 285, 290,
+      300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390,
+      400, 410, 420, 430, 440, 450, 460, 480, 495,
+      500, 520, 530, 540, 560,
+      600
+     ],
+     "miraflex": [ // формный цилиндр Miraflex
+      300, 320, 330, 340, 345, 350, 360, 370, 380, 390,
+      400, 410, 420, 430, 440, 450, 460, 470, 480,
+      500, 520, 530, 540, 550, 560, 580,
+      600, 640, 700
+     ],
+     "proflex": [ // Хлюпино, Одинцово
+      350, 360, 370, 380,
+      420, 440, 480,
+      510, 520, 546, 550, 560, 570, 580, 590,
+      600, 610, 634, 640, 680,
+      760
+     ],
+
+     "bizCanter": [ // Щелково Бизнес Цэнтр todo: уточнить название машины
+      380, 390, 420, 460, 490, 540, 580, 660, 720, 750
+     ],
+    };
 
     var z = document.getElementById('z');
     var engineList = document.getElementById('engineList');
@@ -512,48 +514,65 @@ function main() {
     engineList.addEventListener('change', _loadCylinders);
 
     function _loadCylinders() {
-     if (engineList.value == 'miraflex') {
-      z.innerHTML = '';
-      for (var i = 0; i < miraflex.length; i++) {
-       var optElem = document.createElement('option');
-       optElem.innerHTML = miraflex[i];
-       z.appendChild(optElem);
+     z.innerHTML = '';
+     for (let key in cilinders) {
+      let optGr = document.createElement('optgroup');
+      optGr.label = key;
+      let printTypeObj = cilinders[key];
+      for (let j = 0; j < printTypeObj.length; j++) {
+       let optEl = document.createElement('option');
+       optEl.innerHTML = printTypeObj[j];
+       optGr.append(optEl);
       }
-     } else if (engineList.value == 'soloflex') {
-      z.innerHTML = '';
-      for (var i = 0; i < soloflex.length; i++) {
-       var optElem = document.createElement('option');
-       optElem.innerHTML = soloflex[i];
-       z.appendChild(optElem);
-      }
-     } else if (engineList.value == 'hlupiki') {
-      z.innerHTML = '';
-      for (var i = 0; i < hlupiki.length; i++) {
-       var optElem = document.createElement('option');
-       optElem.innerHTML = hlupiki[i];
-       z.appendChild(optElem);
-      }
-     } else if (engineList.value == 'bizCanter') {
-      /*      z.innerHTML = '';
-            for (let key in bizCanter) {
-             let optGr = document.createElement('optgroup');
-             optGr.label = key;
-             let printTypeObj = bizCanter[key];
-             for (let j=0; j<printTypeObj.length; j++) {
-              let optEl = document.createElement('option');
-              optEl.innerHTML = printTypeObj[j];
-              optGr.append(optEl);
-             }
-             z.append(optGr);
-            }*/
-      z.innerHTML = '';
-      for (var i = 0; i < bizCanter.length; i++) {
-       var optElem = document.createElement('option');
-       optElem.innerHTML = bizCanter[i];
-       z.appendChild(optElem);
-      }
+      z.append(optGr);
      }
     }
+
+    /*
+        function _loadCylinders() {
+         if (engineList.value == 'miraflex') {
+          z.innerHTML = '';
+          for (var i = 0; i < miraflex.length; i++) {
+           var optElem = document.createElement('option');
+           optElem.innerHTML = miraflex[i];
+           z.appendChild(optElem);
+          }
+         } else if (engineList.value == 'soloflex') {
+          z.innerHTML = '';
+          for (var i = 0; i < soloflex.length; i++) {
+           var optElem = document.createElement('option');
+           optElem.innerHTML = soloflex[i];
+           z.appendChild(optElem);
+          }
+         } else if (engineList.value == 'hlupiki') {
+          z.innerHTML = '';
+          for (var i = 0; i < hlupiki.length; i++) {
+           var optElem = document.createElement('option');
+           optElem.innerHTML = hlupiki[i];
+           z.appendChild(optElem);
+          }
+         } else if (engineList.value == 'bizCanter') {
+          /!*      z.innerHTML = '';
+                for (let key in bizCanter) {
+                 let optGr = document.createElement('optgroup');
+                 optGr.label = key;
+                 let printTypeObj = bizCanter[key];
+                 for (let j=0; j<printTypeObj.length; j++) {
+                  let optEl = document.createElement('option');
+                  optEl.innerHTML = printTypeObj[j];
+                  optGr.append(optEl);
+                 }
+                 z.append(optGr);
+                }*!/
+          z.innerHTML = '';
+          for (var i = 0; i < bizCanter.length; i++) {
+           var optElem = document.createElement('option');
+           optElem.innerHTML = bizCanter[i];
+           z.appendChild(optElem);
+          }
+         }
+        }
+    */
    }
 
    function searchPantByName() {
