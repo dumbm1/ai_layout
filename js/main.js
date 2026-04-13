@@ -515,64 +515,22 @@ function main() {
 
     function _loadCylinders() {
      z.innerHTML = '';
+
      for (let key in cilinders) {
-      let optGr = document.createElement('optgroup');
-      optGr.label = key;
+      let optElTop = document.createElement('option');
+      optElTop.innerHTML = key;
+      z.appendChild(optElTop);
       let printTypeObj = cilinders[key];
       for (let j = 0; j < printTypeObj.length; j++) {
        let optEl = document.createElement('option');
        optEl.innerHTML = printTypeObj[j];
-       optGr.append(optEl);
+       z.appendChild(optEl);
+       // optGr.append(optEl);
+
       }
-      z.append(optGr);
+
      }
     }
-
-    /*
-        function _loadCylinders() {
-         if (engineList.value == 'miraflex') {
-          z.innerHTML = '';
-          for (var i = 0; i < miraflex.length; i++) {
-           var optElem = document.createElement('option');
-           optElem.innerHTML = miraflex[i];
-           z.appendChild(optElem);
-          }
-         } else if (engineList.value == 'soloflex') {
-          z.innerHTML = '';
-          for (var i = 0; i < soloflex.length; i++) {
-           var optElem = document.createElement('option');
-           optElem.innerHTML = soloflex[i];
-           z.appendChild(optElem);
-          }
-         } else if (engineList.value == 'hlupiki') {
-          z.innerHTML = '';
-          for (var i = 0; i < hlupiki.length; i++) {
-           var optElem = document.createElement('option');
-           optElem.innerHTML = hlupiki[i];
-           z.appendChild(optElem);
-          }
-         } else if (engineList.value == 'bizCanter') {
-          /!*      z.innerHTML = '';
-                for (let key in bizCanter) {
-                 let optGr = document.createElement('optgroup');
-                 optGr.label = key;
-                 let printTypeObj = bizCanter[key];
-                 for (let j=0; j<printTypeObj.length; j++) {
-                  let optEl = document.createElement('option');
-                  optEl.innerHTML = printTypeObj[j];
-                  optGr.append(optEl);
-                 }
-                 z.append(optGr);
-                }*!/
-          z.innerHTML = '';
-          for (var i = 0; i < bizCanter.length; i++) {
-           var optElem = document.createElement('option');
-           optElem.innerHTML = bizCanter[i];
-           z.appendChild(optElem);
-          }
-         }
-        }
-    */
    }
 
    function searchPantByName() {
