@@ -65,7 +65,7 @@ function main() {
    setTxt(defTxt());
    setSel(defSel());
    setCol(defCol());
-   setColorsFromXml();
+   // setColorsFromXml();
 
    /*  $('#btnOk').click(function () {
       var opts = {};

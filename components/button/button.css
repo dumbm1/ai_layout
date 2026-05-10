@@ -26,11 +26,12 @@
  height: 2rem;
  width: 2rem;
  padding: 0;
+ background: none;
 }
 
 .btn__main-btn {
  height: 2rem;
- font-size: 2rem;
+ font-size: 1.5rem;
  width: 100%;
 }
 
