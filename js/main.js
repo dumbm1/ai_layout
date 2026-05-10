@@ -1,5 +1,3 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global $, window, location, CSInterface, SystemPath, themeManager*/
 main();
 
 function main() {
@@ -19,6 +17,17 @@ function main() {
   addLayout();
 
   checkInput();
+
+  document.querySelector('fieldset.section').addEventListener('focusin', (e) => {
+   let targ = e.target;
+   if (targ.classList.contains('shift')) targ.select();
+  });
+  document.querySelectorAll('.shift').forEach(el => {
+   el.addEventListener('focusout', (e)=>{
+    if (e.target.value < 1) e.target.value = 1;
+    if(e.target.value > 5) e.target.value = 5;
+   })
+  })
 
   /**
    * Handling the incorrect input
@@ -65,20 +74,6 @@ function main() {
    setTxt(defTxt());
    setSel(defSel());
    setCol(defCol());
-   // setColorsFromXml();
-
-   /*  $('#btnOk').click(function () {
-      var opts = {};
-      opts.txt = getTxt();
-      opts.sel = getSel();
-      opts.nmb = getNmb();
-      opts.col = getCol();
-      opts.chk = getChk();
-
-      csInterface.evalScript(makeLayout.toString() + ';makeLayout(' + JSON.stringify(opts) + ')', function (result) {
-       // alert (result);
-      });
-     });*/
 
    document.getElementById('btnOk').addEventListener('click', () => {
     let opts = {};
@@ -502,6 +497,7 @@ function main() {
     var z = document.getElementById('z');
     // var engineList = document.getElementById('engineList');
     _loadCylinders();
+
     // engineList.addEventListener('change', _loadCylinders);
 
     function _loadCylinders() {
