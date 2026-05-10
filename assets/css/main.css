@@ -1,0 +1,21 @@
+@import "normalize.css";
+@import "fonts.css";
+@import "colors.css";
+
+@import "../../components/button/button.css";
+@import "../../components/input/input-file.css";
+@import "../../components/section/section.css";
+
+
+* {
+ box-sizing: border-box;
+}
+
+html {
+ font-size: 10px;
+ overflow: hidden;
+}
+
+body {
+ font-family: "Tahoma", Sans-Serif;
+}

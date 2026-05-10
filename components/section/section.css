@@ -1,0 +1,22 @@
+.section input[type='number'] { /*временный костыль, убрать*/
+ float: none;
+}
+
+.section select { /*временный костыль, убрать*/
+ float: none;
+}
+
+
+.section {
+ display: flex;
+ justify-content: space-between;
+}
+
+.section div {
+ display: flex;
+ flex-direction: column;
+}
+
+.section div.w100, .section textarea#fileName, .section textarea#layoutName {
+ width: 100%;
+}

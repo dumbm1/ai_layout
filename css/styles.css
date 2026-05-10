@@ -1,14 +1,12 @@
 /*Your styles*/
 
-body {
-  margin: 20px;
-}
+
 
 #content {
-  margin-right:   auto;
-  margin-left:    auto;
-  vertical-align: middle;
-  width:          100%;
+ display: flex;
+ flex-direction: column;
+ row-gap: 0.5rem;
+ padding: 1rem;
 }
 
 /*
@@ -45,15 +43,15 @@ by the settings of the CC application
 }
 
 .hostButton {
-  border:         1px solid;
-  border-radius:  2px;
-  height:         20px;
-  vertical-align: bottom;
-  font-family:    inherit;
-  color:          inherit;
-  font-size:      inherit;
+ border: 1px solid;
+ border-radius: 2px;
+ height: 20px;
+ vertical-align: bottom;
+ font-family: inherit;
+ color: inherit;
+ font-size: inherit;
 }
 
-#white_layer, #dots, #active_doc, #rail_lines{
-  opacity :1;
-  }
+#white_layer, #dots, #active_doc, #rail_lines {
+ opacity: 1;
+}

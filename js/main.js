@@ -14,7 +14,7 @@ function main() {
   themeManager.init();
   loadJSX('json2.js');
 
-  $('#btnReset').click(reloadPanel);
+  document.getElementById('btnReset').addEventListener('click', reloadPanel);
 
   addLayout();
 
@@ -26,8 +26,8 @@ function main() {
    * */
   function checkInput() {
    var inputElems = document.getElementsByTagName('input');
-   for (var i = 0; i < inputElems.length; i++) {
-    var obj = inputElems[i];
+   for (let i = 0; i < inputElems.length; i++) {
+    let obj = inputElems[i];
 
     if (obj.getAttribute('id') == 'pantSearch') continue;
 
@@ -48,14 +48,14 @@ function main() {
   }
 
   function addLayout() {
-   var sorryMessage = 'In development..';
-   var pantBook = makePantoneBook();
+   const sorryMessage = 'In development..';
+   const pantBook = makePantoneBook();
    addPantList(pantBook);
    searchPantByName();
    makeEngines();
    addOutColors();
 
-   var storeOpts = JSON.parse(localStorage.getItem('opts'));
+   let storeOpts = JSON.parse(localStorage.getItem('opts'));
 
    if (storeOpts) {
     setNmb(storeOpts.nmb);
@@ -67,18 +67,32 @@ function main() {
    setCol(defCol());
    setColorsFromXml();
 
-   $('#btnOk').click(function () {
-    var opts = {};
+   /*  $('#btnOk').click(function () {
+      var opts = {};
+      opts.txt = getTxt();
+      opts.sel = getSel();
+      opts.nmb = getNmb();
+      opts.col = getCol();
+      opts.chk = getChk();
+
+      csInterface.evalScript(makeLayout.toString() + ';makeLayout(' + JSON.stringify(opts) + ')', function (result) {
+       // alert (result);
+      });
+     });*/
+
+   document.getElementById('btnOk').addEventListener('click', () => {
+    let opts = {};
     opts.txt = getTxt();
     opts.sel = getSel();
     opts.nmb = getNmb();
     opts.col = getCol();
     opts.chk = getChk();
 
-    csInterface.evalScript(makeLayout.toString() + ';makeLayout(' + JSON.stringify(opts) + ')', function (result) {
+    csInterface.evalScript(jsx_makeLayout.toString() + ';jsx_makeLayout(' + JSON.stringify(opts) + ')', function (result) {
      // alert (result);
     });
    });
+
    $('#btn_github').click(function () {
     try {
      window.cep.util.openURLInDefaultBrowser('https://github.com/dumbm1/ai_layout');
@@ -86,12 +100,14 @@ function main() {
      alert('See more on "https://github.com/dumbm1/ai_layout"');
     }
    });
+
    $('.col-btn').click(function (e) {
     var targ = e.target;
     if (targ.className != 'hostButton col-btn-close-btn') {
      prompt('shift', '5');
     }
    });
+
    $('input').change(function (e) {
     if ($(this).attr('id') == 'indentIn' ||
      $(this).attr('id') == 'margLeft' ||
@@ -111,12 +127,15 @@ function main() {
      }));
     }
    });
+
    $('#white_layer').click(function (e) {
     // alert($('#white_layer').prop('checked'));
    });
+
    $('#dots').click(function (e) {
     // alert($('#dots').prop('checked'));
    });
+
    $('#active_doc').click(function (e) {
     // alert($('#active_doc').prop('checked'));
    });
@@ -159,39 +178,6 @@ function main() {
    /**
     * THE LIBRARY
     * */
-
-   /*
-      function setChkHandler() {
-
-       $('input[type=checkbox].btn-link-chk').each(function () {
-
-        if (this.checked == true) {
-         $(this).parent().addClass('btn-link-checked');
-         $(this).parent().parent().addClass('btn-link-div-checked');
-         $(this).attr('checked', 'checked');
-        } else {
-         $(this).parent().removeClass('btn-link-checked');
-         $(this).parent().parent().removeClass('btn-link-div-checked');
-         $(this).removeAttr('checked');
-        }
-       });
-
-       $('.btn-link-div').click(function () {
-        var childDiv = $(this).find('.btn-link');
-        var chkbx = childDiv.find('input');
-
-        $(this).toggleClass('btn-link-div-checked', '');
-        childDiv.toggleClass('btn-link-checked', '');
-
-        if (chkbx.attr('checked') == 'checked') {
-         chkbx.removeAttr('checked');
-        } else {
-         chkbx.attr('checked', 'checked');
-        }
-       });
-
-      }
-   */
 
    /**
     * GETTERS
@@ -514,9 +500,9 @@ function main() {
     };
 
     var z = document.getElementById('z');
-    var engineList = document.getElementById('engineList');
+    // var engineList = document.getElementById('engineList');
     _loadCylinders();
-    engineList.addEventListener('change', _loadCylinders);
+    // engineList.addEventListener('change', _loadCylinders);
 
     function _loadCylinders() {
      z.innerHTML = '';
@@ -3618,7 +3604,7 @@ function main() {
 /**
  * Extend Script host function
  * */
-function makeLayout(str) {
+function jsx_makeLayout(str) {
  var PT_TO_MM = 2.834645668;
  var MM_TO_PT = 0.352777778;
  var DISTORS = 0;
