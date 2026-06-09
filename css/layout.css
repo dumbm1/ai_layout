@@ -93,7 +93,7 @@ input[type=checkbox] {
 }
 
 #pantList {
- height: 14rem;
+ height: 9rem;
  /* box-sizing: border-box;
   float: left;
   border-bottom: none;
@@ -109,7 +109,7 @@ input[type=checkbox] {
 }
 
 #pantList div {
- height: 14rem;
+ /*height: 9rem;*/
  overflow-y: scroll;
 
 }
