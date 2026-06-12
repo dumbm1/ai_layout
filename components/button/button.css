@@ -25,11 +25,12 @@
 .btn__icon {
  height: 2rem;
  width: 2rem;
- padding: 0;
+ padding: .2rem;
  background: none;
  color: var(--input-color);
  background: var(--input-bg);
  border-radius: .5rem;
+
 }
 
 .btn__main-btn {

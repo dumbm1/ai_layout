@@ -75,7 +75,6 @@
    <input id="railWidth" class="hostTextarea" type="number" step="0.5" min="2"></div>
  </section>
 
-
  <!--COLORS BLOCK-->
  <section class="section section__flx-col">
   <legend>Краски</legend>
@@ -114,7 +113,6 @@
 
  <!--COLORS BLOCK END-->
 
-
  <!--WHITE LAYER-->
  <section class="section section__div-flx-row">
   <div>
@@ -130,7 +128,7 @@
 
  <section class="section section__div-flx-row">
 
-  <div>
+  <div style="border: 1px solid red">
    <input id="active_doc" type="checkbox" checked>
    <label for="active_doc">Создать в этом документе</label>
   </div>
@@ -158,13 +156,17 @@
 
  <!--MAIN BUTTONS-->
  <section class="section section_footer">
-  <button class="btn btn__main-btn" id="btnOk">Погнали!</button>
-  <svg class="btn btn__icon" id="btnReset">
-   <use href="assets/img/icons-sprite.svg#refresh"></use>
-  </svg>
-  <svg class="btn btn__icon" id="btn_github" title="Open source on https://github.com/dumbm1/ai_layout">
-   <use href="assets/img/icons-sprite.svg#github"></use>
-  </svg>
+  <button class="btn btn__main-btn" id="btnOk" title="Сгенерировать верстку">Погнали!</button>
+  <span title="Перезагрузка панели">
+   <svg class="btn btn__icon" id="btnReset">
+    <use href="assets/img/icons-sprite.svg#refresh"></use>
+   </svg>
+  </span>
+  <span title="Открыть исходник на https://github.com/dumbm1/ai_layout">
+   <svg class="btn btn__icon" id="btn_github">
+    <use href="assets/img/icons-sprite.svg#github"></use>
+   </svg>
+  </span>
  </section>
 
 </div>

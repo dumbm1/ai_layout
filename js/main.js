@@ -88,7 +88,7 @@ function main() {
     });
    });
 
-   $('#btn_github').click(function () {
+   document.getElementById('btn_github').addEventListener('click', ()=> {
     try {
      window.cep.util.openURLInDefaultBrowser('https://github.com/dumbm1/ai_layout');
     } catch (e) {
