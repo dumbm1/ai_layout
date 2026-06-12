@@ -27,13 +27,16 @@
  width: 2rem;
  padding: 0;
  background: none;
+ color: var(--input-color);
+ background: var(--input-bg);
+ border-radius: .5rem;
 }
 
 .btn__main-btn {
  height: 2rem;
  font-size: 1.5rem;
  width: 100%;
- margin-right: 1rem;
+ /*margin-right: 1rem;*/
 }
 
 .btn:hover {

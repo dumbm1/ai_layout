@@ -39,6 +39,10 @@
  column-gap: 0.3rem;
 }
 
+.section_footer{
+ gap: 0.5rem;
+}
+
 .section div.w100, .section textarea#fileName, .section textarea#layoutName {
  width: 100%;
 }
