@@ -23,11 +23,11 @@ function main() {
    if (targ.classList.contains('shift')) targ.select();
   });
   document.querySelectorAll('.shift').forEach(el => {
-   el.addEventListener('focusout', (e)=>{
+   el.addEventListener('focusout', (e) => {
     if (e.target.value < 1) e.target.value = 1;
-    if(e.target.value > 5) e.target.value = 5;
-   })
-  })
+    if (e.target.value > 5) e.target.value = 5;
+   });
+  });
 
   /**
    * Handling the incorrect input
@@ -88,7 +88,7 @@ function main() {
     });
    });
 
-   document.getElementById('btn_github').addEventListener('click', ()=> {
+   document.getElementById('btn_github').addEventListener('click', () => {
     try {
      window.cep.util.openURLInDefaultBrowser('https://github.com/dumbm1/ai_layout');
     } catch (e) {
@@ -463,19 +463,25 @@ function main() {
 
    function makeEngines() {
     let cilinders = {
-     "soloflex": [ // формный цилиндр Soloflex
-      270, 280, 285, 290,
-      300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390,
-      400, 410, 420, 430, 440, 450, 460, 480, 495,
-      500, 520, 530, 540, 560,
-      600
+     "soloflex": [ // формный цилиндр Soloflex800 КастомФлекс
+      260, 280,
+      300, 310, 315, 320, 330, 340, 350, 360, 370, 380, 390,
+      400, 410, 415, 420, 430, 440, 450, 460, 480,
+      500, 510, 520, 540, 580,
      ],
-     "miraflex": [ // формный цилиндр Miraflex
+     /*     "soloflex": [ // формный цилиндр Soloflex800 полиграф
+           270, 280, 285, 290,
+           300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 350, 360, 370, 380, 390,
+           400, 410, 420, 430, 440, 450, 460, 480, 495,
+           500, 520, 530, 540, 560,
+           600
+          ],*/
+/*     "miraflex": [ // формный цилиндр Miraflex
       300, 320, 330, 340, 345, 350, 360, 370, 380, 390,
       400, 410, 420, 430, 440, 450, 460, 470, 480,
       500, 520, 530, 540, 550, 560, 580,
       600, 640, 700
-     ],
+     ],*/
      "proflex": [ // Хлюпино, Одинцово
       350, 360, 370, 380,
       420, 440, 480,
@@ -487,8 +493,8 @@ function main() {
      "bizCanter": [ // Щелково Бизнес Цэнтр todo: уточнить название машины
       380, 390,
       400, 410, 420, 430, 440, 450, 460, 470, 480, 490,
-      500, 510, 520, 540, 550,
-      600, 640,
+      500, 510, 520, 530, 540, 550, 560,
+      600, 610, 620, 630, 640,
       700,
       580, 660, 720, 750 // !! толщина полимера 1,7 мм !! это 4 вала, которые пришли в комплекте с машиной
      ],
