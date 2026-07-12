@@ -6,8 +6,6 @@
 @import "../../components/input/input-file.css";
 @import "../../components/input/fieldset.css";
 @import "../../components/section/section.css";
-@import "../../components/input/checkbox.css";
-
 
 * {
  box-sizing: border-box;
