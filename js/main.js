@@ -4340,7 +4340,7 @@ function jsx_makeLayout(str) {
      0.2 * PT_TO_MM,
      (opts.sel.z - DISTORS) * PT_TO_MM);
     railTopLine.name = 'rail_topLine';
-    railTopLine.fillColor = makeSpot('film', [0, 0, 0, 30], 100);
+    railTopLine.fillColor = makeCMYK([0,0,0,0]);
     railTopLine.fillOverprint = false;
     railTopLine.stroked = false;
    }
